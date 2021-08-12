@@ -6,6 +6,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
+import java.util.logging.Logger;
 import java.util.stream.Stream;
 
 import org.hl7.fhir.r4.model.Address;
@@ -401,7 +402,12 @@ public class MDIToFhirCMSService {
 		CommonUtil.setUUID(returnDecedentAge);
 		returnDecedentAge.setSubject(decedentReference);
 		Quantity ageQuantity = new Quantity();
-		ageQuantity.setValue(new BigDecimal(inputFields.AGE)); //TODO: Check valid decimal
+		try {
+			ageQuantity.setValue(new BigDecimal(inputFields.AGE)); //TODO: Check valid decimal
+		}
+		catch(NumberFormatException e) {
+			System.out.println("In decedentAge, could not format number: "+ inputFields.AGE + " .");
+		}
 		ageQuantity.setUnit(inputFields.AGEUNIT); //TODO: Check to make sure it's in system
 		ageQuantity.setSystem("http://unitsofmeasure.org");
 		ageQuantity.setCode(MDIToFhirCMSUtil.convertUnitOfMeasureStringToCode(inputFields.AGEUNIT));
