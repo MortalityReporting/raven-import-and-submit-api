@@ -261,7 +261,7 @@ public class MDIToFhirCMSService {
 			identifier.setType(new CodeableConcept().addCoding(new Coding().setCode("1000007").setSystem("urn:mdi:temporary:code").setDisplay("Case Number")));
 			returnDecedent.addIdentifier(identifier);
 		}
-		Stream<String> nameFields = Stream.of(inputFields.FIRSTNAME,inputFields.LASTNAME,inputFields.MIDNAME,inputFields.POSSIBLEID);
+		Stream<String> nameFields = Stream.of(inputFields.FIRSTNAME,inputFields.LASTNAME,inputFields.MIDNAME);
 		if(!nameFields.allMatch(x -> x == null || x.isEmpty())) {
 			HumanName name = new HumanName();
 			name.addGiven(inputFields.FIRSTNAME);
