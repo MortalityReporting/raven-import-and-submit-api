@@ -50,6 +50,11 @@ public class MDIToFhirCMSUtil {
 				return "a";
 		}
 	}
+	public static Date parseDateForYear(String yearString) throws ParseException {
+		SimpleDateFormat sdf = new SimpleDateFormat("yyyy");
+    	sdf.setTimeZone(TimeZone.getDefault());
+    	return sdf.parse(yearString);
+	}
 	public static Date parseDate(String dateString) throws ParseException {
 		for (String formatString : dateFormatStrings)
 	    {

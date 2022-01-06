@@ -94,6 +94,7 @@ public class MDIToFhirCMSService {
 				,inputFields.CASEID);
 		Decedent decedentResource = null;
 		Reference decedentReference = null;
+		Reference dispositionLocationReference = null;
 		if(!decedentFields.allMatch(x -> x == null || x.isEmpty())) {
 			decedentResource = createDecedent(inputFields);
 			decedentReference = new Reference(decedentResource.getId());
@@ -128,17 +129,18 @@ public class MDIToFhirCMSService {
 			CauseOfDeathPathway causeOfDeathPathway = createCauseOfDeathPathway(inputFields, returnBundle, decedentReference, certifierResource);
 			MDIToFhirCMSUtil.addResourceToBundle(returnBundle, causeOfDeathPathway);
 		}
-		//  Handle Disposition Method
-		if(inputFields.DISPMETHOD != null && !inputFields.DISPMETHOD.isEmpty()) {
-			DecedentDispositionMethod dispositionMethod = createDispositionMethod(inputFields,decedentReference);
-			MDIToFhirCMSUtil.addResourceToBundle(returnBundle, dispositionMethod);
-		}
 		//  Handle Disposition Location
 		Stream<String> dispositionLocationFields = Stream.of(inputFields.DISP_STREET, inputFields.DISP_CITY, inputFields.DISP_COUNTY,
 				inputFields.DISP_STATE,inputFields.DISP_ZIP);
 		if(!dispositionLocationFields.allMatch(x -> x == null || x.isEmpty())) {
 			DispositionLocation dispositionLocation = createDispositionLocation(inputFields,decedentReference);
+			dispositionLocationReference = new Reference(dispositionLocation.getId());
 			MDIToFhirCMSUtil.addResourceToBundle(returnBundle, dispositionLocation);
+		}
+		//  Handle Disposition Method
+		if(inputFields.DISPMETHOD != null && !inputFields.DISPMETHOD.isEmpty()) {
+			DecedentDispositionMethod dispositionMethod = createDispositionMethod(inputFields,decedentReference,dispositionLocationReference);
+			MDIToFhirCMSUtil.addResourceToBundle(returnBundle, dispositionMethod);
 		}
 		// Handle Injury Location
 		Stream<String> injuryLocFields = Stream.of(inputFields.CINJSTREET,inputFields.CINJCITY,inputFields.CINJCOUNTY
@@ -297,6 +299,12 @@ public class MDIToFhirCMSService {
 			else if(MDIToFhirCMSUtil.containsIgnoreCase(inputFields.ETHNICITY, "Cuban")) {
 				returnDecedent.setEthnicity("2135-2", "2182-4", inputFields.ETHNICITY);
 			}
+			else if(MDIToFhirCMSUtil.containsIgnoreCase(inputFields.ETHNICITY, "Puerto Rican")) {
+				returnDecedent.setEthnicity("2135-2", "2180-8", inputFields.ETHNICITY);
+			}
+			else if(MDIToFhirCMSUtil.containsIgnoreCase(inputFields.ETHNICITY, "Salvadoran")) {
+				returnDecedent.setEthnicity("2161-8", "2180-8", inputFields.ETHNICITY);
+			}
 		}
 		if(inputFields.GENDER != null && !inputFields.GENDER.isEmpty()) {
 			if(MDIToFhirCMSUtil.containsIgnoreCase(inputFields.GENDER, "Female")) {
@@ -384,10 +392,10 @@ public class MDIToFhirCMSService {
 			returnDecedent.addExtension(lkaExt);
 		}
 		if(inputFields.HOSPNAME != null && !inputFields.HOSPNAME.isEmpty()) {
-			Extension lkaExt = new Extension();
-			lkaExt.setUrl("urn:mdi:temporary:code:hospital-name-decedent-was-first-taken");
-			lkaExt.setValue(new StringType(inputFields.HOSPNAME));
-			returnDecedent.addExtension(lkaExt);
+			Extension hospExt = new Extension();
+			hospExt.setUrl("urn:mdi:temporary:code:hospital-name-decedent-was-first-taken");
+			hospExt.setValue(new StringType(inputFields.HOSPNAME));
+			returnDecedent.addExtension(hospExt);
 		}
 		if(inputFields.CASEID != null && !inputFields.CASEID.isEmpty()) {
 			Identifier caseId = new Identifier();
@@ -588,7 +596,7 @@ public class MDIToFhirCMSService {
 		return manner;
 	}
 	
-	private DecedentDispositionMethod createDispositionMethod(MDIModelFields inputFields, Reference decedentReferece) {
+	private DecedentDispositionMethod createDispositionMethod(MDIModelFields inputFields, Reference decedentReferece, Reference dispositionLocationReference) {
 		DecedentDispositionMethod returnDispMethod = new DecedentDispositionMethod();
 		CommonUtil.setUUID(returnDispMethod);
 		if(inputFields.DISPMETHOD != null && !inputFields.DISPMETHOD.isEmpty()) {
@@ -596,6 +604,12 @@ public class MDIToFhirCMSService {
 		}
 		if(decedentReferece != null && !decedentReferece.isEmpty()) {
 			returnDispMethod.setSubject(decedentReferece);
+		}
+		if(dispositionLocationReference != null && !dispositionLocationReference.isEmpty()) {
+			Extension e = new Extension();
+			e.setUrl("http://hl7.org/fhir/us/vrdr/StructureDefinition/Observation-Location");
+			e.setValue(dispositionLocationReference);
+			returnDispMethod.addExtension(e); //Must be handled by VRDR in future
 		}
 		return returnDispMethod;
 	}
@@ -805,7 +819,7 @@ public class MDIToFhirCMSService {
 		returnCaseYearObs.setCode(new CodeableConcept().addCoding(new Coding(
 				"urn:mdi:temporary:code", "1000005", "Year by which case is categorized")));
 		if(inputFields.CASEYEAR != null && !inputFields.CASEYEAR.isEmpty()) {
-			Date reportDate = MDIToFhirCMSUtil.parseDate(inputFields.CASEYEAR);
+			Date reportDate = MDIToFhirCMSUtil.parseDateForYear(inputFields.CASEYEAR);
 			returnCaseYearObs.setValue(new DateTimeType(reportDate));
 		}
 		return returnCaseYearObs;

@@ -294,6 +294,7 @@ public class UploadAndExportController {
             if(submitFlag) {
                 try {
 	                ResponseEntity<String> response = submitBundleService.submitBundle(jsonBundle);
+	                System.out.println("Client response body:" + response.getBody());
 	                // save users list on model
 	                if(response.getStatusCode() == HttpStatus.OK ) {
 	                	inputField.setSuccess(true);
