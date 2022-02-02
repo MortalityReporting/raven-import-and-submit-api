@@ -133,6 +133,9 @@ public class UploadAndExportController {
     }
     
     private Map<String, Object> readFileAndSubmitToFhirBase(MultipartFile file, String mappingType) throws IOException, ParseException{
+    	if(mappingType == null) {
+    		mappingType = "MDI";
+    	}
     	ObjectMapper mapper = new ObjectMapper();
     	ArrayNode VRDRBundles = JsonNodeFactory.instance.arrayNode();
     	// parse CSV file to create a list of `InputField` objects
