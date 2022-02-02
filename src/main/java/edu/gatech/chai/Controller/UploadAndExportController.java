@@ -56,7 +56,8 @@ import edu.gatech.chai.VRDR.model.DeathCertificateDocument;
 import edu.gatech.chai.MDI.Model.MDIModelFields;
 import edu.gatech.chai.Mapping.Service.CanaryValidationService;
 import edu.gatech.chai.Mapping.Service.FhirCMSToVRDRService;
-import edu.gatech.chai.Mapping.Service.MDIToFhirCMSService;
+import edu.gatech.chai.Mapping.Service.MDIToMDIFhirCMSService;
+import edu.gatech.chai.Mapping.Service.MDIToVRDRFhirCMSService;
 import edu.gatech.chai.Mapping.Service.NightingaleSubmissionService;
 import edu.gatech.chai.Mapping.Service.VitalcheckSubmissionService;
 import edu.gatech.chai.Submission.Configuration.SubmissionSourcesConfiguration;
@@ -70,7 +71,9 @@ import edu.gatech.chai.Submission.Service.SubmitBundleService;
 @CrossOrigin(origins = "*")
 public class UploadAndExportController {
 	@Autowired
-	MDIToFhirCMSService mappingService;
+	MDIToVRDRFhirCMSService mappingToVRDRService;
+	@Autowired
+	MDIToMDIFhirCMSService mappingToMDIService;
 	@Autowired
 	SubmitBundleService submitBundleService;
 	@Autowired
@@ -85,7 +88,7 @@ public class UploadAndExportController {
 	private SubmissionSourcesConfiguration submissionSourcesConfiguration;
 	@Autowired
 	private PatientSubmitRepository patientSubmitRepository;
-	@Value(" ${fhircms.submit}")
+	@Value("${fhircms.submit}")
 	boolean submitFlag;
 	
 	public UploadAndExportController() {
@@ -97,9 +100,9 @@ public class UploadAndExportController {
     }
     
     @PostMapping(name = "upload-csv-file-dataonly")
-    public ResponseEntity<JsonNode> uploadCSVFileDataOnly(@RequestParam(name = "file", required = true) MultipartFile file) throws JsonProcessingException {
+    public ResponseEntity<JsonNode> uploadCSVFileDataOnly(@RequestParam(name = "file", required = true) MultipartFile file, @RequestParam(name = "mappingType", required = false) String mappingType) throws JsonProcessingException {
     	try {
-    		Map<String, Object> object = readFileAndSubmitToFhirBase(file);
+    		Map<String, Object> object = readFileAndSubmitToFhirBase(file,mappingType);
     		ArrayNode VRDRBundles = (ArrayNode)object.get("bundleArray");
     		HttpHeaders responseHeaders = new HttpHeaders();
     	    responseHeaders.set("Content-Type", "application/json");
@@ -113,9 +116,9 @@ public class UploadAndExportController {
     }
 
     @PostMapping("upload-csv-file")
-    public String uploadCSVFile(@RequestParam(name = "file", required = true) MultipartFile file, Model model) throws JsonProcessingException {
+    public String uploadCSVFile(@RequestParam(name = "file", required = true) MultipartFile file, @RequestParam(name = "mappingType", required = false) String mappingType, Model model) throws JsonProcessingException {
     	try {
-    		Map<String, Object> object = readFileAndSubmitToFhirBase(file);
+    		Map<String, Object> object = readFileAndSubmitToFhirBase(file, mappingType);
     		List<MDIModelFields> inputFields = (List<MDIModelFields>)object.get("viewmodel");
     		String prettyFhirOutput = (String) object.get("prettyFhirOutput");
     		model.addAttribute("inputFields", inputFields);
@@ -127,6 +130,71 @@ public class UploadAndExportController {
             model.addAttribute("status", false);
     	}
     	return "file-upload-status";
+    }
+    
+    private Map<String, Object> readFileAndSubmitToFhirBase(MultipartFile file, String mappingType) throws IOException, ParseException{
+    	ObjectMapper mapper = new ObjectMapper();
+    	ArrayNode VRDRBundles = JsonNodeFactory.instance.arrayNode();
+    	// parse CSV file to create a list of `InputField` objects
+        Reader reader = new BufferedReader(new InputStreamReader(file.getInputStream()));
+        // create csv bean reader
+        CsvToBean<MDIModelFields> csvToBean = new CsvToBeanBuilder(reader)
+                .withType(MDIModelFields.class)
+                .withIgnoreLeadingWhiteSpace(true)
+                .build();
+
+        // convert `CsvToBean` object to list of users
+        List<MDIModelFields> inputFields = csvToBean.parse();
+        String prettyFhirOutput = "";
+        for(MDIModelFields inputField: inputFields) {
+        	String jsonBundle = "";
+        	if(mappingType.equalsIgnoreCase("VRDR")) {
+        		jsonBundle = mappingToVRDRService.convertToVRDRString(inputField);
+        	}
+        	else if(mappingType.equalsIgnoreCase("MDI")) {
+        		jsonBundle = mappingToMDIService.convertToMDIString(inputField);
+        	}
+        	System.out.println("JSON BUNDLE:");
+        	System.out.println(jsonBundle);
+        	JsonNode submitBundleNode = mapper.readTree(jsonBundle);
+            if(prettyFhirOutput.isEmpty()) {
+            	prettyFhirOutput = mapper.writerWithDefaultPrettyPrinter().writeValueAsString(submitBundleNode);
+            }
+            // Submit to fhir server
+            inputField.setSuccess(false);
+            System.out.println(jsonBundle);
+            if(submitFlag) {
+                try {
+	                ResponseEntity<String> response = submitBundleService.submitBundle(jsonBundle);
+	                System.out.println("Client response body:" + response.getBody());
+	                // save users list on model
+	                if(response.getStatusCode() == HttpStatus.OK ) {
+	                	inputField.setSuccess(true);
+	                }
+                }
+                catch (HttpStatusCodeException e) {
+                	inputField.setSuccess(false);
+                	continue;
+                }
+                try {
+            		JsonNode internalVRDRNode = fhirCMSToVRDRService.pullDCDFromBaseFhirServerAsJson(inputField.SYSTEMID, inputField.CASEID);
+            		VRDRBundles.add(internalVRDRNode);
+            	}
+            	catch (ResourceNotFoundException e) {
+            		System.out.println("Error:"  + e.getLocalizedMessage() + "for patient id" + inputField.CASEID);
+            		System.out.println("Could not complete the document request from the FHIR server, appending the original batch request instead");
+            		VRDRBundles.add(submitBundleNode);
+            	}
+            }else {
+            	VRDRBundles.add(submitBundleNode);
+            }
+            
+        }
+        Map<String, Object> returnMap = new HashMap<String, Object>();
+        returnMap.put("viewmodel", inputFields);
+        returnMap.put("bundleArray", VRDRBundles);
+        returnMap.put("prettyFhirOutput", prettyFhirOutput);
+        return returnMap;
     }
     
     @GetMapping("submitEDRS")
@@ -264,65 +332,6 @@ public class UploadAndExportController {
 	    responseHeaders.set("Content-Type", "application/json");
 		ResponseEntity<JsonNode> returnResponse = new ResponseEntity<JsonNode>(jsonOutput, HttpStatus.OK);
 		return returnResponse;
-    }
-    
-    private Map<String, Object> readFileAndSubmitToFhirBase(MultipartFile file) throws IOException, ParseException{
-    	ObjectMapper mapper = new ObjectMapper();
-    	ArrayNode VRDRBundles = JsonNodeFactory.instance.arrayNode();
-    	// parse CSV file to create a list of `InputField` objects
-        Reader reader = new BufferedReader(new InputStreamReader(file.getInputStream()));
-        // create csv bean reader
-        CsvToBean<MDIModelFields> csvToBean = new CsvToBeanBuilder(reader)
-                .withType(MDIModelFields.class)
-                .withIgnoreLeadingWhiteSpace(true)
-                .build();
-
-        // convert `CsvToBean` object to list of users
-        List<MDIModelFields> inputFields = csvToBean.parse();
-        String prettyFhirOutput = "";
-        for(MDIModelFields inputField: inputFields) {
-        	String jsonBundle = mappingService.convertToVRDRString(inputField);
-        	System.out.println("JSON BUNDLE:");
-        	System.out.println(jsonBundle);
-        	JsonNode submitBundleNode = mapper.readTree(jsonBundle);
-            if(prettyFhirOutput.isEmpty()) {
-            	prettyFhirOutput = mapper.writerWithDefaultPrettyPrinter().writeValueAsString(submitBundleNode);
-            }
-            // Submit to fhir server
-            inputField.setSuccess(false);
-            System.out.println(jsonBundle);
-            if(submitFlag) {
-                try {
-	                ResponseEntity<String> response = submitBundleService.submitBundle(jsonBundle);
-	                System.out.println("Client response body:" + response.getBody());
-	                // save users list on model
-	                if(response.getStatusCode() == HttpStatus.OK ) {
-	                	inputField.setSuccess(true);
-	                }
-                }
-                catch (HttpStatusCodeException e) {
-                	inputField.setSuccess(false);
-                	continue;
-                }
-                try {
-            		JsonNode internalVRDRNode = fhirCMSToVRDRService.pullDCDFromBaseFhirServerAsJson(inputField.SYSTEMID, inputField.CASEID);
-            		VRDRBundles.add(internalVRDRNode);
-            	}
-            	catch (ResourceNotFoundException e) {
-            		System.out.println("Error:"  + e.getLocalizedMessage() + "for patient id" + inputField.CASEID);
-            		System.out.println("Could not complete the document request from the FHIR server, appending the original batch request instead");
-            		VRDRBundles.add(submitBundleNode);
-            	}
-            }else {
-            	VRDRBundles.add(submitBundleNode);
-            }
-            
-        }
-        Map<String, Object> returnMap = new HashMap<String, Object>();
-        returnMap.put("viewmodel", inputFields);
-        returnMap.put("bundleArray", VRDRBundles);
-        returnMap.put("prettyFhirOutput", prettyFhirOutput);
-        return returnMap;
     }
     
     private SourceStatus handleNightingaleSubmission(String sourceurl, DeathCertificateDocument dcd, SourceStatus source) throws ResourceAccessException, RestClientException, IOException {

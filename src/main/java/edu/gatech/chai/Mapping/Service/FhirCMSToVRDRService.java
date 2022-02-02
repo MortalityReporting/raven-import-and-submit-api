@@ -113,7 +113,7 @@ public class FhirCMSToVRDRService {
 	@Autowired
 	public FhirCMSToVRDRService(VRDRFhirContext vrdrFhirContext, @Value("${fhircms.url}") String url,
 	@Value("${fhircms.basicAuth.username}") String basicUsername,
-	@Value("${fhircms.basicAuth.password}") String basicPassword) {
+	@Value("${fhircms.basicAuth.password}") String basicPassword){
 		this.vrdrFhirContext = vrdrFhirContext;
 		client = vrdrFhirContext.getCtx().newRestfulGenericClient(url);
 		IClientInterceptor authInterceptor = new BasicAuthInterceptor(basicUsername, basicPassword);

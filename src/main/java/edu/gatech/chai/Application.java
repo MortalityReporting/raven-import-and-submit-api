@@ -6,6 +6,7 @@ import org.springframework.boot.web.servlet.support.SpringBootServletInitializer
 import org.springframework.context.annotation.Bean;
 
 import edu.gatech.chai.VRDR.context.VRDRFhirContext;
+import edu.gatech.chai.MDI.context.MDIFhirContext;
 import edu.gatech.chai.Mapping.Service.CanaryValidationService;
 import edu.gatech.chai.Mapping.Service.NightingaleSubmissionService;
 
@@ -19,6 +20,11 @@ public class Application extends SpringBootServletInitializer{
     @Bean
     public VRDRFhirContext vrdrFhirContext() {
     	return new VRDRFhirContext();
+    }
+    
+    @Bean
+    public MDIFhirContext mdiFhirContext() {
+    	return new MDIFhirContext();
     }
     
     @Bean

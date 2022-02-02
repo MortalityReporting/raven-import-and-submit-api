@@ -116,7 +116,7 @@ public class MDIToFhirCMSUtil {
 	
 	
 	
-	public static Bundle addResourceToBundle(Bundle bundle,Resource resource) {
+	public static Bundle addResourceToBatchBundle(Bundle bundle,Resource resource) {
 		if(resource.getId() == null || resource.getId().isEmpty()) {
 			resource.setId(new IdType(UUID.randomUUID().toString()));
 		}

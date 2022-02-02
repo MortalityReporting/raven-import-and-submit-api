@@ -7,7 +7,7 @@
   <version>0.0.4-SNAPSHOT</version>
   <packaging>war</packaging>
 
-  <name>OpenMDIFhirMapping</name>
+  <name>raven-import-and-submit-api</name>
   <url>http://maven.apache.org</url>
 
   <properties>
@@ -33,7 +33,7 @@
     <dependency>
     	<groupId>edu.gatech</groupId>
     	<artifactId>VRDR</artifactId>
-    	<version>v1.2.2-R4-STU1.2</version>
+    	<version>v1.2.3-R4-STU1.2</version>
     </dependency>
     <!-- <dependency>
 		<groupId>org.springframework.boot</groupId>
@@ -85,6 +85,11 @@
         <groupId>com.fasterxml.jackson.core</groupId>
         <artifactId>jackson-core</artifactId>
         <version>2.11.1</version>
+    </dependency>
+    <dependency>
+    	<groupId>edu.gatech.chai</groupId>
+    	<artifactId>MDI</artifactId>
+    	<version>0.0.1-STU4.0.1</version>
     </dependency>
   </dependencies>
   

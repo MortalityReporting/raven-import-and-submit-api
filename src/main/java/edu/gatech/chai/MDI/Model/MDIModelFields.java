@@ -221,6 +221,10 @@ public class MDIModelFields {
 	public String AUTOPUSED = "";
 	@CsvBindByName
 	public String CUSTODY = "";
+	@CsvBindByName
+	public String PREGNANT = "";
+	@CsvBindByName
+	public String TOBACCO = "";
 	public boolean success = false;
 	
 	public MDIModelFields() {
@@ -1097,6 +1101,22 @@ public class MDIModelFields {
 
 	public void setCERTIFIER_TYPE(String cERTIFIER_TYPE) {
 		CERTIFIER_TYPE = cERTIFIER_TYPE;
+	}
+
+	public String getPREGNANT() {
+		return PREGNANT;
+	}
+
+	public void setPREGNANT(String pREGNANT) {
+		PREGNANT = pREGNANT;
+	}
+
+	public String getTOBACCO() {
+		return TOBACCO;
+	}
+
+	public void setTOBACCO(String tOBACCO) {
+		TOBACCO = tOBACCO;
 	}
 
 	public boolean isSuccess() {
