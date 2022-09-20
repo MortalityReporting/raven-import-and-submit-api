@@ -13,15 +13,19 @@
 <form method="POST" th:action="@{upload-csv-file}" enctype="multipart/form-data">
     <div class="form-group mt-3">
         <div class="form-check">
-	        <input class="form-check-input" type="radio" name="mappingTypeMDI" id="mappingTypeMDI" th:name="mappingType" th:value="MDI"></input>
+	        <input class="form-check-input" type="radio" name="mappingTypeMDI" id="mappingTypeMDI" th:name="mappingType" th:value="VRDR"></input>
 	        <label class="form-check-label" for="mappingTypeMDI">MDIFHIR</label>
         </div>
         <div class="form-check">
 	        <input class="form-check-input" type="radio" name="mappingTypeVRDR" id="mappingTypeVRDR"  th:name="mappingType" th:value="MDI"></input>
 	        <label class="form-check-label" for="mappingTypeVRDR">VRDRFHIR</label>
         </div>
+        <div class="form-check">
+	        <input class="form-check-input" type="radio" name="mappingTypeMDIXLSX" id="mappingTypeMDI" th:name="mappingType" th:value="MDIXLSX"></input>
+	        <label class="form-check-label" for="mappingTypeMDIXLSX">MDIXLSX</label>
+        </div>
         <input type="file" name="file" class="form-control-file" id="file" accept=".csv"></input>
-        <label for="file">Select a CSV file</label>
+        <label for="file">Select a CSV or XLSX file</label>
     </div>
     <button type="submit" class="btn btn-primary">Import Decedents</button>
 </form>

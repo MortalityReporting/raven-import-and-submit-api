@@ -6,7 +6,9 @@ public class MDIModelFields {
 	@CsvBindByName
 	public String SYSTEMID = "";
 	@CsvBindByName
-	public String CASEID = "";
+	public String MDICASEID = "";
+	@CsvBindByName
+	public String EDRSCASEID = "";
 	@CsvBindByName
 	public String FIRSTNAME = "";
 	@CsvBindByName
@@ -94,6 +96,10 @@ public class MDIModelFields {
 	@CsvBindByName
 	public String CINJTIME = "";
 	@CsvBindByName
+	public String CINJDATEEARLY = "";
+	@CsvBindByName
+	public String CINJDATELATE = "";
+	@CsvBindByName
 	public String CIDATEFLAG = "";
 	@CsvBindByName
 	public String CDEATHFLAG = "";
@@ -118,17 +124,11 @@ public class MDIModelFields {
 	@CsvBindByName
 	public String RESZIP = "";
 	@CsvBindByName
-	public String DEATHPLACE = "";
+	public String RESCOUNTRY = "";
 	@CsvBindByName
-	public String DEATHSTREET = "";
+	public String DEATHLOCATION = "";
 	@CsvBindByName
-	public String DEATHCITY = "";
-	@CsvBindByName
-	public String DEATHCOUNTY = "";
-	@CsvBindByName
-	public String DEATHSTATE = "";
-	@CsvBindByName
-	public String DEATHZIP = "";
+	public String INJURYLOCATION = "";
 	@CsvBindByName
 	public String FOUNDADDR_STREET = "";
 	@CsvBindByName
@@ -176,18 +176,6 @@ public class MDIModelFields {
 	@CsvBindByName
 	public String DISP_ZIP = "";
 	@CsvBindByName
-	public String CINJPLACE = "";
-	@CsvBindByName
-	public String CINJSTREET = "";
-	@CsvBindByName
-	public String CINJCITY = "";
-	@CsvBindByName
-	public String CINJCOUNTY = "";
-	@CsvBindByName
-	public String CINJSTATE = "";
-	@CsvBindByName
-	public String CINJZIP = "";
-	@CsvBindByName
 	public String RESNAME = "";
 	@CsvBindByName
 	public String LKAWHERE = "";
@@ -218,13 +206,32 @@ public class MDIModelFields {
 	@CsvBindByName
 	public String CAUTOPSY = "";
 	@CsvBindByName
-	public String AUTOPUSED = "";
+	public String AUTOPSYRESULTSAVAILABLE = "";
 	@CsvBindByName
 	public String CUSTODY = "";
 	@CsvBindByName
 	public String PREGNANT = "";
 	@CsvBindByName
 	public String TOBACCO = "";
+	@CsvBindByName
+	public String TRANSPORTATION = "";
+	@CsvBindByName
+	public String MENAME = "";
+	@CsvBindByName
+	public String MEPHONE = "";
+	@CsvBindByName
+	public String MELICENSE = "";
+	@CsvBindByName
+	public String ME_STREET = "";
+	@CsvBindByName
+	public String ME_CITY = "";
+	@CsvBindByName
+	public String ME_COUNTY = "";
+	@CsvBindByName
+	public String ME_STATE = "";
+	@CsvBindByName
+	public String ME_ZIP = "";
+
 	public boolean success = false;
 	
 	public MDIModelFields() {
@@ -238,13 +245,21 @@ public class MDIModelFields {
 	public void setSYSTEMID(String sYSTEMID) {
 		SYSTEMID = sYSTEMID;
 	}
-	
-	public String getCASEID() {
-		return CASEID;
+
+	public String getMDICASEID() {
+		return MDICASEID;
 	}
 
-	public void setCASEID(String cASENUMBER) {
-		CASEID = cASENUMBER;
+	public void setMDICASEID(String mDICASEID) {
+		MDICASEID = mDICASEID;
+	}
+
+	public String getEDRSCASEID() {
+		return EDRSCASEID;
+	}
+
+	public void setEDRSCASEID(String eDRSCASEID) {
+		EDRSCASEID = eDRSCASEID;
 	}
 	
 	public String getFIRSTNAME() {
@@ -551,6 +566,22 @@ public class MDIModelFields {
 		CINJTIME = cINJTIME;
 	}
 
+	public String getCINJDATEEARLY() {
+		return CINJDATEEARLY;
+	}
+
+	public void setCINJDATEEARLY(String cINJDATEEARLY) {
+		CINJDATEEARLY = cINJDATEEARLY;
+	}
+
+	public String getCINJDATELATE() {
+		return CINJDATELATE;
+	}
+
+	public void setCINJDATELATE(String cINJDATELATE) {
+		CINJDATELATE = cINJDATELATE;
+	}
+
 	public String getCIDATEFLAG() {
 		return CIDATEFLAG;
 	}
@@ -655,12 +686,28 @@ public class MDIModelFields {
 		RESZIP = rESZIP;
 	}
 
-	public String getDEATHPLACE() {
-		return DEATHPLACE;
+	public String getRESCOUNTRY() {
+		return RESCOUNTRY;
 	}
 
-	public void setDEATHPLACE(String dEATHPLACE) {
-		DEATHPLACE = dEATHPLACE;
+	public void setRESCOUNTRY(String rESCOUNTRY) {
+		RESCOUNTRY = rESCOUNTRY;
+	}
+
+	public String getDEATHLOCATION() {
+		return DEATHLOCATION;
+	}
+
+	public void setDEATHLOCATION(String dEATHLOCATION) {
+		DEATHLOCATION = dEATHLOCATION;
+	}
+
+	public String getINJURYLOCATION() {
+		return INJURYLOCATION;
+	}
+
+	public void setINJURYLOCATION(String iNJURYLOCATION) {
+		INJURYLOCATION = iNJURYLOCATION;
 	}
 
 	public String getEVENTPLACE() {
@@ -799,54 +846,6 @@ public class MDIModelFields {
 		PRNZIP = pRNZIP;
 	}
 
-	public String getCINJPLACE() {
-		return CINJPLACE;
-	}
-
-	public void setCINJPLACE(String cINJPLACE) {
-		CINJPLACE = cINJPLACE;
-	}
-
-	public String getCINJSTREET() {
-		return CINJSTREET;
-	}
-
-	public void setCINJSTREET(String cINJSTREET) {
-		CINJSTREET = cINJSTREET;
-	}
-
-	public String getCINJCITY() {
-		return CINJCITY;
-	}
-
-	public void setCINJCITY(String cINJCITY) {
-		CINJCITY = cINJCITY;
-	}
-
-	public String getCINJCOUNTY() {
-		return CINJCOUNTY;
-	}
-
-	public void setCINJCOUNTY(String cINJCOUNTY) {
-		CINJCOUNTY = cINJCOUNTY;
-	}
-
-	public String getCINJSTATE() {
-		return CINJSTATE;
-	}
-
-	public void setCINJSTATE(String cINJSTATE) {
-		CINJSTATE = cINJSTATE;
-	}
-
-	public String getCINJZIP() {
-		return CINJZIP;
-	}
-
-	public void setCINJZIP(String cINJZIP) {
-		CINJZIP = cINJZIP;
-	}
-
 	public String getCDEATHDATE() {
 		return CDEATHDATE;
 	}
@@ -959,12 +958,12 @@ public class MDIModelFields {
 		CAUTOPSY = cAUTOPSY;
 	}
 
-	public String getAUTOPUSED() {
-		return AUTOPUSED;
+	public String getAUTOPSYRESULTSAVAILABLE() {
+		return AUTOPSYRESULTSAVAILABLE;
 	}
 
-	public void setAUTOPUSED(String aUTOPUSED) {
-		AUTOPUSED = aUTOPUSED;
+	public void setAUTOPSYRESULTSAVAILABLE(String aUTOPSYRESULTSAVAILABLE) {
+		AUTOPSYRESULTSAVAILABLE = aUTOPSYRESULTSAVAILABLE;
 	}
 
 	public String getCUSTODY() {
@@ -999,45 +998,7 @@ public class MDIModelFields {
 		DISPMETHOD = dISPMETHOD;
 	}
 
-	public String getDEATHSTREET() {
-		return DEATHSTREET;
-	}
-
-	public void setDEATHSTREET(String dEATHSTREET) {
-		DEATHSTREET = dEATHSTREET;
-	}
-
-	public String getDEATHCITY() {
-		return DEATHCITY;
-	}
-
-	public void setDEATHCITY(String dEATHCITY) {
-		DEATHCITY = dEATHCITY;
-	}
-
-	public String getDEATHCOUNTY() {
-		return DEATHCOUNTY;
-	}
-
-	public void setDEATHCOUNTY(String dEATHCOUNTY) {
-		DEATHCOUNTY = dEATHCOUNTY;
-	}
-
-	public String getDEATHSTATE() {
-		return DEATHSTATE;
-	}
-
-	public void setDEATHSTATE(String dEATHSTATE) {
-		DEATHSTATE = dEATHSTATE;
-	}
-
-	public String getDEATHZIP() {
-		return DEATHZIP;
-	}
-
-	public void setDEATHZIP(String dEATHZIP) {
-		DEATHZIP = dEATHZIP;
-	}
+	
 
 	public String getDISP_PLACE() {
 		return DISP_PLACE;
@@ -1117,6 +1078,82 @@ public class MDIModelFields {
 
 	public void setTOBACCO(String tOBACCO) {
 		TOBACCO = tOBACCO;
+	}
+
+	public String getTRANSPORTATION() {
+		return TRANSPORTATION;
+	}
+
+	public void setTRANSPORTATION(String tRANSPORTATION) {
+		TRANSPORTATION = tRANSPORTATION;
+	}
+
+	public String getMENAME() {
+		return this.MENAME;
+	}
+
+	public void setMENAME(String MENAME) {
+		this.MENAME = MENAME;
+	}
+
+	public String getMEPHONE() {
+		return this.MEPHONE;
+	}
+
+	public void setMEPHONE(String MEPHONE) {
+		this.MEPHONE = MEPHONE;
+	}
+
+	public String getMELICENSE() {
+		return this.MELICENSE;
+	}
+
+	public void setMELICENSE(String MELICENSE) {
+		this.MELICENSE = MELICENSE;
+	}
+
+	public String getME_STREET() {
+		return this.ME_STREET;
+	}
+
+	public void setME_STREET(String ME_STREET) {
+		this.ME_STREET = ME_STREET;
+	}
+
+	public String getME_CITY() {
+		return this.ME_CITY;
+	}
+
+	public void setME_CITY(String ME_CITY) {
+		this.ME_CITY = ME_CITY;
+	}
+
+	public String getME_COUNTY() {
+		return this.ME_COUNTY;
+	}
+
+	public void setME_COUNTY(String ME_COUNTY) {
+		this.ME_COUNTY = ME_COUNTY;
+	}
+
+	public String getME_STATE() {
+		return this.ME_STATE;
+	}
+
+	public void setME_STATE(String ME_STATE) {
+		this.ME_STATE = ME_STATE;
+	}
+
+	public String getME_ZIP() {
+		return this.ME_ZIP;
+	}
+
+	public void setME_ZIP(String ME_ZIP) {
+		this.ME_ZIP = ME_ZIP;
+	}
+
+	public boolean getSuccess() {
+		return this.success;
 	}
 
 	public boolean isSuccess() {

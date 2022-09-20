@@ -1,0 +1,1327 @@
+[
+    {
+        "fhirBundle": {
+            "resourceType": "Bundle",
+            "id": "21507c6b-2e61-448b-bcbc-4662958e31e6",
+            "meta": {
+                "profile": [
+                    "http://hl7.org/fhir/us/mdi/StructureDefinition/Bundle-document-mdi-to-edrs"
+                ]
+            },
+            "type": "batch",
+            "entry": [
+                {
+                    "resource": {
+                        "resourceType": "Composition",
+                        "id": "e4255f39-a58e-43fd-ab43-e11f583ca52d",
+                        "meta": {
+                            "profile": [
+                                "http://hl7.org/fhir/us/mdi/StructureDefinition/Composition-mdi-to-edrs"
+                            ]
+                        },
+                        "extension": [
+                            {
+                                "url": "http://hl7.org/fhir/us/mdi/StructureDefinition/Extension-tracking-number",
+                                "valueIdentifier": {
+                                    "type": {
+                                        "coding": [
+                                            {
+                                                "system": "http://hl7.org/fhir/us/mdi/CodeSystem/CodeSystem-mdi-codes",
+                                                "code": "mdi-case-number"
+                                            }
+                                        ]
+                                    },
+                                    "value": "123789"
+                                }
+                            },
+                            {
+                                "url": "http://hl7.org/fhir/us/mdi/StructureDefinition/Extension-tracking-number",
+                                "valueIdentifier": {
+                                    "type": {
+                                        "coding": [
+                                            {
+                                                "system": "http://hl7.org/fhir/us/mdi/CodeSystem/CodeSystem-mdi-codes",
+                                                "code": "edrs-file-number"
+                                            }
+                                        ]
+                                    },
+                                    "value": "789123"
+                                }
+                            }
+                        ],
+                        "identifier": {
+                            "type": {
+                                "coding": [
+                                    {
+                                        "system": "urn:mdi:temporary:code",
+                                        "code": "1000007",
+                                        "display": "Case Number"
+                                    }
+                                ]
+                            },
+                            "value": "TestIdentifier"
+                        },
+                        "status": "preliminary",
+                        "type": {
+                            "coding": [
+                                {
+                                    "system": "http://loinc.org",
+                                    "code": "86807-5",
+                                    "display": "Death administrative information Document"
+                                }
+                            ]
+                        },
+                        "subject": {
+                            "reference": "2ba2de01-5dd8-47fc-810f-c918f0078a17"
+                        },
+                        "date": "2022-09-16T14:20:07-04:00",
+                        "author": [
+                            {
+                                "reference": "f4262d57-7647-47ef-b05b-c3c8efbf0a02"
+                            }
+                        ],
+                        "section": [
+                            {
+                                "code": {
+                                    "coding": [
+                                        {
+                                            "system": "http://hl7.org/fhir/us/mdi/CodeSystem/CodeSystem-mdi-codes",
+                                            "code": "circumstances"
+                                        }
+                                    ]
+                                },
+                                "entry": [
+                                    {
+                                        "reference": "6f5ea421-2d12-4339-905a-fe2c467e62f7"
+                                    },
+                                    {
+                                        "reference": "29740955-179e-4df7-b9e2-f3dcca91eaff"
+                                    },
+                                    {
+                                        "reference": "1d4d3108-2ce0-440c-8eed-618e975e6298"
+                                    }
+                                ]
+                            },
+                            {
+                                "code": {
+                                    "coding": [
+                                        {
+                                            "system": "http://hl7.org/fhir/us/mdi/CodeSystem/CodeSystem-mdi-codes",
+                                            "code": "jurisdiction"
+                                        }
+                                    ]
+                                },
+                                "entry": [
+                                    {
+                                        "reference": "2252a1ca-b0f1-46e8-9d6c-1a5a24e357b6"
+                                    }
+                                ]
+                            },
+                            {
+                                "code": {
+                                    "coding": [
+                                        {
+                                            "system": "http://hl7.org/fhir/us/mdi/CodeSystem/CodeSystem-mdi-codes",
+                                            "code": "cause-manner"
+                                        }
+                                    ]
+                                },
+                                "entry": [
+                                    {
+                                        "reference": "5cb3000f-fbbf-4cee-a639-1c31b66fe596"
+                                    }
+                                ]
+                            }
+                        ]
+                    }
+                },
+                {
+                    "fullUrl": "e4255f39-a58e-43fd-ab43-e11f583ca52d",
+                    "resource": {
+                        "resourceType": "Composition",
+                        "id": "e4255f39-a58e-43fd-ab43-e11f583ca52d",
+                        "meta": {
+                            "profile": [
+                                "http://hl7.org/fhir/us/mdi/StructureDefinition/Composition-mdi-to-edrs"
+                            ]
+                        },
+                        "extension": [
+                            {
+                                "url": "http://hl7.org/fhir/us/mdi/StructureDefinition/Extension-tracking-number",
+                                "valueIdentifier": {
+                                    "type": {
+                                        "coding": [
+                                            {
+                                                "system": "http://hl7.org/fhir/us/mdi/CodeSystem/CodeSystem-mdi-codes",
+                                                "code": "mdi-case-number"
+                                            }
+                                        ]
+                                    },
+                                    "value": "123789"
+                                }
+                            },
+                            {
+                                "url": "http://hl7.org/fhir/us/mdi/StructureDefinition/Extension-tracking-number",
+                                "valueIdentifier": {
+                                    "type": {
+                                        "coding": [
+                                            {
+                                                "system": "http://hl7.org/fhir/us/mdi/CodeSystem/CodeSystem-mdi-codes",
+                                                "code": "edrs-file-number"
+                                            }
+                                        ]
+                                    },
+                                    "value": "789123"
+                                }
+                            }
+                        ],
+                        "identifier": {
+                            "type": {
+                                "coding": [
+                                    {
+                                        "system": "urn:mdi:temporary:code",
+                                        "code": "1000007",
+                                        "display": "Case Number"
+                                    }
+                                ]
+                            },
+                            "value": "TestIdentifier"
+                        },
+                        "status": "preliminary",
+                        "type": {
+                            "coding": [
+                                {
+                                    "system": "http://loinc.org",
+                                    "code": "86807-5",
+                                    "display": "Death administrative information Document"
+                                }
+                            ]
+                        },
+                        "subject": {
+                            "reference": "2ba2de01-5dd8-47fc-810f-c918f0078a17"
+                        },
+                        "date": "2022-09-16T14:20:07-04:00",
+                        "author": [
+                            {
+                                "reference": "f4262d57-7647-47ef-b05b-c3c8efbf0a02"
+                            }
+                        ],
+                        "section": [
+                            {
+                                "code": {
+                                    "coding": [
+                                        {
+                                            "system": "http://hl7.org/fhir/us/mdi/CodeSystem/CodeSystem-mdi-codes",
+                                            "code": "circumstances"
+                                        }
+                                    ]
+                                },
+                                "entry": [
+                                    {
+                                        "reference": "6f5ea421-2d12-4339-905a-fe2c467e62f7"
+                                    },
+                                    {
+                                        "reference": "29740955-179e-4df7-b9e2-f3dcca91eaff"
+                                    },
+                                    {
+                                        "reference": "1d4d3108-2ce0-440c-8eed-618e975e6298"
+                                    }
+                                ]
+                            },
+                            {
+                                "code": {
+                                    "coding": [
+                                        {
+                                            "system": "http://hl7.org/fhir/us/mdi/CodeSystem/CodeSystem-mdi-codes",
+                                            "code": "jurisdiction"
+                                        }
+                                    ]
+                                },
+                                "entry": [
+                                    {
+                                        "reference": "2252a1ca-b0f1-46e8-9d6c-1a5a24e357b6"
+                                    }
+                                ]
+                            },
+                            {
+                                "code": {
+                                    "coding": [
+                                        {
+                                            "system": "http://hl7.org/fhir/us/mdi/CodeSystem/CodeSystem-mdi-codes",
+                                            "code": "cause-manner"
+                                        }
+                                    ]
+                                },
+                                "entry": [
+                                    {
+                                        "reference": "5cb3000f-fbbf-4cee-a639-1c31b66fe596"
+                                    }
+                                ]
+                            }
+                        ]
+                    },
+                    "request": {
+                        "method": "POST"
+                    }
+                },
+                {
+                    "fullUrl": "2ba2de01-5dd8-47fc-810f-c918f0078a17",
+                    "resource": {
+                        "resourceType": "Patient",
+                        "id": "2ba2de01-5dd8-47fc-810f-c918f0078a17",
+                        "meta": {
+                            "profile": [
+                                "http://hl7.org/fhir/us/core/StructureDefinition/us-core-patient"
+                            ]
+                        },
+                        "extension": [
+                            {
+                                "url": "http://hl7.org/fhir/us/core/StructureDefinition/us-core-race",
+                                "extension": [
+                                    {
+                                        "url": "ombCategory",
+                                        "valueCoding": {
+                                            "system": "urn:oid:2.16.840.1.113883.6.238",
+                                            "code": "2106-3"
+                                        }
+                                    },
+                                    {
+                                        "url": "text",
+                                        "valueString": "White"
+                                    }
+                                ]
+                            },
+                            {
+                                "url": "http://hl7.org/fhir/us/core/StructureDefinition/us-core-ethnicity",
+                                "extension": [
+                                    {
+                                        "url": "ombCategory",
+                                        "valueCoding": {
+                                            "system": "urn:oid:2.16.840.1.113883.6.238",
+                                            "code": "2135-2"
+                                        }
+                                    },
+                                    {
+                                        "url": "text",
+                                        "valueString": "Not Hipanic Or Latino"
+                                    }
+                                ]
+                            }
+                        ],
+                        "name": [
+                            {
+                                "use": "official",
+                                "family": "Brox",
+                                "given": [
+                                    "Whago",
+                                    "C"
+                                ]
+                            }
+                        ],
+                        "gender": "male",
+                        "birthDate": "1982-01-02",
+                        "address": [
+                            {
+                                "extension": [
+                                    {
+                                        "url": "Text",
+                                        "valueString": "400 Windstream Street"
+                                    }
+                                ],
+                                "use": "home",
+                                "city": "Atlanta "
+                            }
+                        ]
+                    },
+                    "request": {
+                        "method": "POST"
+                    }
+                },
+                {
+                    "fullUrl": "f4262d57-7647-47ef-b05b-c3c8efbf0a02",
+                    "resource": {
+                        "resourceType": "Practitioner",
+                        "id": "f4262d57-7647-47ef-b05b-c3c8efbf0a02",
+                        "meta": {
+                            "profile": [
+                                "http://hl7.org/fhir/us/core/StructureDefinition/us-core-practitioner"
+                            ]
+                        },
+                        "identifier": [
+                            {
+                                "value": "34343"
+                            }
+                        ],
+                        "telecom": [
+                            {
+                                "value": "603-271-1235",
+                                "use": "work"
+                            }
+                        ],
+                        "address": [
+                            {
+                                "line": [
+                                    "246 Pleasant St. Suite 218"
+                                ],
+                                "city": "Concord",
+                                "state": "NH",
+                                "postalCode": "3301"
+                            }
+                        ]
+                    },
+                    "request": {
+                        "method": "POST"
+                    }
+                },
+                {
+                    "fullUrl": "6f5ea421-2d12-4339-905a-fe2c467e62f7",
+                    "resource": {
+                        "resourceType": "Location",
+                        "id": "6f5ea421-2d12-4339-905a-fe2c467e62f7",
+                        "meta": {
+                            "profile": [
+                                "http://hl7.org/fhir/us/core/StructureDefinition/us-core-location"
+                            ]
+                        },
+                        "address": {
+                            "text": "456 Maple St., Manchester NH"
+                        }
+                    },
+                    "request": {
+                        "method": "POST"
+                    }
+                },
+                {
+                    "fullUrl": "29740955-179e-4df7-b9e2-f3dcca91eaff",
+                    "resource": {
+                        "resourceType": "Observation",
+                        "id": "29740955-179e-4df7-b9e2-f3dcca91eaff",
+                        "meta": {
+                            "profile": [
+                                "http://hl7.org/fhir/us/mdi/StructureDefinition/Observation-tobacco-use-contributed-to-death"
+                            ]
+                        },
+                        "status": "preliminary",
+                        "code": {
+                            "coding": [
+                                {
+                                    "system": "http://loinc.org",
+                                    "code": "69443-0",
+                                    "display": "Did tobacco use contribute to death"
+                                }
+                            ]
+                        },
+                        "subject": {
+                            "reference": "2ba2de01-5dd8-47fc-810f-c918f0078a17"
+                        },
+                        "valueCodeableConcept": {
+                            "coding": [
+                                {
+                                    "system": "http://snomed.info/sct",
+                                    "code": "373067005",
+                                    "display": "No"
+                                }
+                            ]
+                        }
+                    },
+                    "request": {
+                        "method": "POST"
+                    }
+                },
+                {
+                    "fullUrl": "1d4d3108-2ce0-440c-8eed-618e975e6298",
+                    "resource": {
+                        "resourceType": "Observation",
+                        "id": "1d4d3108-2ce0-440c-8eed-618e975e6298",
+                        "meta": {
+                            "profile": [
+                                "http://hl7.org/fhir/us/mdi/StructureDefinition/Observation-decedent-pregnancy"
+                            ]
+                        },
+                        "status": "preliminary",
+                        "code": {
+                            "coding": [
+                                {
+                                    "system": "http://loinc.org",
+                                    "code": "69442-2",
+                                    "display": "Timing of recent pregnancy in relation to death"
+                                }
+                            ]
+                        },
+                        "subject": {
+                            "reference": "2ba2de01-5dd8-47fc-810f-c918f0078a17"
+                        }
+                    },
+                    "request": {
+                        "method": "POST"
+                    }
+                },
+                {
+                    "fullUrl": "2252a1ca-b0f1-46e8-9d6c-1a5a24e357b6",
+                    "resource": {
+                        "resourceType": "Observation",
+                        "id": "2252a1ca-b0f1-46e8-9d6c-1a5a24e357b6",
+                        "meta": {
+                            "profile": [
+                                "http://hl7.org/fhir/us/mdi/StructureDefinition/Observation-death-date"
+                            ]
+                        },
+                        "status": "final",
+                        "code": {
+                            "coding": [
+                                {
+                                    "system": "http://loinc.org",
+                                    "code": "81956-5",
+                                    "display": "Date+time of death"
+                                }
+                            ]
+                        },
+                        "subject": {
+                            "reference": "2ba2de01-5dd8-47fc-810f-c918f0078a17"
+                        },
+                        "effectiveDateTime": "2022-09-16T14:20:14-04:00",
+                        "valueDateTime": "0029-12-05T05:30:00-05:00"
+                    },
+                    "request": {
+                        "method": "POST"
+                    }
+                },
+                {
+                    "fullUrl": "5ed4dd81-6324-4d8b-bc2e-d153c11324ee",
+                    "resource": {
+                        "resourceType": "Observation",
+                        "id": "5ed4dd81-6324-4d8b-bc2e-d153c11324ee",
+                        "meta": {
+                            "profile": [
+                                "http://hl7.org/fhir/us/mdi/StructureDefinition/Observation-cause-of-death-part1"
+                            ]
+                        },
+                        "code": {
+                            "coding": [
+                                {
+                                    "system": "http://loinc.org",
+                                    "code": "69453-9"
+                                }
+                            ]
+                        },
+                        "subject": {
+                            "reference": "Patient/2ba2de01-5dd8-47fc-810f-c918f0078a17"
+                        },
+                        "performer": [
+                            {
+                                "reference": "Practitioner/f4262d57-7647-47ef-b05b-c3c8efbf0a02"
+                            }
+                        ],
+                        "valueCodeableConcept": {
+                            "text": "Staphylococcal sepsis"
+                        },
+                        "component": [
+                            {
+                                "code": {
+                                    "coding": [
+                                        {
+                                            "system": "http://hl7.org/fhir/us/mdi/CodeSystem/CodeSystem-local-component-codes",
+                                            "code": "lineNumber"
+                                        }
+                                    ]
+                                },
+                                "valueInteger": 1
+                            },
+                            {
+                                "code": {
+                                    "coding": [
+                                        {
+                                            "system": "http://loinc.org",
+                                            "code": "69440-6"
+                                        }
+                                    ]
+                                },
+                                "valueString": "3 days"
+                            }
+                        ]
+                    },
+                    "request": {
+                        "method": "POST"
+                    }
+                },
+                {
+                    "fullUrl": "54627e6f-565e-4524-97f2-88274c6e958c",
+                    "resource": {
+                        "resourceType": "Observation",
+                        "id": "54627e6f-565e-4524-97f2-88274c6e958c",
+                        "meta": {
+                            "profile": [
+                                "http://hl7.org/fhir/us/mdi/StructureDefinition/Observation-cause-of-death-part1"
+                            ]
+                        },
+                        "code": {
+                            "coding": [
+                                {
+                                    "system": "http://loinc.org",
+                                    "code": "69453-9"
+                                }
+                            ]
+                        },
+                        "subject": {
+                            "reference": "Patient/2ba2de01-5dd8-47fc-810f-c918f0078a17"
+                        },
+                        "performer": [
+                            {
+                                "reference": "Practitioner/f4262d57-7647-47ef-b05b-c3c8efbf0a02"
+                            }
+                        ],
+                        "valueCodeableConcept": {
+                            "text": "Decubitus ulcers of back and buttocks"
+                        },
+                        "component": [
+                            {
+                                "code": {
+                                    "coding": [
+                                        {
+                                            "system": "http://hl7.org/fhir/us/mdi/CodeSystem/CodeSystem-local-component-codes",
+                                            "code": "lineNumber"
+                                        }
+                                    ]
+                                },
+                                "valueInteger": 2
+                            },
+                            {
+                                "code": {
+                                    "coding": [
+                                        {
+                                            "system": "http://loinc.org",
+                                            "code": "69440-6"
+                                        }
+                                    ]
+                                },
+                                "valueString": "4 months"
+                            }
+                        ]
+                    },
+                    "request": {
+                        "method": "POST"
+                    }
+                },
+                {
+                    "fullUrl": "8570de85-5bf4-4d12-8adf-b4ee2951a13c",
+                    "resource": {
+                        "resourceType": "Observation",
+                        "id": "8570de85-5bf4-4d12-8adf-b4ee2951a13c",
+                        "meta": {
+                            "profile": [
+                                "http://hl7.org/fhir/us/mdi/StructureDefinition/Observation-cause-of-death-part1"
+                            ]
+                        },
+                        "code": {
+                            "coding": [
+                                {
+                                    "system": "http://loinc.org",
+                                    "code": "69453-9"
+                                }
+                            ]
+                        },
+                        "subject": {
+                            "reference": "Patient/2ba2de01-5dd8-47fc-810f-c918f0078a17"
+                        },
+                        "performer": [
+                            {
+                                "reference": "Practitioner/f4262d57-7647-47ef-b05b-c3c8efbf0a02"
+                            }
+                        ],
+                        "valueCodeableConcept": {
+                            "text": "Anoxic encephalopathy"
+                        },
+                        "component": [
+                            {
+                                "code": {
+                                    "coding": [
+                                        {
+                                            "system": "http://hl7.org/fhir/us/mdi/CodeSystem/CodeSystem-local-component-codes",
+                                            "code": "lineNumber"
+                                        }
+                                    ]
+                                },
+                                "valueInteger": 3
+                            },
+                            {
+                                "code": {
+                                    "coding": [
+                                        {
+                                            "system": "http://loinc.org",
+                                            "code": "69440-6"
+                                        }
+                                    ]
+                                },
+                                "valueString": "12 years"
+                            }
+                        ]
+                    },
+                    "request": {
+                        "method": "POST"
+                    }
+                },
+                {
+                    "fullUrl": "c042bb27-4df0-4dc0-b238-5b408dda9798",
+                    "resource": {
+                        "resourceType": "Observation",
+                        "id": "c042bb27-4df0-4dc0-b238-5b408dda9798",
+                        "meta": {
+                            "profile": [
+                                "http://hl7.org/fhir/us/mdi/StructureDefinition/Observation-contributing-cause-of-death-part2"
+                            ]
+                        },
+                        "code": {
+                            "coding": [
+                                {
+                                    "system": "http://loinc.org",
+                                    "code": "69441-4",
+                                    "display": "Other significant causes or conditions of death"
+                                }
+                            ]
+                        },
+                        "subject": {
+                            "reference": "Patient/2ba2de01-5dd8-47fc-810f-c918f0078a17"
+                        },
+                        "performer": [
+                            {
+                                "reference": "Practitioner/f4262d57-7647-47ef-b05b-c3c8efbf0a02"
+                            }
+                        ],
+                        "valueCodeableConcept": {
+                            "text": "Diabetes mellitus"
+                        }
+                    },
+                    "request": {
+                        "method": "POST"
+                    }
+                },
+                {
+                    "fullUrl": "5cb3000f-fbbf-4cee-a639-1c31b66fe596",
+                    "resource": {
+                        "resourceType": "Observation",
+                        "id": "5cb3000f-fbbf-4cee-a639-1c31b66fe596",
+                        "meta": {
+                            "profile": [
+                                "http://hl7.org/fhir/us/mdi/StructureDefinition/Observation-manner-of-death"
+                            ]
+                        },
+                        "status": "final",
+                        "code": {
+                            "coding": [
+                                {
+                                    "system": "http://loinc.org",
+                                    "code": "69449-7",
+                                    "display": "Manner of death"
+                                }
+                            ]
+                        },
+                        "subject": {
+                            "reference": "2ba2de01-5dd8-47fc-810f-c918f0078a17"
+                        },
+                        "performer": [
+                            {
+                                "reference": "f4262d57-7647-47ef-b05b-c3c8efbf0a02"
+                            }
+                        ],
+                        "valueCodeableConcept": {
+                            "coding": [
+                                {
+                                    "system": "http://snomed.info/sct",
+                                    "code": "7878000",
+                                    "display": "Accidental Death"
+                                }
+                            ]
+                        }
+                    },
+                    "request": {
+                        "method": "POST"
+                    }
+                }
+            ]
+        },
+        "fhirResponse": {
+            "name": "Whago C Brox",
+            "status": "Not Submitted",
+            "statusCode": "",
+            "state": ""
+        },
+        "Narrative": "",
+        "fields": {
+            "SYSTEMID": {
+                "status": "not mapped",
+                "FHIRResource": {},
+                "value": ""
+            },
+            "MDICASEID": {
+                "status": "mapped",
+                "FHIRResource": {},
+                "value": "123789"
+            },
+            "EDRSCASEID": {
+                "status": "mapped",
+                "FHIRResource": {},
+                "value": "789123"
+            },
+            "FIRSTNAME": {
+                "status": "mapped",
+                "FHIRResource": {},
+                "value": "Whago"
+            },
+            "MIDNAME": {
+                "status": "mapped",
+                "FHIRResource": {},
+                "value": "C"
+            },
+            "LASTNAME": {
+                "status": "mapped",
+                "FHIRResource": {},
+                "value": "Brox"
+            },
+            "AGE": {
+                "status": "mapped",
+                "FHIRResource": {},
+                "value": "40"
+            },
+            "AGEUNIT": {
+                "status": "mapped",
+                "FHIRResource": {},
+                "value": "years"
+            },
+            "RACE": {
+                "status": "mapped",
+                "FHIRResource": {},
+                "value": "White"
+            },
+            "GENDER": {
+                "status": "mapped",
+                "FHIRResource": {},
+                "value": "Male"
+            },
+            "ETHNICITY": {
+                "status": "mapped",
+                "FHIRResource": {},
+                "value": "Not Hipanic Or Latino"
+            },
+            "BIRTHDATE": {
+                "status": "mapped",
+                "FHIRResource": {},
+                "value": "1/2/82"
+            },
+            "MRNNUMBER": {
+                "status": "not mapped",
+                "FHIRResource": {},
+                "value": ""
+            },
+            "JOBTITLE": {
+                "status": "not mapped",
+                "FHIRResource": {},
+                "value": ""
+            },
+            "INDUSTRY": {
+                "status": "not mapped",
+                "FHIRResource": {},
+                "value": ""
+            },
+            "LANGUAGE": {
+                "status": "not mapped",
+                "FHIRResource": {},
+                "value": ""
+            },
+            "MARITAL": {
+                "status": "not mapped",
+                "FHIRResource": {},
+                "value": ""
+            },
+            "POSSIBLEID": {
+                "status": "not mapped",
+                "FHIRResource": {},
+                "value": ""
+            },
+            "CAUSEA": {
+                "status": "mapped",
+                "FHIRResource": {},
+                "value": "Staphylococcal sepsis"
+            },
+            "CAUSEB": {
+                "status": "mapped",
+                "FHIRResource": {},
+                "value": "Decubitus ulcers of back and buttocks"
+            },
+            "CAUSEC": {
+                "status": "mapped",
+                "FHIRResource": {},
+                "value": "Anoxic encephalopathy"
+            },
+            "CAUSED": {
+                "status": "not mapped",
+                "FHIRResource": {},
+                "value": ""
+            },
+            "OSCOND": {
+                "status": "mapped",
+                "FHIRResource": {},
+                "value": "Diabetes mellitus"
+            },
+            "MANNER": {
+                "status": "mapped",
+                "FHIRResource": {},
+                "value": "Accidental death"
+            },
+            "DISPMETHOD": {
+                "status": "not mapped",
+                "FHIRResource": {},
+                "value": ""
+            },
+            "CHOWNINJURY": {
+                "status": "not mapped",
+                "FHIRResource": {},
+                "value": ""
+            },
+            "DURATIONA": {
+                "status": "mapped",
+                "FHIRResource": {},
+                "value": "3 days"
+            },
+            "DURATIONB": {
+                "status": "mapped",
+                "FHIRResource": {},
+                "value": "4 months"
+            },
+            "DURATIONC": {
+                "status": "mapped",
+                "FHIRResource": {},
+                "value": "12 years"
+            },
+            "DURATIOND": {
+                "status": "mapped",
+                "FHIRResource": {},
+                "value": "12 years"
+            },
+            "CASENOTES": {
+                "status": "not mapped",
+                "FHIRResource": {},
+                "value": ""
+            },
+            "ATWORK": {
+                "status": "not mapped",
+                "FHIRResource": {},
+                "value": ""
+            },
+            "JOBRELATED": {
+                "status": "not mapped",
+                "FHIRResource": {},
+                "value": ""
+            },
+            "REPORTDATE": {
+                "status": "not mapped",
+                "FHIRResource": {},
+                "value": ""
+            },
+            "REPORTTIME": {
+                "status": "not mapped",
+                "FHIRResource": {},
+                "value": ""
+            },
+            "FOUNDDATE": {
+                "status": "not mapped",
+                "FHIRResource": {},
+                "value": ""
+            },
+            "FOUNDTIME": {
+                "status": "not mapped",
+                "FHIRResource": {},
+                "value": ""
+            },
+            "CDEATHDATE": {
+                "status": "mapped",
+                "FHIRResource": {},
+                "value": "0530"
+            },
+            "CDEATHTIME": {
+                "status": "mapped",
+                "FHIRResource": {},
+                "value": "0530"
+            },
+            "EVENTDATE": {
+                "status": "not mapped",
+                "FHIRResource": {},
+                "value": ""
+            },
+            "EVENTTIME": {
+                "status": "not mapped",
+                "FHIRResource": {},
+                "value": ""
+            },
+            "PRNDATE": {
+                "status": "not mapped",
+                "FHIRResource": {},
+                "value": ""
+            },
+            "PRNTIME": {
+                "status": "not mapped",
+                "FHIRResource": {},
+                "value": ""
+            },
+            "EXAMDATE": {
+                "status": "not mapped",
+                "FHIRResource": {},
+                "value": ""
+            },
+            "CINJDATE": {
+                "status": "not mapped",
+                "FHIRResource": {},
+                "value": ""
+            },
+            "CINJTIME": {
+                "status": "not mapped",
+                "FHIRResource": {},
+                "value": ""
+            },
+            "CINJDATEEARLY": {
+                "status": "not mapped",
+                "FHIRResource": {},
+                "value": ""
+            },
+            "CINJDATELATE": {
+                "status": "not mapped",
+                "FHIRResource": {},
+                "value": ""
+            },
+            "CIDATEFLAG": {
+                "status": "not mapped",
+                "FHIRResource": {},
+                "value": ""
+            },
+            "CDEATHFLAG": {
+                "status": "not mapped",
+                "FHIRResource": {},
+                "value": ""
+            },
+            "LKADATE": {
+                "status": "not mapped",
+                "FHIRResource": {},
+                "value": ""
+            },
+            "LKATIME": {
+                "status": "not mapped",
+                "FHIRResource": {},
+                "value": ""
+            },
+            "CASEYEAR": {
+                "status": "not mapped",
+                "FHIRResource": {},
+                "value": ""
+            },
+            "ATHOSPDATE": {
+                "status": "not mapped",
+                "FHIRResource": {},
+                "value": ""
+            },
+            "ATHOSPTIME": {
+                "status": "not mapped",
+                "FHIRResource": {},
+                "value": ""
+            },
+            "RESSTREET": {
+                "status": "not mapped",
+                "FHIRResource": {},
+                "value": ""
+            },
+            "RESCITY": {
+                "status": "mapped",
+                "FHIRResource": {},
+                "value": "Atlanta "
+            },
+            "RESCOUNTY": {
+                "status": "not mapped",
+                "FHIRResource": {},
+                "value": ""
+            },
+            "RESSTATE": {
+                "status": "not mapped",
+                "FHIRResource": {},
+                "value": ""
+            },
+            "RESZIP": {
+                "status": "not mapped",
+                "FHIRResource": {},
+                "value": ""
+            },
+            "RESCOUNTRY": {
+                "status": "mapped",
+                "FHIRResource": {},
+                "value": "US"
+            },
+            "DEATHLOCATION": {
+                "status": "mapped",
+                "FHIRResource": {},
+                "value": "456 Maple St., Manchester NH"
+            },
+            "INJURYLOCATION": {
+                "status": "not mapped",
+                "FHIRResource": {},
+                "value": ""
+            },
+            "FOUNDADDR_STREET": {
+                "status": "not mapped",
+                "FHIRResource": {},
+                "value": ""
+            },
+            "FOUNDADDR_CITY": {
+                "status": "not mapped",
+                "FHIRResource": {},
+                "value": ""
+            },
+            "FOUNDADDR_COUNTY": {
+                "status": "not mapped",
+                "FHIRResource": {},
+                "value": ""
+            },
+            "FOUNDADDR_STATE": {
+                "status": "not mapped",
+                "FHIRResource": {},
+                "value": ""
+            },
+            "FOUNDADDR_ZIP": {
+                "status": "not mapped",
+                "FHIRResource": {},
+                "value": ""
+            },
+            "EVENTPLACE": {
+                "status": "not mapped",
+                "FHIRResource": {},
+                "value": ""
+            },
+            "EVENTADDR_STREET": {
+                "status": "not mapped",
+                "FHIRResource": {},
+                "value": ""
+            },
+            "EVENTADDR_CITY": {
+                "status": "not mapped",
+                "FHIRResource": {},
+                "value": ""
+            },
+            "EVENTADDR_COUNTY": {
+                "status": "not mapped",
+                "FHIRResource": {},
+                "value": ""
+            },
+            "EVENTADDR_STATE": {
+                "status": "not mapped",
+                "FHIRResource": {},
+                "value": ""
+            },
+            "EVENTADDR_ZIP": {
+                "status": "not mapped",
+                "FHIRResource": {},
+                "value": ""
+            },
+            "PRNPLACE": {
+                "status": "not mapped",
+                "FHIRResource": {},
+                "value": ""
+            },
+            "PRNSTREET": {
+                "status": "not mapped",
+                "FHIRResource": {},
+                "value": ""
+            },
+            "PRNCITY": {
+                "status": "not mapped",
+                "FHIRResource": {},
+                "value": ""
+            },
+            "PRNCOUNTY": {
+                "status": "not mapped",
+                "FHIRResource": {},
+                "value": ""
+            },
+            "PRNSTATE": {
+                "status": "not mapped",
+                "FHIRResource": {},
+                "value": ""
+            },
+            "PRNZIP": {
+                "status": "not mapped",
+                "FHIRResource": {},
+                "value": ""
+            },
+            "DISP_PLACE": {
+                "status": "not mapped",
+                "FHIRResource": {},
+                "value": ""
+            },
+            "DISP_STREET": {
+                "status": "not mapped",
+                "FHIRResource": {},
+                "value": ""
+            },
+            "DISP_CITY": {
+                "status": "not mapped",
+                "FHIRResource": {},
+                "value": ""
+            },
+            "DISP_COUNTY": {
+                "status": "not mapped",
+                "FHIRResource": {},
+                "value": ""
+            },
+            "DISP_STATE": {
+                "status": "not mapped",
+                "FHIRResource": {},
+                "value": ""
+            },
+            "DISP_ZIP": {
+                "status": "not mapped",
+                "FHIRResource": {},
+                "value": ""
+            },
+            "RESNAME": {
+                "status": "mapped",
+                "FHIRResource": {},
+                "value": "400 Windstream Street"
+            },
+            "LKAWHERE": {
+                "status": "not mapped",
+                "FHIRResource": {},
+                "value": ""
+            },
+            "HOSPNAME": {
+                "status": "not mapped",
+                "FHIRResource": {},
+                "value": ""
+            },
+            "SCENEADDR_STREET": {
+                "status": "not mapped",
+                "FHIRResource": {},
+                "value": ""
+            },
+            "SCENEADDR_CITY": {
+                "status": "not mapped",
+                "FHIRResource": {},
+                "value": ""
+            },
+            "SCENEADDR_COUNTY": {
+                "status": "not mapped",
+                "FHIRResource": {},
+                "value": ""
+            },
+            "SCENEADDR_STATE": {
+                "status": "not mapped",
+                "FHIRResource": {},
+                "value": ""
+            },
+            "SCENEADDR_ZIP": {
+                "status": "not mapped",
+                "FHIRResource": {},
+                "value": ""
+            },
+            "CERTIFIER_NAME": {
+                "status": "not mapped",
+                "FHIRResource": {},
+                "value": ""
+            },
+            "CERTIFIER_TYPE": {
+                "status": "not mapped",
+                "FHIRResource": {},
+                "value": ""
+            },
+            "SURGERY": {
+                "status": "not mapped",
+                "FHIRResource": {},
+                "value": ""
+            },
+            "SURGDATE": {
+                "status": "not mapped",
+                "FHIRResource": {},
+                "value": ""
+            },
+            "SURGREASON": {
+                "status": "not mapped",
+                "FHIRResource": {},
+                "value": ""
+            },
+            "HCPROVIDER": {
+                "status": "not mapped",
+                "FHIRResource": {},
+                "value": ""
+            },
+            "CAUTOPSY": {
+                "status": "not mapped",
+                "FHIRResource": {},
+                "value": ""
+            },
+            "AUTOPSYRESULTSAVAILABLE": {
+                "status": "not mapped",
+                "FHIRResource": {},
+                "value": ""
+            },
+            "CUSTODY": {
+                "status": "not mapped",
+                "FHIRResource": {},
+                "value": ""
+            },
+            "PREGNANT": {
+                "status": "mapped",
+                "FHIRResource": {},
+                "value": "Not pregnant in last 12 months"
+            },
+            "TOBACCO": {
+                "status": "mapped",
+                "FHIRResource": {},
+                "value": "No"
+            },
+            "TRANSPORTATION": {
+                "status": "not mapped",
+                "FHIRResource": {},
+                "value": ""
+            },
+            "MENAME": {
+                "status": "mapped",
+                "FHIRResource": {},
+                "value": "Jennifer Duval"
+            },
+            "MEPHONE": {
+                "status": "mapped",
+                "FHIRResource": {},
+                "value": "603-271-1235"
+            },
+            "MELICENSE": {
+                "status": "mapped",
+                "FHIRResource": {},
+                "value": "34343"
+            },
+            "ME_STREET": {
+                "status": "mapped",
+                "FHIRResource": {},
+                "value": "246 Pleasant St. Suite 218"
+            },
+            "ME_CITY": {
+                "status": "mapped",
+                "FHIRResource": {},
+                "value": "Concord"
+            },
+            "ME_COUNTY": {
+                "status": "not mapped",
+                "FHIRResource": {},
+                "value": ""
+            },
+            "ME_STATE": {
+                "status": "mapped",
+                "FHIRResource": {},
+                "value": "NH"
+            },
+            "ME_ZIP": {
+                "status": "mapped",
+                "FHIRResource": {},
+                "value": "3301"
+            },
+            "success": {
+                "status": "not mapped",
+                "FHIRResource": {},
+                "value": ""
+            }
+        }
+    }
+]

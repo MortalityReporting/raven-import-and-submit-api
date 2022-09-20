@@ -23,6 +23,7 @@ import org.hl7.fhir.r4.model.CodeableConcept;
 import org.hl7.fhir.r4.model.HumanName;
 import org.hl7.fhir.r4.model.IdType;
 import org.hl7.fhir.r4.model.Meta;
+import org.hl7.fhir.r4.model.Quantity;
 import org.hl7.fhir.r4.model.Resource;
 
 public class MDIToFhirCMSUtil {
@@ -162,6 +163,46 @@ public class MDIToFhirCMSUtil {
 					returnAge.setUnit("min");
 					returnAge.setCode("min");
 					return returnAge;
+			}
+		}
+
+	    return null;
+	}
+
+	public static Quantity parseQuantity(String ageString) {
+		Quantity returnQuantity = new Quantity();
+		Pattern r = Pattern.compile(ageRegex);
+	    Matcher m = r.matcher(ageString.toLowerCase());
+		if(m.find()) {
+			String quantity =  m.group(1);
+			String type = m.group(2);
+			returnQuantity.setValue(Double.parseDouble(quantity));
+			returnQuantity.setSystem("http://hl7.org/fhir/ValueSet/age-units");
+			switch(type) {
+				case "year":
+					returnQuantity.setUnit("a");
+					returnQuantity.setCode("a");
+					return returnQuantity;
+				case "month":
+					returnQuantity.setUnit("mo");
+					returnQuantity.setCode("mo");
+					return returnQuantity;
+				case "week":
+					returnQuantity.setUnit("wk");
+					returnQuantity.setCode("wk");
+					return returnQuantity;
+				case "day":
+					returnQuantity.setUnit("d");
+					returnQuantity.setCode("d");
+					return returnQuantity;
+				case "hour":
+					returnQuantity.setUnit("h");
+					returnQuantity.setCode("h");
+					return returnQuantity;
+				case "minute":
+					returnQuantity.setUnit("min");
+					returnQuantity.setCode("min");
+					return returnQuantity;
 			}
 		}
 
