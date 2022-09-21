@@ -76,6 +76,9 @@ public class MDIToMDIFhirCMSService {
 		caseIdentifier.setType(new CodeableConcept().addCoding(new Coding().setCode("1000007").setSystem("urn:mdi:temporary:code").setDisplay("Case Number")));
 		
 		CompositionMDIToEDRS mainComposition = returnBundle.getCompositionMDIToEDRS();
+		//Some bookkeeping to set the mainComposition id
+		CommonUtil.setUUID(mainComposition);
+		returnBundle.getEntryFirstRep().setFullUrl(mainComposition.getId());
 		mainComposition.setIdentifier(caseIdentifier);
 		mainComposition.setStatus(CompositionStatus.PRELIMINARY);
 		mainComposition.setDate(new Date());
@@ -85,7 +88,7 @@ public class MDIToMDIFhirCMSService {
 		if(inputFields.EDRSCASEID != null && !inputFields.EDRSCASEID.isEmpty()){
 			mainComposition.addEDRSCaseIdExtension(inputFields.EDRSCASEID);
 		}
-		MDIToFhirCMSUtil.addResourceToBatchBundle(returnBundle, mainComposition);
+		//MDIToFhirCMSUtil.addResourceToBatchBundle(returnBundle, mainComposition);
 
 		Patient patientResource = null;
 		Reference patientReference = null;
@@ -103,7 +106,7 @@ public class MDIToMDIFhirCMSService {
 				,inputFields.MDICASEID, inputFields.EDRSCASEID);
 		if(!decedentFields.allMatch(x -> x == null || x.isEmpty())) {
 			patientResource = createPatient(inputFields);
-			patientReference = new Reference(patientResource.getId());
+			patientReference = new Reference("Patient/"+patientResource.getId());
 			mainComposition.setSubject(patientReference);
 			MDIToFhirCMSUtil.addResourceToBatchBundle(returnBundle, patientResource);
 		}
@@ -112,7 +115,7 @@ public class MDIToMDIFhirCMSService {
 			inputFields.ME_STREET,inputFields.ME_CITY,inputFields.ME_COUNTY,inputFields.ME_STATE,inputFields.ME_ZIP);
 		if(!practitionerFields.allMatch(x -> x == null || x.isEmpty())) {
 			practitionerResource = createPractitioner(inputFields);
-			practitionerReference = new Reference(practitionerResource.getId());
+			practitionerReference = new Reference("Practitioner/"+practitionerResource.getId());
 			mainComposition.addAuthor(practitionerReference);
 			MDIToFhirCMSUtil.addResourceToBatchBundle(returnBundle, practitionerResource);
 		}
@@ -126,11 +129,11 @@ public class MDIToMDIFhirCMSService {
 				certifierResource = createCertifier(inputFields);
 				MDIToFhirCMSUtil.addResourceToBatchBundle(returnBundle, certifierResource);
 			}
-			certifierReference = new Reference(certifierResource.getId());
+			certifierReference = new Reference("Practitioner/"+certifierResource.getId());
 			mainComposition.addAttester(certifierReference);
 			ProcedureDeathCertification deathCertification = createDeathCertification(inputFields, patientReference, certifierReference);
 			MDIToFhirCMSUtil.addResourceToBatchBundle(returnBundle, deathCertification);
-			mainComposition.getJurisdictionSection().addEntry(new Reference(deathCertification));
+			mainComposition.getJurisdictionSection().addEntry(new Reference("Procedure/"+deathCertification));
 		}
 		
 		// Handle Death Location
@@ -138,28 +141,28 @@ public class MDIToMDIFhirCMSService {
 		Stream<String> deathLocFields = Stream.of(inputFields.DEATHLOCATION);
 		if(!deathLocFields.allMatch(x -> x == null || x.isEmpty())) {
 			deathLocation = createDeathLocation(inputFields);
-			mainComposition.getCircumstancesSection().addEntry(new Reference(deathLocation.getId()));
+			mainComposition.getCircumstancesSection().addEntry(new Reference("Location/"+deathLocation.getId()));
 			MDIToFhirCMSUtil.addResourceToBatchBundle(returnBundle, deathLocation);
 		}
 		//Handle TobaccoUseContributedToDeath
 		Stream<String> tobaccoFields = Stream.of(inputFields.TOBACCO);
 		if(!tobaccoFields.allMatch(x -> x == null || x.isEmpty())) {
 			ObservationTobaccoUseContributedToDeath tobacco = createObservationTobaccoUseContributedToDeath(inputFields, patientReference);
-			mainComposition.getCircumstancesSection().addEntry(new Reference(tobacco.getId()));
+			mainComposition.getCircumstancesSection().addEntry(new Reference("Observation/"+tobacco.getId()));
 			MDIToFhirCMSUtil.addResourceToBatchBundle(returnBundle, tobacco);
 		}
 		//Handle Decedent Pregnancy
 		Stream<String> pregnantFields = Stream.of(inputFields.PREGNANT);
 		if(!pregnantFields.allMatch(x -> x == null || x.isEmpty())) {
 			ObservationDecedentPregnancy pregnant = createObservationDecedentPregnancy(inputFields, patientReference);
-			mainComposition.getCircumstancesSection().addEntry(new Reference(pregnant.getId()));
+			mainComposition.getCircumstancesSection().addEntry(new Reference("Observation/"+pregnant.getId()));
 			MDIToFhirCMSUtil.addResourceToBatchBundle(returnBundle, pregnant);
 		}
 		//Handle Injury Location
 		Stream<String> injuryLocationFields = Stream.of(inputFields.INJURYLOCATION);
 		if(!injuryLocationFields.allMatch(x -> x == null || x.isEmpty())) {
 			Location injuryLocation = createInjuryLocation(inputFields, patientReference);
-			mainComposition.getCircumstancesSection().addEntry(new Reference(injuryLocation.getId()));
+			mainComposition.getCircumstancesSection().addEntry(new Reference("Location/"+injuryLocation.getId()));
 			MDIToFhirCMSUtil.addResourceToBatchBundle(returnBundle, injuryLocation);
 		}
 		//Handle HowDeathInjuryOccured
@@ -167,7 +170,7 @@ public class MDIToMDIFhirCMSService {
 				inputFields.TRANSPORTATION);
 		if(!injuryIncidentFields.allMatch(x -> x == null || x.isEmpty())) {
 			ObservationHowDeathInjuryOccurred howDeathInjuryOccurred = createObservationHowDeathInjuryOccurred(inputFields, patientResource, practitionerResource);
-			mainComposition.getCircumstancesSection().addEntry(new Reference(howDeathInjuryOccurred.getId()));
+			mainComposition.getCircumstancesSection().addEntry(new Reference("Observation/"+howDeathInjuryOccurred.getId()));
 			MDIToFhirCMSUtil.addResourceToBatchBundle(returnBundle, howDeathInjuryOccurred);
 		}
 		// Handle Death Date
@@ -175,7 +178,7 @@ public class MDIToMDIFhirCMSService {
 				inputFields.CDEATHDATE, inputFields.CDEATHTIME);
 		if(!deathDateFields.allMatch(x -> x == null || x.isEmpty())) {
 			ObservationDeathDate deathDate = createDeathDate(inputFields, patientReference, deathLocation);
-			mainComposition.getJurisdictionSection().addEntry(new Reference(deathDate.getId()));
+			mainComposition.getJurisdictionSection().addEntry(new Reference("Observation/"+deathDate.getId()));
 			MDIToFhirCMSUtil.addResourceToBatchBundle(returnBundle, deathDate);
 		}
 		// Handle Cause Of Death Pathway
@@ -186,7 +189,7 @@ public class MDIToMDIFhirCMSService {
 			//THis list contains CauseOfDeathPart1 and CauseOfDeathPart2 resources
 			List<Observation> causeOfDeathPathway = createCauseOfDeathPathway(inputFields, returnBundle, mainComposition, patientResource, practitionerResource);
 			for(Observation cause:causeOfDeathPathway){
-				mainComposition.getCauseMannerSection().addEntry(new Reference(cause.getId()));
+				mainComposition.getCauseMannerSection().addEntry(new Reference("Observation/"+cause.getId()));
 				MDIToFhirCMSUtil.addResourceToBatchBundle(returnBundle, cause);
 			}
 		}
@@ -195,21 +198,21 @@ public class MDIToMDIFhirCMSService {
 		Stream<String> mannerFields = Stream.of(inputFields.MANNER);
 		if(!mannerFields.allMatch(x -> x == null || x.isEmpty())) {
 			ObservationMannerOfDeath manner = createMannerOfDeath(inputFields, patientReference, practitionerReference);
-			mainComposition.getCauseMannerSection().addEntry(new Reference(manner.getId()));
+			mainComposition.getCauseMannerSection().addEntry(new Reference("Observation/"+manner.getId()));
 			MDIToFhirCMSUtil.addResourceToBatchBundle(returnBundle, manner);
 		}
 		// Handle HowDeathInjuryOccurred
 		Stream<String> deathInjuryFields = Stream.of(inputFields.CHOWNINJURY);
 		if(!deathInjuryFields.allMatch(x -> x == null || x.isEmpty())) {
 			ObservationHowDeathInjuryOccurred deathInjuryDescription = createHowDeathInjuryOccurred(inputFields, patientResource, practitionerResource);
-			mainComposition.getCauseMannerSection().addEntry(new Reference(deathInjuryDescription.getId()));
+			mainComposition.getCauseMannerSection().addEntry(new Reference("Observation/"+deathInjuryDescription.getId()));
 			MDIToFhirCMSUtil.addResourceToBatchBundle(returnBundle, deathInjuryDescription);
 		}
 		// Handle CaseNotes
 		/*if(inputFields.CASENOTES != null && !inputFields.CASENOTES.isEmpty()) {
 			for(String caseNote: inputFields.CASENOTES.split(";")) {
 				DocumentReferenceMDICaseNotesSummary caseNoteResource = createCaseNote(caseNote,patientResource);
-				mainComposition.getNarrativeSection().addEntry(new Reference(caseNoteResource.getId()));
+				mainComposition.getNarrativeSection().addEntry(new Reference("DocumentReference/"+caseNoteResource.getId()));
 				MDIToFhirCMSUtil.addResourceToBatchBundle(returnBundle, caseNoteResource);
 			}
 		}*/
@@ -372,7 +375,7 @@ public class MDIToMDIFhirCMSService {
 		returnPractitioner.setMeta(new Meta().addProfile("http://hl7.org/fhir/us/core/StructureDefinition/us-core-practitioner"));
 		CommonUtil.setUUID(returnPractitioner);
 		if(inputFields.MENAME != null && !inputFields.MENAME.isEmpty()) {
-			HumanName certName = MDIToFhirCMSUtil.parseHumanName(inputFields.CERTIFIER_NAME);
+			HumanName certName = MDIToFhirCMSUtil.parseHumanName(inputFields.MENAME);
 			if (certName != null){
 				certName.setUse(NameUse.OFFICIAL);
 				returnPractitioner.addName(certName);
@@ -460,6 +463,7 @@ public class MDIToMDIFhirCMSService {
 			if(cause != null && !cause.isEmpty()) {
 				int lineNumber = i + 1; //entry 0 = line number 1
 				ObservationCauseOfDeathPart1 causeOfDeathCondition = new ObservationCauseOfDeathPart1(patientResource, practitionerResource, cause, lineNumber, interval);
+				CommonUtil.setUUID(causeOfDeathCondition);
 				returnList.add(causeOfDeathCondition);
 			}
 		}
@@ -470,6 +474,7 @@ public class MDIToMDIFhirCMSService {
 				continue;
 			}
 			ObservationContributingCauseOfDeathPart2 conditionContrib = new ObservationContributingCauseOfDeathPart2(patientResource, practitionerResource, otherCause);
+			CommonUtil.setUUID(conditionContrib);
 			returnList.add(conditionContrib);
 		}
 		return returnList;

@@ -2,13 +2,19 @@
     {
         "fhirBundle": {
             "resourceType": "Bundle",
+            "id": "094697c6-3203-4bde-b86b-a81cb99db4b9",
+            "meta": {
+                "profile": [
+                    "http://hl7.org/fhir/us/mdi/StructureDefinition/Bundle-document-mdi-to-edrs"
+                ]
+            },
             "type": "batch",
             "entry": [
                 {
-                    "fullUrl": "e87d9e6a-e4ea-4cd9-a5d4-e7d7f7209467",
+                    "fullUrl": "7576a15e-44b1-4717-be00-373f42cfb1fb",
                     "resource": {
                         "resourceType": "Composition",
-                        "id": "e87d9e6a-e4ea-4cd9-a5d4-e7d7f7209467",
+                        "id": "7576a15e-44b1-4717-be00-373f42cfb1fb",
                         "meta": {
                             "profile": [
                                 "http://hl7.org/fhir/us/mdi/StructureDefinition/Composition-mdi-to-edrs"
@@ -26,7 +32,21 @@
                                             }
                                         ]
                                     },
-                                    "value": "000009\n\n\n"
+                                    "value": "123789"
+                                }
+                            },
+                            {
+                                "url": "http://hl7.org/fhir/us/mdi/StructureDefinition/Extension-tracking-number",
+                                "valueIdentifier": {
+                                    "type": {
+                                        "coding": [
+                                            {
+                                                "system": "http://hl7.org/fhir/us/mdi/CodeSystem/CodeSystem-mdi-codes",
+                                                "code": "edrs-file-number"
+                                            }
+                                        ]
+                                    },
+                                    "value": "789123"
                                 }
                             }
                         ],
@@ -40,7 +60,7 @@
                                     }
                                 ]
                             },
-                            "value": "000009\n\n\n"
+                            "value": "TestIdentifier"
                         },
                         "status": "preliminary",
                         "type": {
@@ -53,30 +73,15 @@
                             ]
                         },
                         "subject": {
-                            "reference": "Patient/ab237db2-d32b-4f4a-a8f5-92559806cccd"
+                            "reference": "Patient/5aa504f0-682a-44e5-bd13-713953fcbff3"
                         },
-                        "date": "2022-08-12T14:18:02-04:00",
+                        "date": "2022-09-21T16:03:06-04:00",
                         "author": [
                             {
-                                "reference": "Practitioner/34988fcc-1f91-4525-8158-b8f7fd816a00"
+                                "reference": "Practitioner/6a5fb4fb-d603-4522-8287-418b915abd48"
                             }
                         ],
                         "section": [
-                            {
-                                "code": {
-                                    "coding": [
-                                        {
-                                            "system": "http://hl7.org/fhir/us/mdi/CodeSystem/CodeSystem-mdi-codes",
-                                            "code": "demographics"
-                                        }
-                                    ]
-                                },
-                                "entry": [
-                                    {
-                                        "reference": "a1069609-63d8-4fcd-946f-5dcc74a44c50"
-                                    }
-                                ]
-                            },
                             {
                                 "code": {
                                     "coding": [
@@ -88,16 +93,13 @@
                                 },
                                 "entry": [
                                     {
-                                        "reference": "e68d7a76-7aa0-4155-bf31-88452dbf3645"
+                                        "reference": "Location/7b9f62c7-1ad7-44e4-b44c-b53db3a745c1"
                                     },
                                     {
-                                        "reference": "fab79bc8-860a-4bfa-8265-b2399a9301bf"
+                                        "reference": "Observation/3bf1c00a-f0fb-4d12-8f6b-a26b623951a9"
                                     },
                                     {
-                                        "reference": "6cd8ee98-b2ac-4338-8d6d-b1443a258005"
-                                    },
-                                    {
-                                        "reference": "654fe8ba-7d87-413a-9e51-98969df30d68"
+                                        "reference": "Observation/a08becf4-1c14-4246-82d4-e1b3eb060dcc"
                                     }
                                 ]
                             },
@@ -112,7 +114,7 @@
                                 },
                                 "entry": [
                                     {
-                                        "reference": "d69f6da9-803d-4165-94c1-4f37b87b3484"
+                                        "reference": "Observation/7ed1f08a-a9b3-498e-98f0-b42a8509392e"
                                     }
                                 ]
                             },
@@ -127,57 +129,55 @@
                                 },
                                 "entry": [
                                     {
-                                        "reference": "8a979b31-62d6-48bd-b501-1ce786880fc6"
+                                        "reference": "Observation/5b47b8ee-058c-479b-a79a-dd46d62c1b4a"
                                     },
                                     {
-                                        "reference": "8299503a-dc08-4e14-be9c-fb85b6c94ec7"
+                                        "reference": "Observation/58f34206-a69b-41d2-a2e1-46d507a48cc8"
                                     },
                                     {
-                                        "reference": "a031cb0e-c58e-4b26-bb4b-ee0ecb35fcf6"
+                                        "reference": "Observation/ea170aa2-70ac-40ce-b08e-10eccc431757"
                                     },
                                     {
-                                        "reference": "dd95b654-f17d-4f73-9a3f-073a7353596a"
+                                        "reference": "Observation/08eba7b6-b287-4e52-b053-b7f038a5cbbd"
                                     },
                                     {
-                                        "reference": "3cc302df-dbc6-47fd-a158-4930249cae90"
+                                        "reference": "Observation/b6f97995-25b5-4c08-83ff-914c66d31aac"
                                     },
                                     {
-                                        "reference": "298797ef-319e-4b99-81e3-ff477c38f6bb"
-                                    }
-                                ]
-                            },
-                            {
-                                "code": {
-                                    "coding": [
-                                        {
-                                            "system": "http://hl7.org/fhir/us/mdi/CodeSystem/CodeSystem-mdi-codes",
-                                            "code": "narratives"
-                                        }
-                                    ]
-                                },
-                                "entry": [
-                                    {
-                                        "reference": "d792a4b7-b468-445d-a18b-ecec9060e015"
+                                        "reference": "Observation/1d728006-3785-4847-aaca-fe4352799c4b"
                                     }
                                 ]
                             }
                         ]
-                    },
-                    "request": {
-                        "method": "POST"
                     }
                 },
                 {
-                    "fullUrl": "ab237db2-d32b-4f4a-a8f5-92559806cccd",
+                    "fullUrl": "5aa504f0-682a-44e5-bd13-713953fcbff3",
                     "resource": {
                         "resourceType": "Patient",
-                        "id": "ab237db2-d32b-4f4a-a8f5-92559806cccd",
+                        "id": "5aa504f0-682a-44e5-bd13-713953fcbff3",
                         "meta": {
                             "profile": [
                                 "http://hl7.org/fhir/us/core/StructureDefinition/us-core-patient"
                             ]
                         },
                         "extension": [
+                            {
+                                "url": "http://hl7.org/fhir/us/core/StructureDefinition/us-core-race",
+                                "extension": [
+                                    {
+                                        "url": "ombCategory",
+                                        "valueCoding": {
+                                            "system": "urn:oid:2.16.840.1.113883.6.238",
+                                            "code": "2106-3"
+                                        }
+                                    },
+                                    {
+                                        "url": "text",
+                                        "valueString": "White"
+                                    }
+                                ]
+                            },
                             {
                                 "url": "http://hl7.org/fhir/us/core/StructureDefinition/us-core-ethnicity",
                                 "extension": [
@@ -189,147 +189,79 @@
                                         }
                                     },
                                     {
-                                        "url": "detailed",
-                                        "valueCoding": {
-                                            "system": "urn:oid:2.16.840.1.113883.6.238",
-                                            "code": "2180-8"
-                                        }
-                                    },
-                                    {
                                         "url": "text",
-                                        "valueString": "Puerto Rican"
+                                        "valueString": "Not Hipanic Or Latino"
                                     }
                                 ]
-                            }
-                        ],
-                        "identifier": [
-                            {
-                                "type": {
-                                    "coding": [
-                                        {
-                                            "system": "urn:mdi:temporary:code",
-                                            "code": "1000007",
-                                            "display": "Case Number"
-                                        }
-                                    ]
-                                },
-                                "value": "000009\n\n\n"
-                            },
-                            {
-                                "type": {
-                                    "coding": [
-                                        {
-                                            "system": "http://terminology.hl7.org/CodeSystem/v2-0203",
-                                            "code": "MR",
-                                            "display": "Medical Record Number"
-                                        }
-                                    ]
-                                },
-                                "system": "http://hl7.org/fhir/sid/us-ssn",
-                                "value": "555011234"
                             }
                         ],
                         "name": [
                             {
                                 "use": "official",
-                                "family": "Rogers",
+                                "family": "Brox",
                                 "given": [
-                                    "Jasmine",
-                                    "M."
+                                    "Blago",
+                                    "C"
                                 ]
                             }
                         ],
-                        "gender": "unknown",
-                        "birthDate": "1966-06-15",
+                        "gender": "male",
+                        "birthDate": "1982-01-02",
                         "address": [
                             {
-                                "use": "home"
+                                "extension": [
+                                    {
+                                        "url": "Text",
+                                        "valueString": "400 Windstream Street"
+                                    }
+                                ],
+                                "use": "home",
+                                "city": "Atlanta "
                             }
-                        ],
-                        "maritalStatus": {
-                            "coding": [
-                                {
-                                    "system": "http://terminology.hl7.org/CodeSystem/v3-MaritalStatus",
-                                    "code": "U",
-                                    "display": "unmarried"
-                                }
-                            ]
-                        }
+                        ]
                     },
                     "request": {
                         "method": "POST"
                     }
                 },
                 {
-                    "fullUrl": "34988fcc-1f91-4525-8158-b8f7fd816a00",
+                    "fullUrl": "6a5fb4fb-d603-4522-8287-418b915abd48",
                     "resource": {
                         "resourceType": "Practitioner",
-                        "id": "34988fcc-1f91-4525-8158-b8f7fd816a00",
+                        "id": "6a5fb4fb-d603-4522-8287-418b915abd48",
                         "meta": {
                             "profile": [
                                 "http://hl7.org/fhir/us/core/StructureDefinition/us-core-practitioner"
                             ]
                         },
+                        "identifier": [
+                            {
+                                "value": "34343"
+                            }
+                        ],
                         "name": [
                             {
-                                "family": "Jones",
+                                "use": "official",
+                                "family": "Duval",
                                 "given": [
-                                    "Jane"
-                                ]
-                            }
-                        ]
-                    },
-                    "request": {
-                        "method": "POST"
-                    }
-                },
-                {
-                    "fullUrl": "a1069609-63d8-4fcd-946f-5dcc74a44c50",
-                    "resource": {
-                        "resourceType": "Observation",
-                        "id": "a1069609-63d8-4fcd-946f-5dcc74a44c50",
-                        "meta": {
-                            "profile": [
-                                "http://hl7.org/fhir/us/odh/StructureDefinition/odh-UsualWork"
-                            ]
-                        },
-                        "category": [
-                            {
-                                "coding": [
-                                    {
-                                        "system": "http://terminology.hl7.org/CodeSystem/observation-category",
-                                        "code": "social-history",
-                                        "display": "social-history"
-                                    }
+                                    "Jennifer"
                                 ]
                             }
                         ],
-                        "code": {
-                            "coding": [
-                                {
-                                    "system": "http://loinc.org",
-                                    "code": "21843-8",
-                                    "display": "History of Usual occupation"
-                                }
-                            ]
-                        },
-                        "subject": {
-                            "reference": "ab237db2-d32b-4f4a-a8f5-92559806cccd"
-                        },
-                        "component": [
+                        "telecom": [
                             {
-                                "code": {
-                                    "coding": [
-                                        {
-                                            "system": "http://loinc.org",
-                                            "code": "21844-6",
-                                            "display": "History of Usual industry"
-                                        }
-                                    ]
-                                },
-                                "valueCodeableConcept": {
-                                    "text": "Health Insurance"
-                                }
+                                "value": "603-271-1235",
+                                "use": "work"
+                            }
+                        ],
+                        "address": [
+                            {
+                                "line": [
+                                    "246 Pleasant St. Suite 218"
+                                ],
+                                "city": "Concord",
+                                "state": "NH",
+                                "postalCode": "3301"
                             }
                         ]
                     },
@@ -338,20 +270,17 @@
                     }
                 },
                 {
-                    "fullUrl": "e68d7a76-7aa0-4155-bf31-88452dbf3645",
+                    "fullUrl": "7b9f62c7-1ad7-44e4-b44c-b53db3a745c1",
                     "resource": {
                         "resourceType": "Location",
-                        "id": "e68d7a76-7aa0-4155-bf31-88452dbf3645",
+                        "id": "7b9f62c7-1ad7-44e4-b44c-b53db3a745c1",
                         "meta": {
                             "profile": [
                                 "http://hl7.org/fhir/us/core/StructureDefinition/us-core-location"
                             ]
                         },
-                        "name": "400 Windstream Street",
                         "address": {
-                            "line": [
-                                "400 Windstream Street"
-                            ]
+                            "text": "456 Maple St., Manchester NH"
                         }
                     },
                     "request": {
@@ -359,32 +288,33 @@
                     }
                 },
                 {
-                    "fullUrl": "fab79bc8-860a-4bfa-8265-b2399a9301bf",
+                    "fullUrl": "3bf1c00a-f0fb-4d12-8f6b-a26b623951a9",
                     "resource": {
                         "resourceType": "Observation",
-                        "id": "fab79bc8-860a-4bfa-8265-b2399a9301bf",
+                        "id": "3bf1c00a-f0fb-4d12-8f6b-a26b623951a9",
                         "meta": {
                             "profile": [
-                                "http://hl7.org/fhir/us/mdi/StructureDefinition/Observation-death-injury-at-work"
+                                "http://hl7.org/fhir/us/mdi/StructureDefinition/Observation-tobacco-use-contributed-to-death"
                             ]
                         },
+                        "status": "preliminary",
                         "code": {
                             "coding": [
                                 {
                                     "system": "http://loinc.org",
-                                    "code": "69444-8",
-                                    "display": "Did death result from injury at work"
+                                    "code": "69443-0",
+                                    "display": "Did tobacco use contribute to death"
                                 }
                             ]
                         },
                         "subject": {
-                            "reference": "ab237db2-d32b-4f4a-a8f5-92559806cccd"
+                            "reference": "Patient/5aa504f0-682a-44e5-bd13-713953fcbff3"
                         },
                         "valueCodeableConcept": {
                             "coding": [
                                 {
-                                    "system": "urn:oid:2.16.840.1.113883.12.136",
-                                    "code": "N",
+                                    "system": "http://snomed.info/sct",
+                                    "code": "373067005",
                                     "display": "No"
                                 }
                             ]
@@ -395,51 +325,16 @@
                     }
                 },
                 {
-                    "fullUrl": "6cd8ee98-b2ac-4338-8d6d-b1443a258005",
+                    "fullUrl": "a08becf4-1c14-4246-82d4-e1b3eb060dcc",
                     "resource": {
                         "resourceType": "Observation",
-                        "id": "6cd8ee98-b2ac-4338-8d6d-b1443a258005",
-                        "meta": {
-                            "profile": [
-                                "http://hl7.org/fhir/us/mdi/StructureDefinition/Observation-tobacco-use-contributed-to-death"
-                            ]
-                        },
-                        "status": "final",
-                        "code": {
-                            "coding": [
-                                {
-                                    "system": "http://loinc.org",
-                                    "code": "69443-0"
-                                }
-                            ]
-                        },
-                        "subject": {
-                            "reference": "ab237db2-d32b-4f4a-a8f5-92559806cccd"
-                        },
-                        "valueCodeableConcept": {
-                            "coding": [
-                                {
-                                    "system": "http://snomed.info/sct",
-                                    "code": "373066001",
-                                    "display": "Yes"
-                                }
-                            ]
-                        }
-                    },
-                    "request": {
-                        "method": "POST"
-                    }
-                },
-                {
-                    "fullUrl": "654fe8ba-7d87-413a-9e51-98969df30d68",
-                    "resource": {
-                        "resourceType": "Observation",
-                        "id": "654fe8ba-7d87-413a-9e51-98969df30d68",
+                        "id": "a08becf4-1c14-4246-82d4-e1b3eb060dcc",
                         "meta": {
                             "profile": [
                                 "http://hl7.org/fhir/us/mdi/StructureDefinition/Observation-decedent-pregnancy"
                             ]
                         },
+                        "status": "preliminary",
                         "code": {
                             "coding": [
                                 {
@@ -450,7 +345,7 @@
                             ]
                         },
                         "subject": {
-                            "reference": "ab237db2-d32b-4f4a-a8f5-92559806cccd"
+                            "reference": "Patient/5aa504f0-682a-44e5-bd13-713953fcbff3"
                         }
                     },
                     "request": {
@@ -458,10 +353,10 @@
                     }
                 },
                 {
-                    "fullUrl": "d69f6da9-803d-4165-94c1-4f37b87b3484",
+                    "fullUrl": "7ed1f08a-a9b3-498e-98f0-b42a8509392e",
                     "resource": {
                         "resourceType": "Observation",
-                        "id": "d69f6da9-803d-4165-94c1-4f37b87b3484",
+                        "id": "7ed1f08a-a9b3-498e-98f0-b42a8509392e",
                         "meta": {
                             "profile": [
                                 "http://hl7.org/fhir/us/mdi/StructureDefinition/Observation-death-date"
@@ -478,37 +373,56 @@
                             ]
                         },
                         "subject": {
-                            "reference": "ab237db2-d32b-4f4a-a8f5-92559806cccd"
+                            "reference": "Patient/5aa504f0-682a-44e5-bd13-713953fcbff3"
                         },
-                        "effectiveDateTime": "2022-08-12T14:18:02-04:00",
-                        "valueDateTime": "2022-01-04T05:30:00-05:00"
+                        "effectiveDateTime": "2022-09-21T16:03:06-04:00",
+                        "valueDateTime": "0029-12-05T05:30:00-05:00"
                     },
                     "request": {
                         "method": "POST"
                     }
                 },
                 {
-                    "fullUrl": "8a979b31-62d6-48bd-b501-1ce786880fc6",
+                    "fullUrl": "5b47b8ee-058c-479b-a79a-dd46d62c1b4a",
                     "resource": {
                         "resourceType": "Observation",
-                        "id": "8a979b31-62d6-48bd-b501-1ce786880fc6",
+                        "id": "5b47b8ee-058c-479b-a79a-dd46d62c1b4a",
                         "meta": {
                             "profile": [
-                                "http://hl7.org/fhir/us/mdi/StructureDefinition/Observation-cause-of-death-condition"
+                                "http://hl7.org/fhir/us/mdi/StructureDefinition/Observation-cause-of-death-part1"
                             ]
                         },
                         "code": {
+                            "coding": [
+                                {
+                                    "system": "http://loinc.org",
+                                    "code": "69453-9"
+                                }
+                            ]
+                        },
+                        "subject": {
+                            "reference": "Patient/5aa504f0-682a-44e5-bd13-713953fcbff3"
+                        },
+                        "performer": [
+                            {
+                                "reference": "Practitioner/6a5fb4fb-d603-4522-8287-418b915abd48"
+                            }
+                        ],
+                        "valueCodeableConcept": {
                             "text": "Staphylococcal sepsis"
                         },
-                        "subject": {
-                            "reference": "ab237db2-d32b-4f4a-a8f5-92559806cccd"
-                        },
-                        "performer": [
-                            {
-                                "reference": "34988fcc-1f91-4525-8158-b8f7fd816a00"
-                            }
-                        ],
                         "component": [
+                            {
+                                "code": {
+                                    "coding": [
+                                        {
+                                            "system": "http://hl7.org/fhir/us/mdi/CodeSystem/CodeSystem-local-component-codes",
+                                            "code": "lineNumber"
+                                        }
+                                    ]
+                                },
+                                "valueInteger": 1
+                            },
                             {
                                 "code": {
                                     "coding": [
@@ -518,12 +432,7 @@
                                         }
                                     ]
                                 },
-                                "valueQuantity": {
-                                    "value": 3.0,
-                                    "unit": "d",
-                                    "system": "http://hl7.org/fhir/ValueSet/age-units",
-                                    "code": "d"
-                                }
+                                "valueString": "3 days"
                             }
                         ]
                     },
@@ -532,27 +441,46 @@
                     }
                 },
                 {
-                    "fullUrl": "8299503a-dc08-4e14-be9c-fb85b6c94ec7",
+                    "fullUrl": "58f34206-a69b-41d2-a2e1-46d507a48cc8",
                     "resource": {
                         "resourceType": "Observation",
-                        "id": "8299503a-dc08-4e14-be9c-fb85b6c94ec7",
+                        "id": "58f34206-a69b-41d2-a2e1-46d507a48cc8",
                         "meta": {
                             "profile": [
-                                "http://hl7.org/fhir/us/mdi/StructureDefinition/Observation-cause-of-death-condition"
+                                "http://hl7.org/fhir/us/mdi/StructureDefinition/Observation-cause-of-death-part1"
                             ]
                         },
                         "code": {
+                            "coding": [
+                                {
+                                    "system": "http://loinc.org",
+                                    "code": "69453-9"
+                                }
+                            ]
+                        },
+                        "subject": {
+                            "reference": "Patient/5aa504f0-682a-44e5-bd13-713953fcbff3"
+                        },
+                        "performer": [
+                            {
+                                "reference": "Practitioner/6a5fb4fb-d603-4522-8287-418b915abd48"
+                            }
+                        ],
+                        "valueCodeableConcept": {
                             "text": "Decubitus ulcers of back and buttocks"
                         },
-                        "subject": {
-                            "reference": "ab237db2-d32b-4f4a-a8f5-92559806cccd"
-                        },
-                        "performer": [
-                            {
-                                "reference": "34988fcc-1f91-4525-8158-b8f7fd816a00"
-                            }
-                        ],
                         "component": [
+                            {
+                                "code": {
+                                    "coding": [
+                                        {
+                                            "system": "http://hl7.org/fhir/us/mdi/CodeSystem/CodeSystem-local-component-codes",
+                                            "code": "lineNumber"
+                                        }
+                                    ]
+                                },
+                                "valueInteger": 2
+                            },
                             {
                                 "code": {
                                     "coding": [
@@ -562,12 +490,7 @@
                                         }
                                     ]
                                 },
-                                "valueQuantity": {
-                                    "value": 4.0,
-                                    "unit": "mo",
-                                    "system": "http://hl7.org/fhir/ValueSet/age-units",
-                                    "code": "mo"
-                                }
+                                "valueString": "4 months"
                             }
                         ]
                     },
@@ -576,27 +499,46 @@
                     }
                 },
                 {
-                    "fullUrl": "a031cb0e-c58e-4b26-bb4b-ee0ecb35fcf6",
+                    "fullUrl": "ea170aa2-70ac-40ce-b08e-10eccc431757",
                     "resource": {
                         "resourceType": "Observation",
-                        "id": "a031cb0e-c58e-4b26-bb4b-ee0ecb35fcf6",
+                        "id": "ea170aa2-70ac-40ce-b08e-10eccc431757",
                         "meta": {
                             "profile": [
-                                "http://hl7.org/fhir/us/mdi/StructureDefinition/Observation-cause-of-death-condition"
+                                "http://hl7.org/fhir/us/mdi/StructureDefinition/Observation-cause-of-death-part1"
                             ]
                         },
                         "code": {
-                            "text": "Anoxic encephalopathy"
+                            "coding": [
+                                {
+                                    "system": "http://loinc.org",
+                                    "code": "69453-9"
+                                }
+                            ]
                         },
                         "subject": {
-                            "reference": "ab237db2-d32b-4f4a-a8f5-92559806cccd"
+                            "reference": "Patient/5aa504f0-682a-44e5-bd13-713953fcbff3"
                         },
                         "performer": [
                             {
-                                "reference": "34988fcc-1f91-4525-8158-b8f7fd816a00"
+                                "reference": "Practitioner/6a5fb4fb-d603-4522-8287-418b915abd48"
                             }
                         ],
+                        "valueCodeableConcept": {
+                            "text": "Anoxic encephalopathy"
+                        },
                         "component": [
+                            {
+                                "code": {
+                                    "coding": [
+                                        {
+                                            "system": "http://hl7.org/fhir/us/mdi/CodeSystem/CodeSystem-local-component-codes",
+                                            "code": "lineNumber"
+                                        }
+                                    ]
+                                },
+                                "valueInteger": 3
+                            },
                             {
                                 "code": {
                                     "coding": [
@@ -606,12 +548,7 @@
                                         }
                                     ]
                                 },
-                                "valueQuantity": {
-                                    "value": 12.0,
-                                    "unit": "a",
-                                    "system": "http://hl7.org/fhir/ValueSet/age-units",
-                                    "code": "a"
-                                }
+                                "valueString": "12 years"
                             }
                         ]
                     },
@@ -620,50 +557,103 @@
                     }
                 },
                 {
-                    "fullUrl": "dd95b654-f17d-4f73-9a3f-073a7353596a",
-                    "resource": {
-                        "resourceType": "List",
-                        "id": "dd95b654-f17d-4f73-9a3f-073a7353596a",
-                        "meta": {
-                            "profile": [
-                                "http://hl7.org/fhir/us/mdi/StructureDefinition/List-cause-of-death-pathway"
-                            ]
-                        },
-                        "status": "current",
-                        "mode": "snapshot",
-                        "subject": {
-                            "reference": "ab237db2-d32b-4f4a-a8f5-92559806cccd"
-                        },
-                        "source": {
-                            "reference": "34988fcc-1f91-4525-8158-b8f7fd816a00"
-                        },
-                        "entry": [
-                            {
-                                "item": {
-                                    "reference": "8a979b31-62d6-48bd-b501-1ce786880fc6"
-                                }
-                            },
-                            {
-                                "item": {
-                                    "reference": "8299503a-dc08-4e14-be9c-fb85b6c94ec7"
-                                }
-                            },
-                            {
-                                "item": {
-                                    "reference": "a031cb0e-c58e-4b26-bb4b-ee0ecb35fcf6"
-                                }
-                            }
-                        ]
-                    },
-                    "request": {
-                        "method": "POST"
-                    }
-                },
-                {
-                    "fullUrl": "3cc302df-dbc6-47fd-a158-4930249cae90",
+                    "fullUrl": "08eba7b6-b287-4e52-b053-b7f038a5cbbd",
                     "resource": {
                         "resourceType": "Observation",
-                        "id": "3cc302df-dbc6-47fd-a158-4930249cae90",
+                        "id": "08eba7b6-b287-4e52-b053-b7f038a5cbbd",
+                        "meta": {
+                            "profile": [
+                                "http://hl7.org/fhir/us/mdi/StructureDefinition/Observation-cause-of-death-part1"
+                            ]
+                        },
+                        "code": {
+                            "coding": [
+                                {
+                                    "system": "http://loinc.org",
+                                    "code": "69453-9"
+                                }
+                            ]
+                        },
+                        "subject": {
+                            "reference": "Patient/5aa504f0-682a-44e5-bd13-713953fcbff3"
+                        },
+                        "performer": [
+                            {
+                                "reference": "Practitioner/6a5fb4fb-d603-4522-8287-418b915abd48"
+                            }
+                        ],
+                        "valueCodeableConcept": {
+                            "text": "Oxycodone and Alprazolam toxicity"
+                        },
+                        "component": [
+                            {
+                                "code": {
+                                    "coding": [
+                                        {
+                                            "system": "http://hl7.org/fhir/us/mdi/CodeSystem/CodeSystem-local-component-codes",
+                                            "code": "lineNumber"
+                                        }
+                                    ]
+                                },
+                                "valueInteger": 4
+                            },
+                            {
+                                "code": {
+                                    "coding": [
+                                        {
+                                            "system": "http://loinc.org",
+                                            "code": "69440-6"
+                                        }
+                                    ]
+                                },
+                                "valueString": "12 years"
+                            }
+                        ]
+                    },
+                    "request": {
+                        "method": "POST"
+                    }
+                },
+                {
+                    "fullUrl": "b6f97995-25b5-4c08-83ff-914c66d31aac",
+                    "resource": {
+                        "resourceType": "Observation",
+                        "id": "b6f97995-25b5-4c08-83ff-914c66d31aac",
+                        "meta": {
+                            "profile": [
+                                "http://hl7.org/fhir/us/mdi/StructureDefinition/Observation-contributing-cause-of-death-part2"
+                            ]
+                        },
+                        "code": {
+                            "coding": [
+                                {
+                                    "system": "http://loinc.org",
+                                    "code": "69441-4",
+                                    "display": "Other significant causes or conditions of death"
+                                }
+                            ]
+                        },
+                        "subject": {
+                            "reference": "Patient/5aa504f0-682a-44e5-bd13-713953fcbff3"
+                        },
+                        "performer": [
+                            {
+                                "reference": "Practitioner/6a5fb4fb-d603-4522-8287-418b915abd48"
+                            }
+                        ],
+                        "valueCodeableConcept": {
+                            "text": "Diabetes mellitus"
+                        }
+                    },
+                    "request": {
+                        "method": "POST"
+                    }
+                },
+                {
+                    "fullUrl": "1d728006-3785-4847-aaca-fe4352799c4b",
+                    "resource": {
+                        "resourceType": "Observation",
+                        "id": "1d728006-3785-4847-aaca-fe4352799c4b",
                         "meta": {
                             "profile": [
                                 "http://hl7.org/fhir/us/mdi/StructureDefinition/Observation-manner-of-death"
@@ -680,11 +670,11 @@
                             ]
                         },
                         "subject": {
-                            "reference": "ab237db2-d32b-4f4a-a8f5-92559806cccd"
+                            "reference": "Patient/5aa504f0-682a-44e5-bd13-713953fcbff3"
                         },
                         "performer": [
                             {
-                                "reference": "34988fcc-1f91-4525-8158-b8f7fd816a00"
+                                "reference": "Practitioner/6a5fb4fb-d603-4522-8287-418b915abd48"
                             }
                         ],
                         "valueCodeableConcept": {
@@ -700,89 +690,11 @@
                     "request": {
                         "method": "POST"
                     }
-                },
-                {
-                    "fullUrl": "298797ef-319e-4b99-81e3-ff477c38f6bb",
-                    "resource": {
-                        "resourceType": "Observation",
-                        "id": "298797ef-319e-4b99-81e3-ff477c38f6bb",
-                        "meta": {
-                            "profile": [
-                                "http://hl7.org/fhir/us/mdi/StructureDefinition/Observation-how-death-injury-occurred"
-                            ]
-                        },
-                        "code": {
-                            "coding": [
-                                {
-                                    "system": "http://loinc.org",
-                                    "code": " 11374-6",
-                                    "display": "Injury incident description Narrative"
-                                }
-                            ]
-                        },
-                        "subject": {
-                            "reference": "Patient/ab237db2-d32b-4f4a-a8f5-92559806cccd"
-                        },
-                        "performer": [
-                            {
-                                "reference": "Patient/ab237db2-d32b-4f4a-a8f5-92559806cccd"
-                            }
-                        ],
-                        "valueString": "Ingestion of medications"
-                    },
-                    "request": {
-                        "method": "POST"
-                    }
-                },
-                {
-                    "fullUrl": "d792a4b7-b468-445d-a18b-ecec9060e015",
-                    "resource": {
-                        "resourceType": "DocumentReference",
-                        "id": "d792a4b7-b468-445d-a18b-ecec9060e015",
-                        "meta": {
-                            "profile": [
-                                "http://hl7.org/fhir/us/mdi/StructureDefinition/DocumentReference-mdi-case-notes-summary"
-                            ]
-                        },
-                        "type": {
-                            "coding": [
-                                {
-                                    "system": "http://loinc.org",
-                                    "code": "47046-8",
-                                    "display": "Summary of death note"
-                                }
-                            ]
-                        },
-                        "category": [
-                            {
-                                "coding": [
-                                    {
-                                        "system": "http://hl7.org/fhir/us/mdi/CodeSystem/CodeSystem-mdi-codes",
-                                        "code": "mdi-case-notes-summary",
-                                        "display": "MDI Case Notes Summary"
-                                    }
-                                ]
-                            }
-                        ],
-                        "date": "2022-08-12T14:18:02.098-04:00",
-                        "content": [
-                            {
-                                "attachment": {
-                                    "contentType": "text/plain",
-                                    "language": "en-US",
-                                    "data": "VGhpcyA1NS15ZWFyLW9sZCB3b21hbiB3YXMgYWRtaXR0ZWQgdG8gTWFu4oCZcyBHcmVhdGVzdCBIb3NwaXRhbCB3aXRoIGxldGhhcmd5IGFuZCBmZXZlciBvbiAxLzEvMjIgZnJvbSBhIHNraWxsZWQgbnVyc2luZyBob21lIHdoZXJlIHNoZSB3YXMgYSByZXNpZGVudCBmb3IgMTIgeWVhcnMuICBTaGUgd2FzIGRpYWdub3NlZCB3aXRoIFN0YXBoeWxvY29jY2FsIHNlcHNpcyBhcmlzaW5nIGZyb20gbGFyZ2UgZGVjdWJpdHVzIHVsY2VycyBvZiBoZXIgYmFjayBhbmQgYnV0dG9ja3MuIERlc3BpdGUgdHJlYXRtZW50IHdpdGggaW50cmF2ZW5vdXMgYW50aWJpb3RpY3Mgc2hlIGRldmVsb3BlZCB3b3JzZW5pbmcgaHlwb3RlbnNpb24gYW5kIHNlcHRpYyBzaG9jayBhbmQgZGllZCBvbiB0aGUgM3JkIGhvc3BpdGFsIGRheS4KU2hlIGhhZCBhIHJlbW90ZSBoaXN0b3J5IG9mIGRydWcgYWJ1c2UuIFdoZW4gc2hlIHdhcyA0MyB5ZWFycyBvbGQgc2hlIGJlY2FtZSBhIHJlc2lkZW50IG9mIHRoZSBza2lsbGVkIG51cnNpbmcgZmFjaWxpdHkgYWZ0ZXIgc2hlIHN1cnZpdmVkIGFuIG92ZXJkb3NlIG9mIGFscHJhem9sYW0gYW5kIG94eWNvZG9uZSBidXQgd2FzIGxlZnQgd2l0aCBhbm94aWMgYnJhaW4gZGFtYWdlIGFuZCB3YXMgdW5hYmxlIHRvIGNhcmUgZm9yIGhlcnNlbGYuIFNoZSBwZXJpb2RpY2FsbHkgZGV2ZWxvcGVkIHByZXNzdXJlIHVsY2VycyBmcm9tIG1vc3RseSBiZWluZyBjb25maW5lZCB0byBiZWQuICBPdmVyIHRoZSA0IG1vbnRocyBiZWZvcmUgaGVyIGRlYXRoIHNoZSBkZXZlbG9wZWQgbmV3IHByZXNzdXJlIHVsY2VycyB0aGF0IHdlcmUgdW5yZXNwb25zaXZlIHRvIHRyZWF0bWVudCBiZWNhdXNlIG9mIGhlciBwb29yIG51dHJpdGlvbmFsIHN0YXR1cy4K"
-                                }
-                            }
-                        ]
-                    },
-                    "request": {
-                        "method": "POST"
-                    }
                 }
             ]
         },
         "fhirResponse": {
-            "name": "Jasmine M. Rogers",
+            "name": "Blago C Brox",
             "status": "Not Submitted",
             "statusCode": "",
             "state": ""
@@ -794,30 +706,35 @@
                 "FHIRResource": {},
                 "value": ""
             },
-            "CASEID": {
+            "MDICASEID": {
                 "status": "mapped",
                 "FHIRResource": {},
-                "value": "000009\n\n\n"
+                "value": "123789"
+            },
+            "EDRSCASEID": {
+                "status": "mapped",
+                "FHIRResource": {},
+                "value": "789123"
             },
             "FIRSTNAME": {
                 "status": "mapped",
                 "FHIRResource": {},
-                "value": "Jasmine"
+                "value": "Blago"
             },
             "MIDNAME": {
                 "status": "mapped",
                 "FHIRResource": {},
-                "value": "M."
+                "value": "C"
             },
             "LASTNAME": {
                 "status": "mapped",
                 "FHIRResource": {},
-                "value": "Rogers"
+                "value": "Brox"
             },
             "AGE": {
                 "status": "mapped",
                 "FHIRResource": {},
-                "value": "55"
+                "value": "40"
             },
             "AGEUNIT": {
                 "status": "mapped",
@@ -825,29 +742,29 @@
                 "value": "years"
             },
             "RACE": {
-                "status": "not mapped",
+                "status": "mapped",
                 "FHIRResource": {},
-                "value": ""
+                "value": "White"
             },
             "GENDER": {
                 "status": "mapped",
                 "FHIRResource": {},
-                "value": "F"
+                "value": "Male"
             },
             "ETHNICITY": {
                 "status": "mapped",
                 "FHIRResource": {},
-                "value": "Puerto Rican"
+                "value": "Not Hipanic Or Latino"
             },
             "BIRTHDATE": {
                 "status": "mapped",
                 "FHIRResource": {},
-                "value": "06/15/1966"
+                "value": "1/2/82"
             },
             "MRNNUMBER": {
-                "status": "mapped",
+                "status": "not mapped",
                 "FHIRResource": {},
-                "value": "555011234"
+                "value": ""
             },
             "JOBTITLE": {
                 "status": "not mapped",
@@ -855,9 +772,9 @@
                 "value": ""
             },
             "INDUSTRY": {
-                "status": "mapped",
+                "status": "not mapped",
                 "FHIRResource": {},
-                "value": "Health Insurance"
+                "value": ""
             },
             "LANGUAGE": {
                 "status": "not mapped",
@@ -865,9 +782,9 @@
                 "value": ""
             },
             "MARITAL": {
-                "status": "mapped",
+                "status": "not mapped",
                 "FHIRResource": {},
-                "value": "never married"
+                "value": ""
             },
             "POSSIBLEID": {
                 "status": "not mapped",
@@ -890,19 +807,19 @@
                 "value": "Anoxic encephalopathy"
             },
             "CAUSED": {
-                "status": "not mapped",
+                "status": "mapped",
                 "FHIRResource": {},
-                "value": ""
+                "value": "Oxycodone and Alprazolam toxicity"
             },
             "OSCOND": {
-                "status": "not mapped",
+                "status": "mapped",
                 "FHIRResource": {},
-                "value": ""
+                "value": "Diabetes mellitus"
             },
             "MANNER": {
                 "status": "mapped",
                 "FHIRResource": {},
-                "value": "Accidental"
+                "value": "Accidental death"
             },
             "DISPMETHOD": {
                 "status": "not mapped",
@@ -910,9 +827,9 @@
                 "value": ""
             },
             "CHOWNINJURY": {
-                "status": "mapped",
+                "status": "not mapped",
                 "FHIRResource": {},
-                "value": "Ingestion of medications"
+                "value": ""
             },
             "DURATIONA": {
                 "status": "mapped",
@@ -935,14 +852,14 @@
                 "value": "12 years"
             },
             "CASENOTES": {
-                "status": "mapped",
+                "status": "not mapped",
                 "FHIRResource": {},
-                "value": "This 55-year-old woman was admitted to Man’s Greatest Hospital with lethargy and fever on 1/1/22 from a skilled nursing home where she was a resident for 12 years.  She was diagnosed with Staphylococcal sepsis arising from large decubitus ulcers of her back and buttocks. Despite treatment with intravenous antibiotics she developed worsening hypotension and septic shock and died on the 3rd hospital day.\nShe had a remote history of drug abuse. When she was 43 years old she became a resident of the skilled nursing facility after she survived an overdose of alprazolam and oxycodone but was left with anoxic brain damage and was unable to care for herself. She periodically developed pressure ulcers from mostly being confined to bed.  Over the 4 months before her death she developed new pressure ulcers that were unresponsive to treatment because of her poor nutritional status.\n"
+                "value": ""
             },
             "ATWORK": {
-                "status": "mapped",
+                "status": "not mapped",
                 "FHIRResource": {},
-                "value": "no"
+                "value": ""
             },
             "JOBRELATED": {
                 "status": "not mapped",
@@ -972,7 +889,7 @@
             "CDEATHDATE": {
                 "status": "mapped",
                 "FHIRResource": {},
-                "value": "01/04/2022"
+                "value": "0530"
             },
             "CDEATHTIME": {
                 "status": "mapped",
@@ -1014,6 +931,16 @@
                 "FHIRResource": {},
                 "value": ""
             },
+            "CINJDATEEARLY": {
+                "status": "not mapped",
+                "FHIRResource": {},
+                "value": ""
+            },
+            "CINJDATELATE": {
+                "status": "not mapped",
+                "FHIRResource": {},
+                "value": ""
+            },
             "CIDATEFLAG": {
                 "status": "not mapped",
                 "FHIRResource": {},
@@ -1055,9 +982,9 @@
                 "value": ""
             },
             "RESCITY": {
-                "status": "not mapped",
+                "status": "mapped",
                 "FHIRResource": {},
-                "value": ""
+                "value": "Atlanta "
             },
             "RESCOUNTY": {
                 "status": "not mapped",
@@ -1074,186 +1001,141 @@
                 "FHIRResource": {},
                 "value": ""
             },
-            "DEATHPLACE": {
+            "RESCOUNTRY": {
+                "status": "mapped",
+                "FHIRResource": {},
+                "value": "US"
+            },
+            "DEATHLOCATION": {
+                "status": "mapped",
+                "FHIRResource": {},
+                "value": "456 Maple St., Manchester NH"
+            },
+            "INJURYLOCATION": {
                 "status": "not mapped",
                 "FHIRResource": {},
                 "value": ""
             },
-            "DEATHSTREET": {
+            "FOUNDADDR_STREET": {
+                "status": "not mapped",
+                "FHIRResource": {},
+                "value": ""
+            },
+            "FOUNDADDR_CITY": {
+                "status": "not mapped",
+                "FHIRResource": {},
+                "value": ""
+            },
+            "FOUNDADDR_COUNTY": {
+                "status": "not mapped",
+                "FHIRResource": {},
+                "value": ""
+            },
+            "FOUNDADDR_STATE": {
+                "status": "not mapped",
+                "FHIRResource": {},
+                "value": ""
+            },
+            "FOUNDADDR_ZIP": {
+                "status": "not mapped",
+                "FHIRResource": {},
+                "value": ""
+            },
+            "EVENTPLACE": {
+                "status": "not mapped",
+                "FHIRResource": {},
+                "value": ""
+            },
+            "EVENTADDR_STREET": {
+                "status": "not mapped",
+                "FHIRResource": {},
+                "value": ""
+            },
+            "EVENTADDR_CITY": {
+                "status": "not mapped",
+                "FHIRResource": {},
+                "value": ""
+            },
+            "EVENTADDR_COUNTY": {
+                "status": "not mapped",
+                "FHIRResource": {},
+                "value": ""
+            },
+            "EVENTADDR_STATE": {
+                "status": "not mapped",
+                "FHIRResource": {},
+                "value": ""
+            },
+            "EVENTADDR_ZIP": {
+                "status": "not mapped",
+                "FHIRResource": {},
+                "value": ""
+            },
+            "PRNPLACE": {
+                "status": "not mapped",
+                "FHIRResource": {},
+                "value": ""
+            },
+            "PRNSTREET": {
+                "status": "not mapped",
+                "FHIRResource": {},
+                "value": ""
+            },
+            "PRNCITY": {
+                "status": "not mapped",
+                "FHIRResource": {},
+                "value": ""
+            },
+            "PRNCOUNTY": {
+                "status": "not mapped",
+                "FHIRResource": {},
+                "value": ""
+            },
+            "PRNSTATE": {
+                "status": "not mapped",
+                "FHIRResource": {},
+                "value": ""
+            },
+            "PRNZIP": {
+                "status": "not mapped",
+                "FHIRResource": {},
+                "value": ""
+            },
+            "DISP_PLACE": {
+                "status": "not mapped",
+                "FHIRResource": {},
+                "value": ""
+            },
+            "DISP_STREET": {
+                "status": "not mapped",
+                "FHIRResource": {},
+                "value": ""
+            },
+            "DISP_CITY": {
+                "status": "not mapped",
+                "FHIRResource": {},
+                "value": ""
+            },
+            "DISP_COUNTY": {
+                "status": "not mapped",
+                "FHIRResource": {},
+                "value": ""
+            },
+            "DISP_STATE": {
+                "status": "not mapped",
+                "FHIRResource": {},
+                "value": ""
+            },
+            "DISP_ZIP": {
+                "status": "not mapped",
+                "FHIRResource": {},
+                "value": ""
+            },
+            "RESNAME": {
                 "status": "mapped",
                 "FHIRResource": {},
                 "value": "400 Windstream Street"
             },
-            "DEATHCITY": {
-                "status": "not mapped",
-                "FHIRResource": {},
-                "value": ""
-            },
-            "DEATHCOUNTY": {
-                "status": "not mapped",
-                "FHIRResource": {},
-                "value": ""
-            },
-            "DEATHSTATE": {
-                "status": "not mapped",
-                "FHIRResource": {},
-                "value": ""
-            },
-            "DEATHZIP": {
-                "status": "not mapped",
-                "FHIRResource": {},
-                "value": ""
-            },
-            "FOUNDADDR_STREET": {
-                "status": "not mapped",
-                "FHIRResource": {},
-                "value": ""
-            },
-            "FOUNDADDR_CITY": {
-                "status": "not mapped",
-                "FHIRResource": {},
-                "value": ""
-            },
-            "FOUNDADDR_COUNTY": {
-                "status": "not mapped",
-                "FHIRResource": {},
-                "value": ""
-            },
-            "FOUNDADDR_STATE": {
-                "status": "not mapped",
-                "FHIRResource": {},
-                "value": ""
-            },
-            "FOUNDADDR_ZIP": {
-                "status": "not mapped",
-                "FHIRResource": {},
-                "value": ""
-            },
-            "EVENTPLACE": {
-                "status": "not mapped",
-                "FHIRResource": {},
-                "value": ""
-            },
-            "EVENTADDR_STREET": {
-                "status": "not mapped",
-                "FHIRResource": {},
-                "value": ""
-            },
-            "EVENTADDR_CITY": {
-                "status": "not mapped",
-                "FHIRResource": {},
-                "value": ""
-            },
-            "EVENTADDR_COUNTY": {
-                "status": "not mapped",
-                "FHIRResource": {},
-                "value": ""
-            },
-            "EVENTADDR_STATE": {
-                "status": "not mapped",
-                "FHIRResource": {},
-                "value": ""
-            },
-            "EVENTADDR_ZIP": {
-                "status": "not mapped",
-                "FHIRResource": {},
-                "value": ""
-            },
-            "PRNPLACE": {
-                "status": "not mapped",
-                "FHIRResource": {},
-                "value": ""
-            },
-            "PRNSTREET": {
-                "status": "not mapped",
-                "FHIRResource": {},
-                "value": ""
-            },
-            "PRNCITY": {
-                "status": "not mapped",
-                "FHIRResource": {},
-                "value": ""
-            },
-            "PRNCOUNTY": {
-                "status": "not mapped",
-                "FHIRResource": {},
-                "value": ""
-            },
-            "PRNSTATE": {
-                "status": "not mapped",
-                "FHIRResource": {},
-                "value": ""
-            },
-            "PRNZIP": {
-                "status": "not mapped",
-                "FHIRResource": {},
-                "value": ""
-            },
-            "DISP_PLACE": {
-                "status": "not mapped",
-                "FHIRResource": {},
-                "value": ""
-            },
-            "DISP_STREET": {
-                "status": "not mapped",
-                "FHIRResource": {},
-                "value": ""
-            },
-            "DISP_CITY": {
-                "status": "not mapped",
-                "FHIRResource": {},
-                "value": ""
-            },
-            "DISP_COUNTY": {
-                "status": "not mapped",
-                "FHIRResource": {},
-                "value": ""
-            },
-            "DISP_STATE": {
-                "status": "not mapped",
-                "FHIRResource": {},
-                "value": ""
-            },
-            "DISP_ZIP": {
-                "status": "not mapped",
-                "FHIRResource": {},
-                "value": ""
-            },
-            "CINJPLACE": {
-                "status": "not mapped",
-                "FHIRResource": {},
-                "value": ""
-            },
-            "CINJSTREET": {
-                "status": "not mapped",
-                "FHIRResource": {},
-                "value": ""
-            },
-            "CINJCITY": {
-                "status": "not mapped",
-                "FHIRResource": {},
-                "value": ""
-            },
-            "CINJCOUNTY": {
-                "status": "not mapped",
-                "FHIRResource": {},
-                "value": ""
-            },
-            "CINJSTATE": {
-                "status": "not mapped",
-                "FHIRResource": {},
-                "value": ""
-            },
-            "CINJZIP": {
-                "status": "not mapped",
-                "FHIRResource": {},
-                "value": ""
-            },
-            "RESNAME": {
-                "status": "not mapped",
-                "FHIRResource": {},
-                "value": ""
-            },
             "LKAWHERE": {
                 "status": "not mapped",
                 "FHIRResource": {},
@@ -1290,9 +1172,9 @@
                 "value": ""
             },
             "CERTIFIER_NAME": {
-                "status": "mapped",
+                "status": "not mapped",
                 "FHIRResource": {},
-                "value": "Jane Jones"
+                "value": ""
             },
             "CERTIFIER_TYPE": {
                 "status": "not mapped",
@@ -1324,7 +1206,7 @@
                 "FHIRResource": {},
                 "value": ""
             },
-            "AUTOPUSED": {
+            "AUTOPSYRESULTSAVAILABLE": {
                 "status": "not mapped",
                 "FHIRResource": {},
                 "value": ""
@@ -1337,2640 +1219,57 @@
             "PREGNANT": {
                 "status": "mapped",
                 "FHIRResource": {},
-                "value": "no"
+                "value": "Not pregnant in last 12 months"
             },
             "TOBACCO": {
                 "status": "mapped",
                 "FHIRResource": {},
-                "value": "yes"
+                "value": "No"
             },
-            "success": {
-                "status": "not mapped",
-                "FHIRResource": {},
-                "value": ""
-            }
-        }
-    },
-    {
-        "fhirBundle": {
-            "resourceType": "Bundle",
-            "type": "batch",
-            "entry": [
-                {
-                    "fullUrl": "240b814d-fd84-4bd3-ad9d-22c82612055e",
-                    "resource": {
-                        "resourceType": "Composition",
-                        "id": "240b814d-fd84-4bd3-ad9d-22c82612055e",
-                        "meta": {
-                            "profile": [
-                                "http://hl7.org/fhir/us/mdi/StructureDefinition/Composition-mdi-to-edrs"
-                            ]
-                        },
-                        "extension": [
-                            {
-                                "url": "http://hl7.org/fhir/us/mdi/StructureDefinition/Extension-tracking-number",
-                                "valueIdentifier": {
-                                    "type": {
-                                        "coding": [
-                                            {
-                                                "system": "http://hl7.org/fhir/us/mdi/CodeSystem/CodeSystem-mdi-codes",
-                                                "code": "mdi-case-number"
-                                            }
-                                        ]
-                                    },
-                                    "value": "000010\n\n\n"
-                                }
-                            }
-                        ],
-                        "identifier": {
-                            "type": {
-                                "coding": [
-                                    {
-                                        "system": "urn:mdi:temporary:code",
-                                        "code": "1000007",
-                                        "display": "Case Number"
-                                    }
-                                ]
-                            },
-                            "value": "000010\n\n\n"
-                        },
-                        "status": "preliminary",
-                        "type": {
-                            "coding": [
-                                {
-                                    "system": "http://loinc.org",
-                                    "code": "86807-5",
-                                    "display": "Death administrative information Document"
-                                }
-                            ]
-                        },
-                        "subject": {
-                            "reference": "Patient/c3427fbd-6d57-40ed-a56a-08e373f7d03b"
-                        },
-                        "date": "2022-08-12T14:18:02-04:00",
-                        "author": [
-                            {
-                                "reference": "Practitioner/8d1cfb62-a3f0-4f1f-9107-a6dd5eafd7fc"
-                            }
-                        ],
-                        "section": [
-                            {
-                                "code": {
-                                    "coding": [
-                                        {
-                                            "system": "http://hl7.org/fhir/us/mdi/CodeSystem/CodeSystem-mdi-codes",
-                                            "code": "demographics"
-                                        }
-                                    ]
-                                },
-                                "entry": [
-                                    {
-                                        "reference": "5af4dd29-2e29-4b32-9d7b-c0bdd5e6c151"
-                                    }
-                                ]
-                            },
-                            {
-                                "code": {
-                                    "coding": [
-                                        {
-                                            "system": "http://hl7.org/fhir/us/mdi/CodeSystem/CodeSystem-mdi-codes",
-                                            "code": "circumstances"
-                                        }
-                                    ]
-                                },
-                                "entry": [
-                                    {
-                                        "reference": "743c8b51-be4c-4e55-8248-e8f068b35ceb"
-                                    },
-                                    {
-                                        "reference": "4f6e0608-f4bb-45f2-98af-a507b8611d91"
-                                    },
-                                    {
-                                        "reference": "8e184dd2-76f1-444a-bc7f-2fa6458bd2b6"
-                                    },
-                                    {
-                                        "reference": "8b73c371-d426-4bf7-ba8d-0d8557701a21"
-                                    }
-                                ]
-                            },
-                            {
-                                "code": {
-                                    "coding": [
-                                        {
-                                            "system": "http://hl7.org/fhir/us/mdi/CodeSystem/CodeSystem-mdi-codes",
-                                            "code": "jurisdiction"
-                                        }
-                                    ]
-                                },
-                                "entry": [
-                                    {
-                                        "reference": "be139337-27fc-4782-babf-d5ee0d4ded33"
-                                    }
-                                ]
-                            },
-                            {
-                                "code": {
-                                    "coding": [
-                                        {
-                                            "system": "http://hl7.org/fhir/us/mdi/CodeSystem/CodeSystem-mdi-codes",
-                                            "code": "cause-manner"
-                                        }
-                                    ]
-                                },
-                                "entry": [
-                                    {
-                                        "reference": "6fea4bed-f9ce-4095-b474-9dd1d75198dd"
-                                    },
-                                    {
-                                        "reference": "9dac8e8f-8dd0-460a-ba75-2fd0088f2308"
-                                    },
-                                    {
-                                        "reference": "66ede1f4-d839-4f08-9aa2-5cd1b28654e6"
-                                    },
-                                    {
-                                        "reference": "46fe3ed2-f2b5-4dcb-8c1c-5d4259fc9e56"
-                                    },
-                                    {
-                                        "reference": "cd18c2de-34fd-432a-84b2-5d2810131999"
-                                    }
-                                ]
-                            },
-                            {
-                                "code": {
-                                    "coding": [
-                                        {
-                                            "system": "http://hl7.org/fhir/us/mdi/CodeSystem/CodeSystem-mdi-codes",
-                                            "code": "narratives"
-                                        }
-                                    ]
-                                },
-                                "entry": [
-                                    {
-                                        "reference": "f464a347-72f0-4be2-af3a-fc85a6ce94be"
-                                    }
-                                ]
-                            }
-                        ]
-                    },
-                    "request": {
-                        "method": "POST"
-                    }
-                },
-                {
-                    "fullUrl": "c3427fbd-6d57-40ed-a56a-08e373f7d03b",
-                    "resource": {
-                        "resourceType": "Patient",
-                        "id": "c3427fbd-6d57-40ed-a56a-08e373f7d03b",
-                        "meta": {
-                            "profile": [
-                                "http://hl7.org/fhir/us/core/StructureDefinition/us-core-patient"
-                            ]
-                        },
-                        "extension": [
-                            {
-                                "url": "http://hl7.org/fhir/us/core/StructureDefinition/us-core-ethnicity",
-                                "extension": [
-                                    {
-                                        "url": "ombCategory",
-                                        "valueCoding": {
-                                            "system": "urn:oid:2.16.840.1.113883.6.238",
-                                            "code": "2186-5"
-                                        }
-                                    },
-                                    {
-                                        "url": "text",
-                                        "valueString": "Not Hispanic or Latino"
-                                    }
-                                ]
-                            }
-                        ],
-                        "identifier": [
-                            {
-                                "type": {
-                                    "coding": [
-                                        {
-                                            "system": "urn:mdi:temporary:code",
-                                            "code": "1000007",
-                                            "display": "Case Number"
-                                        }
-                                    ]
-                                },
-                                "value": "000010\n\n\n"
-                            },
-                            {
-                                "type": {
-                                    "coding": [
-                                        {
-                                            "system": "http://terminology.hl7.org/CodeSystem/v2-0203",
-                                            "code": "MR",
-                                            "display": "Medical Record Number"
-                                        }
-                                    ]
-                                },
-                                "system": "http://hl7.org/fhir/sid/us-ssn",
-                                "value": "987054321"
-                            }
-                        ],
-                        "name": [
-                            {
-                                "use": "official",
-                                "family": "Freeman",
-                                "given": [
-                                    "Alice",
-                                    "J."
-                                ]
-                            }
-                        ],
-                        "gender": "unknown",
-                        "birthDate": "1978-03-12",
-                        "address": [
-                            {
-                                "use": "home"
-                            }
-                        ],
-                        "maritalStatus": {
-                            "coding": [
-                                {
-                                    "system": "http://terminology.hl7.org/CodeSystem/v3-MaritalStatus",
-                                    "code": "U",
-                                    "display": "unmarried"
-                                }
-                            ]
-                        }
-                    },
-                    "request": {
-                        "method": "POST"
-                    }
-                },
-                {
-                    "fullUrl": "8d1cfb62-a3f0-4f1f-9107-a6dd5eafd7fc",
-                    "resource": {
-                        "resourceType": "Practitioner",
-                        "id": "8d1cfb62-a3f0-4f1f-9107-a6dd5eafd7fc",
-                        "meta": {
-                            "profile": [
-                                "http://hl7.org/fhir/us/core/StructureDefinition/us-core-practitioner"
-                            ]
-                        },
-                        "name": [
-                            {
-                                "family": "Smith",
-                                "given": [
-                                    "Joanne"
-                                ]
-                            }
-                        ]
-                    },
-                    "request": {
-                        "method": "POST"
-                    }
-                },
-                {
-                    "fullUrl": "5af4dd29-2e29-4b32-9d7b-c0bdd5e6c151",
-                    "resource": {
-                        "resourceType": "Observation",
-                        "id": "5af4dd29-2e29-4b32-9d7b-c0bdd5e6c151",
-                        "meta": {
-                            "profile": [
-                                "http://hl7.org/fhir/us/odh/StructureDefinition/odh-UsualWork"
-                            ]
-                        },
-                        "category": [
-                            {
-                                "coding": [
-                                    {
-                                        "system": "http://terminology.hl7.org/CodeSystem/observation-category",
-                                        "code": "social-history",
-                                        "display": "social-history"
-                                    }
-                                ]
-                            }
-                        ],
-                        "code": {
-                            "coding": [
-                                {
-                                    "system": "http://loinc.org",
-                                    "code": "21843-8",
-                                    "display": "History of Usual occupation"
-                                }
-                            ]
-                        },
-                        "subject": {
-                            "reference": "c3427fbd-6d57-40ed-a56a-08e373f7d03b"
-                        },
-                        "component": [
-                            {
-                                "code": {
-                                    "coding": [
-                                        {
-                                            "system": "http://loinc.org",
-                                            "code": "21844-6",
-                                            "display": "History of Usual industry"
-                                        }
-                                    ]
-                                },
-                                "valueCodeableConcept": {
-                                    "text": "Fast food"
-                                }
-                            }
-                        ]
-                    },
-                    "request": {
-                        "method": "POST"
-                    }
-                },
-                {
-                    "fullUrl": "743c8b51-be4c-4e55-8248-e8f068b35ceb",
-                    "resource": {
-                        "resourceType": "Location",
-                        "id": "743c8b51-be4c-4e55-8248-e8f068b35ceb",
-                        "meta": {
-                            "profile": [
-                                "http://hl7.org/fhir/us/core/StructureDefinition/us-core-location"
-                            ]
-                        },
-                        "name": "112 Miramar Ct",
-                        "address": {
-                            "line": [
-                                "112 Miramar Ct"
-                            ]
-                        }
-                    },
-                    "request": {
-                        "method": "POST"
-                    }
-                },
-                {
-                    "fullUrl": "4f6e0608-f4bb-45f2-98af-a507b8611d91",
-                    "resource": {
-                        "resourceType": "Observation",
-                        "id": "4f6e0608-f4bb-45f2-98af-a507b8611d91",
-                        "meta": {
-                            "profile": [
-                                "http://hl7.org/fhir/us/mdi/StructureDefinition/Observation-death-injury-at-work"
-                            ]
-                        },
-                        "code": {
-                            "coding": [
-                                {
-                                    "system": "http://loinc.org",
-                                    "code": "69444-8",
-                                    "display": "Did death result from injury at work"
-                                }
-                            ]
-                        },
-                        "subject": {
-                            "reference": "c3427fbd-6d57-40ed-a56a-08e373f7d03b"
-                        },
-                        "valueCodeableConcept": {
-                            "coding": [
-                                {
-                                    "system": "urn:oid:2.16.840.1.113883.12.136",
-                                    "code": "N",
-                                    "display": "No"
-                                }
-                            ]
-                        }
-                    },
-                    "request": {
-                        "method": "POST"
-                    }
-                },
-                {
-                    "fullUrl": "8e184dd2-76f1-444a-bc7f-2fa6458bd2b6",
-                    "resource": {
-                        "resourceType": "Observation",
-                        "id": "8e184dd2-76f1-444a-bc7f-2fa6458bd2b6",
-                        "meta": {
-                            "profile": [
-                                "http://hl7.org/fhir/us/mdi/StructureDefinition/Observation-tobacco-use-contributed-to-death"
-                            ]
-                        },
-                        "status": "final",
-                        "code": {
-                            "coding": [
-                                {
-                                    "system": "http://loinc.org",
-                                    "code": "69443-0"
-                                }
-                            ]
-                        },
-                        "subject": {
-                            "reference": "c3427fbd-6d57-40ed-a56a-08e373f7d03b"
-                        },
-                        "valueCodeableConcept": {
-                            "coding": [
-                                {
-                                    "system": "http://snomed.info/sct",
-                                    "code": "373067005",
-                                    "display": "No"
-                                }
-                            ]
-                        }
-                    },
-                    "request": {
-                        "method": "POST"
-                    }
-                },
-                {
-                    "fullUrl": "8b73c371-d426-4bf7-ba8d-0d8557701a21",
-                    "resource": {
-                        "resourceType": "Observation",
-                        "id": "8b73c371-d426-4bf7-ba8d-0d8557701a21",
-                        "meta": {
-                            "profile": [
-                                "http://hl7.org/fhir/us/mdi/StructureDefinition/Observation-decedent-pregnancy"
-                            ]
-                        },
-                        "code": {
-                            "coding": [
-                                {
-                                    "system": "http://loinc.org",
-                                    "code": "69442-2",
-                                    "display": "Timing of recent pregnancy in relation to death"
-                                }
-                            ]
-                        },
-                        "subject": {
-                            "reference": "c3427fbd-6d57-40ed-a56a-08e373f7d03b"
-                        }
-                    },
-                    "request": {
-                        "method": "POST"
-                    }
-                },
-                {
-                    "fullUrl": "be139337-27fc-4782-babf-d5ee0d4ded33",
-                    "resource": {
-                        "resourceType": "Observation",
-                        "id": "be139337-27fc-4782-babf-d5ee0d4ded33",
-                        "meta": {
-                            "profile": [
-                                "http://hl7.org/fhir/us/mdi/StructureDefinition/Observation-death-date"
-                            ]
-                        },
-                        "status": "final",
-                        "code": {
-                            "coding": [
-                                {
-                                    "system": "http://loinc.org",
-                                    "code": "81956-5",
-                                    "display": "Date+time of death"
-                                }
-                            ]
-                        },
-                        "subject": {
-                            "reference": "c3427fbd-6d57-40ed-a56a-08e373f7d03b"
-                        },
-                        "effectiveDateTime": "2022-08-12T14:18:02-04:00",
-                        "valueDateTime": "2022-01-08T15:30:00-05:00"
-                    },
-                    "request": {
-                        "method": "POST"
-                    }
-                },
-                {
-                    "fullUrl": "6fea4bed-f9ce-4095-b474-9dd1d75198dd",
-                    "resource": {
-                        "resourceType": "Observation",
-                        "id": "6fea4bed-f9ce-4095-b474-9dd1d75198dd",
-                        "meta": {
-                            "profile": [
-                                "http://hl7.org/fhir/us/mdi/StructureDefinition/Observation-cause-of-death-condition"
-                            ]
-                        },
-                        "code": {
-                            "text": "Fentanyl toxicity"
-                        },
-                        "subject": {
-                            "reference": "c3427fbd-6d57-40ed-a56a-08e373f7d03b"
-                        },
-                        "performer": [
-                            {
-                                "reference": "8d1cfb62-a3f0-4f1f-9107-a6dd5eafd7fc"
-                            }
-                        ],
-                        "component": [
-                            {
-                                "code": {
-                                    "coding": [
-                                        {
-                                            "system": "http://loinc.org",
-                                            "code": "69440-6"
-                                        }
-                                    ]
-                                },
-                                "valueString": "minutes to hours"
-                            }
-                        ]
-                    },
-                    "request": {
-                        "method": "POST"
-                    }
-                },
-                {
-                    "fullUrl": "9dac8e8f-8dd0-460a-ba75-2fd0088f2308",
-                    "resource": {
-                        "resourceType": "Observation",
-                        "id": "9dac8e8f-8dd0-460a-ba75-2fd0088f2308",
-                        "meta": {
-                            "profile": [
-                                "http://hl7.org/fhir/us/mdi/StructureDefinition/Observation-cause-of-death-condition"
-                            ]
-                        },
-                        "subject": {
-                            "reference": "c3427fbd-6d57-40ed-a56a-08e373f7d03b"
-                        },
-                        "performer": [
-                            {
-                                "reference": "8d1cfb62-a3f0-4f1f-9107-a6dd5eafd7fc"
-                            }
-                        ]
-                    },
-                    "request": {
-                        "method": "POST"
-                    }
-                },
-                {
-                    "fullUrl": "66ede1f4-d839-4f08-9aa2-5cd1b28654e6",
-                    "resource": {
-                        "resourceType": "List",
-                        "id": "66ede1f4-d839-4f08-9aa2-5cd1b28654e6",
-                        "meta": {
-                            "profile": [
-                                "http://hl7.org/fhir/us/mdi/StructureDefinition/List-cause-of-death-pathway"
-                            ]
-                        },
-                        "status": "current",
-                        "mode": "snapshot",
-                        "subject": {
-                            "reference": "c3427fbd-6d57-40ed-a56a-08e373f7d03b"
-                        },
-                        "source": {
-                            "reference": "8d1cfb62-a3f0-4f1f-9107-a6dd5eafd7fc"
-                        },
-                        "entry": [
-                            {
-                                "item": {
-                                    "reference": "6fea4bed-f9ce-4095-b474-9dd1d75198dd"
-                                }
-                            },
-                            {
-                                "item": {
-                                    "reference": "9dac8e8f-8dd0-460a-ba75-2fd0088f2308"
-                                }
-                            }
-                        ]
-                    },
-                    "request": {
-                        "method": "POST"
-                    }
-                },
-                {
-                    "fullUrl": "46fe3ed2-f2b5-4dcb-8c1c-5d4259fc9e56",
-                    "resource": {
-                        "resourceType": "Observation",
-                        "id": "46fe3ed2-f2b5-4dcb-8c1c-5d4259fc9e56",
-                        "meta": {
-                            "profile": [
-                                "http://hl7.org/fhir/us/mdi/StructureDefinition/Observation-manner-of-death"
-                            ]
-                        },
-                        "status": "final",
-                        "code": {
-                            "coding": [
-                                {
-                                    "system": "http://loinc.org",
-                                    "code": "69449-7",
-                                    "display": "Manner of death"
-                                }
-                            ]
-                        },
-                        "subject": {
-                            "reference": "c3427fbd-6d57-40ed-a56a-08e373f7d03b"
-                        },
-                        "performer": [
-                            {
-                                "reference": "8d1cfb62-a3f0-4f1f-9107-a6dd5eafd7fc"
-                            }
-                        ],
-                        "valueCodeableConcept": {
-                            "coding": [
-                                {
-                                    "system": "http://snomed.info/sct",
-                                    "code": "7878000",
-                                    "display": "Accidental Death"
-                                }
-                            ]
-                        }
-                    },
-                    "request": {
-                        "method": "POST"
-                    }
-                },
-                {
-                    "fullUrl": "cd18c2de-34fd-432a-84b2-5d2810131999",
-                    "resource": {
-                        "resourceType": "Observation",
-                        "id": "cd18c2de-34fd-432a-84b2-5d2810131999",
-                        "meta": {
-                            "profile": [
-                                "http://hl7.org/fhir/us/mdi/StructureDefinition/Observation-how-death-injury-occurred"
-                            ]
-                        },
-                        "code": {
-                            "coding": [
-                                {
-                                    "system": "http://loinc.org",
-                                    "code": " 11374-6",
-                                    "display": "Injury incident description Narrative"
-                                }
-                            ]
-                        },
-                        "subject": {
-                            "reference": "Patient/c3427fbd-6d57-40ed-a56a-08e373f7d03b"
-                        },
-                        "performer": [
-                            {
-                                "reference": "Patient/c3427fbd-6d57-40ed-a56a-08e373f7d03b"
-                            }
-                        ],
-                        "valueString": "Ingested counterfeit medication"
-                    },
-                    "request": {
-                        "method": "POST"
-                    }
-                },
-                {
-                    "fullUrl": "f464a347-72f0-4be2-af3a-fc85a6ce94be",
-                    "resource": {
-                        "resourceType": "DocumentReference",
-                        "id": "f464a347-72f0-4be2-af3a-fc85a6ce94be",
-                        "meta": {
-                            "profile": [
-                                "http://hl7.org/fhir/us/mdi/StructureDefinition/DocumentReference-mdi-case-notes-summary"
-                            ]
-                        },
-                        "type": {
-                            "coding": [
-                                {
-                                    "system": "http://loinc.org",
-                                    "code": "47046-8",
-                                    "display": "Summary of death note"
-                                }
-                            ]
-                        },
-                        "category": [
-                            {
-                                "coding": [
-                                    {
-                                        "system": "http://hl7.org/fhir/us/mdi/CodeSystem/CodeSystem-mdi-codes",
-                                        "code": "mdi-case-notes-summary",
-                                        "display": "MDI Case Notes Summary"
-                                    }
-                                ]
-                            }
-                        ],
-                        "date": "2022-08-12T14:18:02.772-04:00",
-                        "content": [
-                            {
-                                "attachment": {
-                                    "contentType": "text/plain",
-                                    "language": "en-US",
-                                    "data": "VGhpcyA0Mi15ZWFyLW9sZCB3b21hbiB3YXMgZm91bmQgdW5yZXNwb25zaXZlIG9uIGEgY291Y2ggaW4gYSBob3VzZSB3aGVyZSBzaGUgd2FzIGF0dGVuZGluZyBhIHBhcnR5LiAgUmVzcG9uZGluZyBwYXJhbWVkaWNzIGZvdW5kIGhlciBwdWxzZWxlc3MgYW5kIGFwbmVpYy4gIFJlc3VzY2l0YXRpdmUgZWZmb3J0cyB3ZXJlIHVuc3VjY2Vzc2Z1bC4gIEhlciBmcmllbmQgc3RhdGVkIHRoYXQgZWFybGllciBpbiB0aGUgZXZlbmluZyBzaGUgaGFkIHB1cmNoYXNlZCBzb21lIOKAnG94eeKAnSBmcm9tIGEgbmVpZ2hib3IuICBUaGVyZSB3YXMgYSBoaXN0b3J5IG9mIGhpZ2ggYmxvb2QgcHJlc3N1cmUuCkF0IGF1dG9wc3ksIHRoZSBoZWFydCB3YXMgZW5sYXJnZWQsIGFuZCB0aGUgbGVmdCB2ZW50cmljbGUgd2FzIHRoaWNrZW5lZCBjb25zaXN0ZW50IHdpdGggaHlwZXJ0ZW5zaXZlIGhlYXJ0IGRpc2Vhc2UuICBObyBvdGhlciBwYXRob2xvZ2ljIGZpbmRpbmdzIHdlcmUgaWRlbnRpZmllZC4gCkJsb29kIGNvbnRhaW5lZCBhIGZhdGFsIGNvbmNlbnRyYXRpb24gb2YgZmF0YWwgYW5kIGEgdHJhY2UgYW1vdW50IG9mIGRlbHRhLTkgdGV0cmFoeWRyb2Nhbm5hYmlub2wuICBObyBveHljb2RvbmUgb3Igb3RoZXIgc3Vic3RhbmNlcyB3ZXJlIGRldGVjdGVkLgo="
-                                }
-                            }
-                        ]
-                    },
-                    "request": {
-                        "method": "POST"
-                    }
-                }
-            ]
-        },
-        "fhirResponse": {
-            "name": "Alice J. Freeman",
-            "status": "Not Submitted",
-            "statusCode": "",
-            "state": ""
-        },
-        "Narrative": "",
-        "fields": {
-            "SYSTEMID": {
+            "TRANSPORTATION": {
                 "status": "not mapped",
                 "FHIRResource": {},
                 "value": ""
             },
-            "CASEID": {
+            "MENAME": {
                 "status": "mapped",
                 "FHIRResource": {},
-                "value": "000010\n\n\n"
+                "value": "Jennifer Duval"
             },
-            "FIRSTNAME": {
+            "MEPHONE": {
                 "status": "mapped",
                 "FHIRResource": {},
-                "value": "Alice"
+                "value": "603-271-1235"
             },
-            "MIDNAME": {
+            "MELICENSE": {
                 "status": "mapped",
                 "FHIRResource": {},
-                "value": "J."
+                "value": "34343"
             },
-            "LASTNAME": {
+            "ME_STREET": {
                 "status": "mapped",
                 "FHIRResource": {},
-                "value": "Freeman"
+                "value": "246 Pleasant St. Suite 218"
             },
-            "AGE": {
+            "ME_CITY": {
                 "status": "mapped",
                 "FHIRResource": {},
-                "value": "43"
+                "value": "Concord"
             },
-            "AGEUNIT": {
+            "ME_COUNTY": {
+                "status": "not mapped",
+                "FHIRResource": {},
+                "value": ""
+            },
+            "ME_STATE": {
                 "status": "mapped",
                 "FHIRResource": {},
-                "value": "years"
+                "value": "NH"
             },
-            "RACE": {
-                "status": "not mapped",
-                "FHIRResource": {},
-                "value": ""
-            },
-            "GENDER": {
+            "ME_ZIP": {
                 "status": "mapped",
                 "FHIRResource": {},
-                "value": "F"
-            },
-            "ETHNICITY": {
-                "status": "mapped",
-                "FHIRResource": {},
-                "value": "Not Hispanic or Latino"
-            },
-            "BIRTHDATE": {
-                "status": "mapped",
-                "FHIRResource": {},
-                "value": "03/12/1978"
-            },
-            "MRNNUMBER": {
-                "status": "mapped",
-                "FHIRResource": {},
-                "value": "987054321"
-            },
-            "JOBTITLE": {
-                "status": "not mapped",
-                "FHIRResource": {},
-                "value": ""
-            },
-            "INDUSTRY": {
-                "status": "mapped",
-                "FHIRResource": {},
-                "value": "Fast food"
-            },
-            "LANGUAGE": {
-                "status": "not mapped",
-                "FHIRResource": {},
-                "value": ""
-            },
-            "MARITAL": {
-                "status": "mapped",
-                "FHIRResource": {},
-                "value": "never married (S)"
-            },
-            "POSSIBLEID": {
-                "status": "not mapped",
-                "FHIRResource": {},
-                "value": ""
-            },
-            "CAUSEA": {
-                "status": "mapped",
-                "FHIRResource": {},
-                "value": "Fentanyl toxicity"
-            },
-            "CAUSEB": {
-                "status": "not mapped",
-                "FHIRResource": {},
-                "value": ""
-            },
-            "CAUSEC": {
-                "status": "mapped",
-                "FHIRResource": {},
-                "value": " "
-            },
-            "CAUSED": {
-                "status": "not mapped",
-                "FHIRResource": {},
-                "value": ""
-            },
-            "OSCOND": {
-                "status": "not mapped",
-                "FHIRResource": {},
-                "value": ""
-            },
-            "MANNER": {
-                "status": "mapped",
-                "FHIRResource": {},
-                "value": "Accidental"
-            },
-            "DISPMETHOD": {
-                "status": "not mapped",
-                "FHIRResource": {},
-                "value": ""
-            },
-            "CHOWNINJURY": {
-                "status": "mapped",
-                "FHIRResource": {},
-                "value": "Ingested counterfeit medication"
-            },
-            "DURATIONA": {
-                "status": "mapped",
-                "FHIRResource": {},
-                "value": "minutes to hours"
-            },
-            "DURATIONB": {
-                "status": "not mapped",
-                "FHIRResource": {},
-                "value": ""
-            },
-            "DURATIONC": {
-                "status": "not mapped",
-                "FHIRResource": {},
-                "value": ""
-            },
-            "DURATIOND": {
-                "status": "not mapped",
-                "FHIRResource": {},
-                "value": ""
-            },
-            "CASENOTES": {
-                "status": "mapped",
-                "FHIRResource": {},
-                "value": "This 42-year-old woman was found unresponsive on a couch in a house where she was attending a party.  Responding paramedics found her pulseless and apneic.  Resuscitative efforts were unsuccessful.  Her friend stated that earlier in the evening she had purchased some “oxy” from a neighbor.  There was a history of high blood pressure.\nAt autopsy, the heart was enlarged, and the left ventricle was thickened consistent with hypertensive heart disease.  No other pathologic findings were identified. \nBlood contained a fatal concentration of fatal and a trace amount of delta-9 tetrahydrocannabinol.  No oxycodone or other substances were detected.\n"
-            },
-            "ATWORK": {
-                "status": "mapped",
-                "FHIRResource": {},
-                "value": "no"
-            },
-            "JOBRELATED": {
-                "status": "not mapped",
-                "FHIRResource": {},
-                "value": ""
-            },
-            "REPORTDATE": {
-                "status": "not mapped",
-                "FHIRResource": {},
-                "value": ""
-            },
-            "REPORTTIME": {
-                "status": "not mapped",
-                "FHIRResource": {},
-                "value": ""
-            },
-            "FOUNDDATE": {
-                "status": "not mapped",
-                "FHIRResource": {},
-                "value": ""
-            },
-            "FOUNDTIME": {
-                "status": "not mapped",
-                "FHIRResource": {},
-                "value": ""
-            },
-            "CDEATHDATE": {
-                "status": "mapped",
-                "FHIRResource": {},
-                "value": "01/08/2022"
-            },
-            "CDEATHTIME": {
-                "status": "mapped",
-                "FHIRResource": {},
-                "value": "1530"
-            },
-            "EVENTDATE": {
-                "status": "not mapped",
-                "FHIRResource": {},
-                "value": ""
-            },
-            "EVENTTIME": {
-                "status": "not mapped",
-                "FHIRResource": {},
-                "value": ""
-            },
-            "PRNDATE": {
-                "status": "not mapped",
-                "FHIRResource": {},
-                "value": ""
-            },
-            "PRNTIME": {
-                "status": "not mapped",
-                "FHIRResource": {},
-                "value": ""
-            },
-            "EXAMDATE": {
-                "status": "not mapped",
-                "FHIRResource": {},
-                "value": ""
-            },
-            "CINJDATE": {
-                "status": "not mapped",
-                "FHIRResource": {},
-                "value": ""
-            },
-            "CINJTIME": {
-                "status": "not mapped",
-                "FHIRResource": {},
-                "value": ""
-            },
-            "CIDATEFLAG": {
-                "status": "not mapped",
-                "FHIRResource": {},
-                "value": ""
-            },
-            "CDEATHFLAG": {
-                "status": "not mapped",
-                "FHIRResource": {},
-                "value": ""
-            },
-            "LKADATE": {
-                "status": "not mapped",
-                "FHIRResource": {},
-                "value": ""
-            },
-            "LKATIME": {
-                "status": "not mapped",
-                "FHIRResource": {},
-                "value": ""
-            },
-            "CASEYEAR": {
-                "status": "not mapped",
-                "FHIRResource": {},
-                "value": ""
-            },
-            "ATHOSPDATE": {
-                "status": "not mapped",
-                "FHIRResource": {},
-                "value": ""
-            },
-            "ATHOSPTIME": {
-                "status": "not mapped",
-                "FHIRResource": {},
-                "value": ""
-            },
-            "RESSTREET": {
-                "status": "not mapped",
-                "FHIRResource": {},
-                "value": ""
-            },
-            "RESCITY": {
-                "status": "not mapped",
-                "FHIRResource": {},
-                "value": ""
-            },
-            "RESCOUNTY": {
-                "status": "not mapped",
-                "FHIRResource": {},
-                "value": ""
-            },
-            "RESSTATE": {
-                "status": "not mapped",
-                "FHIRResource": {},
-                "value": ""
-            },
-            "RESZIP": {
-                "status": "not mapped",
-                "FHIRResource": {},
-                "value": ""
-            },
-            "DEATHPLACE": {
-                "status": "not mapped",
-                "FHIRResource": {},
-                "value": ""
-            },
-            "DEATHSTREET": {
-                "status": "mapped",
-                "FHIRResource": {},
-                "value": "112 Miramar Ct"
-            },
-            "DEATHCITY": {
-                "status": "not mapped",
-                "FHIRResource": {},
-                "value": ""
-            },
-            "DEATHCOUNTY": {
-                "status": "not mapped",
-                "FHIRResource": {},
-                "value": ""
-            },
-            "DEATHSTATE": {
-                "status": "not mapped",
-                "FHIRResource": {},
-                "value": ""
-            },
-            "DEATHZIP": {
-                "status": "not mapped",
-                "FHIRResource": {},
-                "value": ""
-            },
-            "FOUNDADDR_STREET": {
-                "status": "not mapped",
-                "FHIRResource": {},
-                "value": ""
-            },
-            "FOUNDADDR_CITY": {
-                "status": "not mapped",
-                "FHIRResource": {},
-                "value": ""
-            },
-            "FOUNDADDR_COUNTY": {
-                "status": "not mapped",
-                "FHIRResource": {},
-                "value": ""
-            },
-            "FOUNDADDR_STATE": {
-                "status": "not mapped",
-                "FHIRResource": {},
-                "value": ""
-            },
-            "FOUNDADDR_ZIP": {
-                "status": "not mapped",
-                "FHIRResource": {},
-                "value": ""
-            },
-            "EVENTPLACE": {
-                "status": "not mapped",
-                "FHIRResource": {},
-                "value": ""
-            },
-            "EVENTADDR_STREET": {
-                "status": "not mapped",
-                "FHIRResource": {},
-                "value": ""
-            },
-            "EVENTADDR_CITY": {
-                "status": "not mapped",
-                "FHIRResource": {},
-                "value": ""
-            },
-            "EVENTADDR_COUNTY": {
-                "status": "not mapped",
-                "FHIRResource": {},
-                "value": ""
-            },
-            "EVENTADDR_STATE": {
-                "status": "not mapped",
-                "FHIRResource": {},
-                "value": ""
-            },
-            "EVENTADDR_ZIP": {
-                "status": "not mapped",
-                "FHIRResource": {},
-                "value": ""
-            },
-            "PRNPLACE": {
-                "status": "not mapped",
-                "FHIRResource": {},
-                "value": ""
-            },
-            "PRNSTREET": {
-                "status": "not mapped",
-                "FHIRResource": {},
-                "value": ""
-            },
-            "PRNCITY": {
-                "status": "not mapped",
-                "FHIRResource": {},
-                "value": ""
-            },
-            "PRNCOUNTY": {
-                "status": "not mapped",
-                "FHIRResource": {},
-                "value": ""
-            },
-            "PRNSTATE": {
-                "status": "not mapped",
-                "FHIRResource": {},
-                "value": ""
-            },
-            "PRNZIP": {
-                "status": "not mapped",
-                "FHIRResource": {},
-                "value": ""
-            },
-            "DISP_PLACE": {
-                "status": "not mapped",
-                "FHIRResource": {},
-                "value": ""
-            },
-            "DISP_STREET": {
-                "status": "not mapped",
-                "FHIRResource": {},
-                "value": ""
-            },
-            "DISP_CITY": {
-                "status": "not mapped",
-                "FHIRResource": {},
-                "value": ""
-            },
-            "DISP_COUNTY": {
-                "status": "not mapped",
-                "FHIRResource": {},
-                "value": ""
-            },
-            "DISP_STATE": {
-                "status": "not mapped",
-                "FHIRResource": {},
-                "value": ""
-            },
-            "DISP_ZIP": {
-                "status": "not mapped",
-                "FHIRResource": {},
-                "value": ""
-            },
-            "CINJPLACE": {
-                "status": "not mapped",
-                "FHIRResource": {},
-                "value": ""
-            },
-            "CINJSTREET": {
-                "status": "not mapped",
-                "FHIRResource": {},
-                "value": ""
-            },
-            "CINJCITY": {
-                "status": "not mapped",
-                "FHIRResource": {},
-                "value": ""
-            },
-            "CINJCOUNTY": {
-                "status": "not mapped",
-                "FHIRResource": {},
-                "value": ""
-            },
-            "CINJSTATE": {
-                "status": "not mapped",
-                "FHIRResource": {},
-                "value": ""
-            },
-            "CINJZIP": {
-                "status": "not mapped",
-                "FHIRResource": {},
-                "value": ""
-            },
-            "RESNAME": {
-                "status": "not mapped",
-                "FHIRResource": {},
-                "value": ""
-            },
-            "LKAWHERE": {
-                "status": "not mapped",
-                "FHIRResource": {},
-                "value": ""
-            },
-            "HOSPNAME": {
-                "status": "not mapped",
-                "FHIRResource": {},
-                "value": ""
-            },
-            "SCENEADDR_STREET": {
-                "status": "not mapped",
-                "FHIRResource": {},
-                "value": ""
-            },
-            "SCENEADDR_CITY": {
-                "status": "not mapped",
-                "FHIRResource": {},
-                "value": ""
-            },
-            "SCENEADDR_COUNTY": {
-                "status": "not mapped",
-                "FHIRResource": {},
-                "value": ""
-            },
-            "SCENEADDR_STATE": {
-                "status": "not mapped",
-                "FHIRResource": {},
-                "value": ""
-            },
-            "SCENEADDR_ZIP": {
-                "status": "not mapped",
-                "FHIRResource": {},
-                "value": ""
-            },
-            "CERTIFIER_NAME": {
-                "status": "mapped",
-                "FHIRResource": {},
-                "value": "Joanne Smith"
-            },
-            "CERTIFIER_TYPE": {
-                "status": "not mapped",
-                "FHIRResource": {},
-                "value": ""
-            },
-            "SURGERY": {
-                "status": "not mapped",
-                "FHIRResource": {},
-                "value": ""
-            },
-            "SURGDATE": {
-                "status": "not mapped",
-                "FHIRResource": {},
-                "value": ""
-            },
-            "SURGREASON": {
-                "status": "not mapped",
-                "FHIRResource": {},
-                "value": ""
-            },
-            "HCPROVIDER": {
-                "status": "not mapped",
-                "FHIRResource": {},
-                "value": ""
-            },
-            "CAUTOPSY": {
-                "status": "not mapped",
-                "FHIRResource": {},
-                "value": ""
-            },
-            "AUTOPUSED": {
-                "status": "not mapped",
-                "FHIRResource": {},
-                "value": ""
-            },
-            "CUSTODY": {
-                "status": "not mapped",
-                "FHIRResource": {},
-                "value": ""
-            },
-            "PREGNANT": {
-                "status": "mapped",
-                "FHIRResource": {},
-                "value": "no\n"
-            },
-            "TOBACCO": {
-                "status": "mapped",
-                "FHIRResource": {},
-                "value": "no"
-            },
-            "success": {
-                "status": "not mapped",
-                "FHIRResource": {},
-                "value": ""
-            }
-        }
-    },
-    {
-        "fhirBundle": {
-            "resourceType": "Bundle",
-            "type": "batch",
-            "entry": [
-                {
-                    "fullUrl": "85db8dbd-f995-4c8c-a744-a171f0cd0d26",
-                    "resource": {
-                        "resourceType": "Composition",
-                        "id": "85db8dbd-f995-4c8c-a744-a171f0cd0d26",
-                        "meta": {
-                            "profile": [
-                                "http://hl7.org/fhir/us/mdi/StructureDefinition/Composition-mdi-to-edrs"
-                            ]
-                        },
-                        "extension": [
-                            {
-                                "url": "http://hl7.org/fhir/us/mdi/StructureDefinition/Extension-tracking-number",
-                                "valueIdentifier": {
-                                    "type": {
-                                        "coding": [
-                                            {
-                                                "system": "http://hl7.org/fhir/us/mdi/CodeSystem/CodeSystem-mdi-codes",
-                                                "code": "mdi-case-number"
-                                            }
-                                        ]
-                                    },
-                                    "value": "000011\n\n\n"
-                                }
-                            }
-                        ],
-                        "identifier": {
-                            "type": {
-                                "coding": [
-                                    {
-                                        "system": "urn:mdi:temporary:code",
-                                        "code": "1000007",
-                                        "display": "Case Number"
-                                    }
-                                ]
-                            },
-                            "value": "000011\n\n\n"
-                        },
-                        "status": "preliminary",
-                        "type": {
-                            "coding": [
-                                {
-                                    "system": "http://loinc.org",
-                                    "code": "86807-5",
-                                    "display": "Death administrative information Document"
-                                }
-                            ]
-                        },
-                        "subject": {
-                            "reference": "Patient/61fc4f36-345e-4cc2-a98a-c17617c08c50"
-                        },
-                        "date": "2022-08-12T14:18:02-04:00",
-                        "author": [
-                            {
-                                "reference": "Practitioner/1d790952-fd01-4f2a-a1d5-58f1429ae81f"
-                            }
-                        ],
-                        "section": [
-                            {
-                                "code": {
-                                    "coding": [
-                                        {
-                                            "system": "http://hl7.org/fhir/us/mdi/CodeSystem/CodeSystem-mdi-codes",
-                                            "code": "demographics"
-                                        }
-                                    ]
-                                },
-                                "entry": [
-                                    {
-                                        "reference": "5101a093-1026-4e90-95b3-ebbea930f06f"
-                                    }
-                                ]
-                            },
-                            {
-                                "code": {
-                                    "coding": [
-                                        {
-                                            "system": "http://hl7.org/fhir/us/mdi/CodeSystem/CodeSystem-mdi-codes",
-                                            "code": "circumstances"
-                                        }
-                                    ]
-                                },
-                                "entry": [
-                                    {
-                                        "reference": "32fd5970-f157-4435-9310-35b1f935810f"
-                                    },
-                                    {
-                                        "reference": "2f57e87c-49d4-45d5-b1fd-6055ac691f4e"
-                                    },
-                                    {
-                                        "reference": "4473b909-8f3c-4b2e-91eb-bdb3d8381dd9"
-                                    },
-                                    {
-                                        "reference": "1c3ea837-399b-48a0-95ff-f5912872b497"
-                                    }
-                                ]
-                            },
-                            {
-                                "code": {
-                                    "coding": [
-                                        {
-                                            "system": "http://hl7.org/fhir/us/mdi/CodeSystem/CodeSystem-mdi-codes",
-                                            "code": "jurisdiction"
-                                        }
-                                    ]
-                                },
-                                "entry": [
-                                    {
-                                        "reference": "16dee6e9-66e7-439b-8235-7936e5a529f3"
-                                    }
-                                ]
-                            },
-                            {
-                                "code": {
-                                    "coding": [
-                                        {
-                                            "system": "http://hl7.org/fhir/us/mdi/CodeSystem/CodeSystem-mdi-codes",
-                                            "code": "cause-manner"
-                                        }
-                                    ]
-                                },
-                                "entry": [
-                                    {
-                                        "reference": "7d47f897-e569-4ff2-a27a-07eacc50854b"
-                                    },
-                                    {
-                                        "reference": "fe9f90d0-86f0-436b-abc4-68ebc7833b90"
-                                    },
-                                    {
-                                        "reference": "33268746-41fb-42b4-89c1-ffbcdb199736"
-                                    },
-                                    {
-                                        "reference": "6fe7833e-6b39-4a83-a684-72279bb66580"
-                                    },
-                                    {
-                                        "reference": "6472cc98-3d70-42b0-af18-62eec938b474"
-                                    },
-                                    {
-                                        "reference": "93f5b448-96f4-4bc7-90b7-da1577dac5cd"
-                                    }
-                                ]
-                            },
-                            {
-                                "code": {
-                                    "coding": [
-                                        {
-                                            "system": "http://hl7.org/fhir/us/mdi/CodeSystem/CodeSystem-mdi-codes",
-                                            "code": "narratives"
-                                        }
-                                    ]
-                                },
-                                "entry": [
-                                    {
-                                        "reference": "5c6817d5-69cc-4a79-b714-903d516933e0"
-                                    }
-                                ]
-                            }
-                        ]
-                    },
-                    "request": {
-                        "method": "POST"
-                    }
-                },
-                {
-                    "fullUrl": "61fc4f36-345e-4cc2-a98a-c17617c08c50",
-                    "resource": {
-                        "resourceType": "Patient",
-                        "id": "61fc4f36-345e-4cc2-a98a-c17617c08c50",
-                        "meta": {
-                            "profile": [
-                                "http://hl7.org/fhir/us/core/StructureDefinition/us-core-patient"
-                            ]
-                        },
-                        "extension": [
-                            {
-                                "url": "http://hl7.org/fhir/us/core/StructureDefinition/us-core-ethnicity",
-                                "extension": [
-                                    {
-                                        "url": "ombCategory",
-                                        "valueCoding": {
-                                            "system": "urn:oid:2.16.840.1.113883.6.238",
-                                            "code": "2135-2"
-                                        }
-                                    },
-                                    {
-                                        "url": "detailed",
-                                        "valueCoding": {
-                                            "system": "urn:oid:2.16.840.1.113883.6.238",
-                                            "code": "2182-4"
-                                        }
-                                    },
-                                    {
-                                        "url": "text",
-                                        "valueString": "Cuban"
-                                    }
-                                ]
-                            }
-                        ],
-                        "identifier": [
-                            {
-                                "type": {
-                                    "coding": [
-                                        {
-                                            "system": "urn:mdi:temporary:code",
-                                            "code": "1000007",
-                                            "display": "Case Number"
-                                        }
-                                    ]
-                                },
-                                "value": "000011\n\n\n"
-                            },
-                            {
-                                "type": {
-                                    "coding": [
-                                        {
-                                            "system": "http://terminology.hl7.org/CodeSystem/v2-0203",
-                                            "code": "MR",
-                                            "display": "Medical Record Number"
-                                        }
-                                    ]
-                                },
-                                "system": "http://hl7.org/fhir/sid/us-ssn",
-                                "value": "456023789"
-                            }
-                        ],
-                        "name": [
-                            {
-                                "use": "official",
-                                "family": "Ramirez",
-                                "given": [
-                                    "Joseph",
-                                    "S."
-                                ]
-                            }
-                        ],
-                        "gender": "unknown",
-                        "birthDate": "1964-02-24",
-                        "address": [
-                            {
-                                "use": "home"
-                            }
-                        ],
-                        "maritalStatus": {
-                            "coding": [
-                                {
-                                    "system": "http://terminology.hl7.org/CodeSystem/v3-MaritalStatus",
-                                    "code": "M",
-                                    "display": "Married"
-                                }
-                            ]
-                        }
-                    },
-                    "request": {
-                        "method": "POST"
-                    }
-                },
-                {
-                    "fullUrl": "1d790952-fd01-4f2a-a1d5-58f1429ae81f",
-                    "resource": {
-                        "resourceType": "Practitioner",
-                        "id": "1d790952-fd01-4f2a-a1d5-58f1429ae81f",
-                        "meta": {
-                            "profile": [
-                                "http://hl7.org/fhir/us/core/StructureDefinition/us-core-practitioner"
-                            ]
-                        },
-                        "name": [
-                            {
-                                "family": "Lost",
-                                "given": [
-                                    "Hope"
-                                ]
-                            }
-                        ]
-                    },
-                    "request": {
-                        "method": "POST"
-                    }
-                },
-                {
-                    "fullUrl": "5101a093-1026-4e90-95b3-ebbea930f06f",
-                    "resource": {
-                        "resourceType": "Observation",
-                        "id": "5101a093-1026-4e90-95b3-ebbea930f06f",
-                        "meta": {
-                            "profile": [
-                                "http://hl7.org/fhir/us/odh/StructureDefinition/odh-UsualWork"
-                            ]
-                        },
-                        "category": [
-                            {
-                                "coding": [
-                                    {
-                                        "system": "http://terminology.hl7.org/CodeSystem/observation-category",
-                                        "code": "social-history",
-                                        "display": "social-history"
-                                    }
-                                ]
-                            }
-                        ],
-                        "code": {
-                            "coding": [
-                                {
-                                    "system": "http://loinc.org",
-                                    "code": "21843-8",
-                                    "display": "History of Usual occupation"
-                                }
-                            ]
-                        },
-                        "subject": {
-                            "reference": "61fc4f36-345e-4cc2-a98a-c17617c08c50"
-                        },
-                        "component": [
-                            {
-                                "code": {
-                                    "coding": [
-                                        {
-                                            "system": "http://loinc.org",
-                                            "code": "21844-6",
-                                            "display": "History of Usual industry"
-                                        }
-                                    ]
-                                },
-                                "valueCodeableConcept": {
-                                    "text": "construction"
-                                }
-                            }
-                        ]
-                    },
-                    "request": {
-                        "method": "POST"
-                    }
-                },
-                {
-                    "fullUrl": "32fd5970-f157-4435-9310-35b1f935810f",
-                    "resource": {
-                        "resourceType": "Location",
-                        "id": "32fd5970-f157-4435-9310-35b1f935810f",
-                        "meta": {
-                            "profile": [
-                                "http://hl7.org/fhir/us/core/StructureDefinition/us-core-location"
-                            ]
-                        },
-                        "name": "198 Westridge Drive",
-                        "address": {
-                            "line": [
-                                "198 Westridge Drive"
-                            ]
-                        }
-                    },
-                    "request": {
-                        "method": "POST"
-                    }
-                },
-                {
-                    "fullUrl": "2f57e87c-49d4-45d5-b1fd-6055ac691f4e",
-                    "resource": {
-                        "resourceType": "Observation",
-                        "id": "2f57e87c-49d4-45d5-b1fd-6055ac691f4e",
-                        "meta": {
-                            "profile": [
-                                "http://hl7.org/fhir/us/mdi/StructureDefinition/Observation-death-injury-at-work"
-                            ]
-                        },
-                        "code": {
-                            "coding": [
-                                {
-                                    "system": "http://loinc.org",
-                                    "code": "69444-8",
-                                    "display": "Did death result from injury at work"
-                                }
-                            ]
-                        },
-                        "subject": {
-                            "reference": "61fc4f36-345e-4cc2-a98a-c17617c08c50"
-                        },
-                        "valueCodeableConcept": {
-                            "coding": [
-                                {
-                                    "system": "urn:oid:2.16.840.1.113883.12.136",
-                                    "code": "Y",
-                                    "display": "Yes"
-                                }
-                            ]
-                        }
-                    },
-                    "request": {
-                        "method": "POST"
-                    }
-                },
-                {
-                    "fullUrl": "4473b909-8f3c-4b2e-91eb-bdb3d8381dd9",
-                    "resource": {
-                        "resourceType": "Observation",
-                        "id": "4473b909-8f3c-4b2e-91eb-bdb3d8381dd9",
-                        "meta": {
-                            "profile": [
-                                "http://hl7.org/fhir/us/mdi/StructureDefinition/Observation-tobacco-use-contributed-to-death"
-                            ]
-                        },
-                        "status": "final",
-                        "code": {
-                            "coding": [
-                                {
-                                    "system": "http://loinc.org",
-                                    "code": "69443-0"
-                                }
-                            ]
-                        },
-                        "subject": {
-                            "reference": "61fc4f36-345e-4cc2-a98a-c17617c08c50"
-                        },
-                        "valueCodeableConcept": {
-                            "coding": [
-                                {
-                                    "system": "http://snomed.info/sct",
-                                    "code": "373067005",
-                                    "display": "No"
-                                }
-                            ]
-                        }
-                    },
-                    "request": {
-                        "method": "POST"
-                    }
-                },
-                {
-                    "fullUrl": "1c3ea837-399b-48a0-95ff-f5912872b497",
-                    "resource": {
-                        "resourceType": "Observation",
-                        "id": "1c3ea837-399b-48a0-95ff-f5912872b497",
-                        "meta": {
-                            "profile": [
-                                "http://hl7.org/fhir/us/mdi/StructureDefinition/Observation-decedent-pregnancy"
-                            ]
-                        },
-                        "code": {
-                            "coding": [
-                                {
-                                    "system": "http://loinc.org",
-                                    "code": "69442-2",
-                                    "display": "Timing of recent pregnancy in relation to death"
-                                }
-                            ]
-                        },
-                        "subject": {
-                            "reference": "61fc4f36-345e-4cc2-a98a-c17617c08c50"
-                        },
-                        "valueCodeableConcept": {
-                            "coding": [
-                                {
-                                    "system": "http://hl7.org/fhir/v3/NullFlavor",
-                                    "code": "NA",
-                                    "display": "not applicable"
-                                }
-                            ]
-                        }
-                    },
-                    "request": {
-                        "method": "POST"
-                    }
-                },
-                {
-                    "fullUrl": "16dee6e9-66e7-439b-8235-7936e5a529f3",
-                    "resource": {
-                        "resourceType": "Observation",
-                        "id": "16dee6e9-66e7-439b-8235-7936e5a529f3",
-                        "meta": {
-                            "profile": [
-                                "http://hl7.org/fhir/us/mdi/StructureDefinition/Observation-death-date"
-                            ]
-                        },
-                        "status": "final",
-                        "code": {
-                            "coding": [
-                                {
-                                    "system": "http://loinc.org",
-                                    "code": "81956-5",
-                                    "display": "Date+time of death"
-                                }
-                            ]
-                        },
-                        "subject": {
-                            "reference": "61fc4f36-345e-4cc2-a98a-c17617c08c50"
-                        },
-                        "effectiveDateTime": "2022-08-12T14:18:02-04:00",
-                        "valueDateTime": "2022-01-01T11:35:00-05:00"
-                    },
-                    "request": {
-                        "method": "POST"
-                    }
-                },
-                {
-                    "fullUrl": "7d47f897-e569-4ff2-a27a-07eacc50854b",
-                    "resource": {
-                        "resourceType": "Observation",
-                        "id": "7d47f897-e569-4ff2-a27a-07eacc50854b",
-                        "meta": {
-                            "profile": [
-                                "http://hl7.org/fhir/us/mdi/StructureDefinition/Observation-cause-of-death-condition"
-                            ]
-                        },
-                        "code": {
-                            "text": "Pulmonary thromboembolism"
-                        },
-                        "subject": {
-                            "reference": "61fc4f36-345e-4cc2-a98a-c17617c08c50"
-                        },
-                        "performer": [
-                            {
-                                "reference": "1d790952-fd01-4f2a-a1d5-58f1429ae81f"
-                            }
-                        ],
-                        "component": [
-                            {
-                                "code": {
-                                    "coding": [
-                                        {
-                                            "system": "http://loinc.org",
-                                            "code": "69440-6"
-                                        }
-                                    ]
-                                },
-                                "valueQuantity": {
-                                    "value": 1.0,
-                                    "unit": "h",
-                                    "system": "http://hl7.org/fhir/ValueSet/age-units",
-                                    "code": "h"
-                                }
-                            }
-                        ]
-                    },
-                    "request": {
-                        "method": "POST"
-                    }
-                },
-                {
-                    "fullUrl": "fe9f90d0-86f0-436b-abc4-68ebc7833b90",
-                    "resource": {
-                        "resourceType": "Observation",
-                        "id": "fe9f90d0-86f0-436b-abc4-68ebc7833b90",
-                        "meta": {
-                            "profile": [
-                                "http://hl7.org/fhir/us/mdi/StructureDefinition/Observation-cause-of-death-condition"
-                            ]
-                        },
-                        "code": {
-                            "text": "Deep venous thrombosis of leg"
-                        },
-                        "subject": {
-                            "reference": "61fc4f36-345e-4cc2-a98a-c17617c08c50"
-                        },
-                        "performer": [
-                            {
-                                "reference": "1d790952-fd01-4f2a-a1d5-58f1429ae81f"
-                            }
-                        ],
-                        "component": [
-                            {
-                                "code": {
-                                    "coding": [
-                                        {
-                                            "system": "http://loinc.org",
-                                            "code": "69440-6"
-                                        }
-                                    ]
-                                },
-                                "valueQuantity": {
-                                    "value": 1.0,
-                                    "unit": "wk",
-                                    "system": "http://hl7.org/fhir/ValueSet/age-units",
-                                    "code": "wk"
-                                }
-                            }
-                        ]
-                    },
-                    "request": {
-                        "method": "POST"
-                    }
-                },
-                {
-                    "fullUrl": "33268746-41fb-42b4-89c1-ffbcdb199736",
-                    "resource": {
-                        "resourceType": "Observation",
-                        "id": "33268746-41fb-42b4-89c1-ffbcdb199736",
-                        "meta": {
-                            "profile": [
-                                "http://hl7.org/fhir/us/mdi/StructureDefinition/Observation-cause-of-death-condition"
-                            ]
-                        },
-                        "code": {
-                            "text": "Blunt head trauma"
-                        },
-                        "subject": {
-                            "reference": "61fc4f36-345e-4cc2-a98a-c17617c08c50"
-                        },
-                        "performer": [
-                            {
-                                "reference": "1d790952-fd01-4f2a-a1d5-58f1429ae81f"
-                            }
-                        ],
-                        "component": [
-                            {
-                                "code": {
-                                    "coding": [
-                                        {
-                                            "system": "http://loinc.org",
-                                            "code": "69440-6"
-                                        }
-                                    ]
-                                },
-                                "valueQuantity": {
-                                    "value": 2.0,
-                                    "unit": "wk",
-                                    "system": "http://hl7.org/fhir/ValueSet/age-units",
-                                    "code": "wk"
-                                }
-                            }
-                        ]
-                    },
-                    "request": {
-                        "method": "POST"
-                    }
-                },
-                {
-                    "fullUrl": "6fe7833e-6b39-4a83-a684-72279bb66580",
-                    "resource": {
-                        "resourceType": "List",
-                        "id": "6fe7833e-6b39-4a83-a684-72279bb66580",
-                        "meta": {
-                            "profile": [
-                                "http://hl7.org/fhir/us/mdi/StructureDefinition/List-cause-of-death-pathway"
-                            ]
-                        },
-                        "status": "current",
-                        "mode": "snapshot",
-                        "subject": {
-                            "reference": "61fc4f36-345e-4cc2-a98a-c17617c08c50"
-                        },
-                        "source": {
-                            "reference": "1d790952-fd01-4f2a-a1d5-58f1429ae81f"
-                        },
-                        "entry": [
-                            {
-                                "item": {
-                                    "reference": "7d47f897-e569-4ff2-a27a-07eacc50854b"
-                                }
-                            },
-                            {
-                                "item": {
-                                    "reference": "fe9f90d0-86f0-436b-abc4-68ebc7833b90"
-                                }
-                            },
-                            {
-                                "item": {
-                                    "reference": "33268746-41fb-42b4-89c1-ffbcdb199736"
-                                }
-                            }
-                        ]
-                    },
-                    "request": {
-                        "method": "POST"
-                    }
-                },
-                {
-                    "fullUrl": "6472cc98-3d70-42b0-af18-62eec938b474",
-                    "resource": {
-                        "resourceType": "Observation",
-                        "id": "6472cc98-3d70-42b0-af18-62eec938b474",
-                        "meta": {
-                            "profile": [
-                                "http://hl7.org/fhir/us/mdi/StructureDefinition/Observation-manner-of-death"
-                            ]
-                        },
-                        "status": "final",
-                        "code": {
-                            "coding": [
-                                {
-                                    "system": "http://loinc.org",
-                                    "code": "69449-7",
-                                    "display": "Manner of death"
-                                }
-                            ]
-                        },
-                        "subject": {
-                            "reference": "61fc4f36-345e-4cc2-a98a-c17617c08c50"
-                        },
-                        "performer": [
-                            {
-                                "reference": "1d790952-fd01-4f2a-a1d5-58f1429ae81f"
-                            }
-                        ],
-                        "valueCodeableConcept": {
-                            "coding": [
-                                {
-                                    "system": "http://snomed.info/sct",
-                                    "code": "7878000",
-                                    "display": "Accidental Death"
-                                }
-                            ]
-                        }
-                    },
-                    "request": {
-                        "method": "POST"
-                    }
-                },
-                {
-                    "fullUrl": "93f5b448-96f4-4bc7-90b7-da1577dac5cd",
-                    "resource": {
-                        "resourceType": "Observation",
-                        "id": "93f5b448-96f4-4bc7-90b7-da1577dac5cd",
-                        "meta": {
-                            "profile": [
-                                "http://hl7.org/fhir/us/mdi/StructureDefinition/Observation-how-death-injury-occurred"
-                            ]
-                        },
-                        "code": {
-                            "coding": [
-                                {
-                                    "system": "http://loinc.org",
-                                    "code": " 11374-6",
-                                    "display": "Injury incident description Narrative"
-                                }
-                            ]
-                        },
-                        "subject": {
-                            "reference": "Patient/61fc4f36-345e-4cc2-a98a-c17617c08c50"
-                        },
-                        "performer": [
-                            {
-                                "reference": "Patient/61fc4f36-345e-4cc2-a98a-c17617c08c50"
-                            }
-                        ],
-                        "valueString": "unrestrained ejected driver in rollover motor vehicle accident"
-                    },
-                    "request": {
-                        "method": "POST"
-                    }
-                },
-                {
-                    "fullUrl": "5c6817d5-69cc-4a79-b714-903d516933e0",
-                    "resource": {
-                        "resourceType": "DocumentReference",
-                        "id": "5c6817d5-69cc-4a79-b714-903d516933e0",
-                        "meta": {
-                            "profile": [
-                                "http://hl7.org/fhir/us/mdi/StructureDefinition/DocumentReference-mdi-case-notes-summary"
-                            ]
-                        },
-                        "type": {
-                            "coding": [
-                                {
-                                    "system": "http://loinc.org",
-                                    "code": "47046-8",
-                                    "display": "Summary of death note"
-                                }
-                            ]
-                        },
-                        "category": [
-                            {
-                                "coding": [
-                                    {
-                                        "system": "http://hl7.org/fhir/us/mdi/CodeSystem/CodeSystem-mdi-codes",
-                                        "code": "mdi-case-notes-summary",
-                                        "display": "MDI Case Notes Summary"
-                                    }
-                                ]
-                            }
-                        ],
-                        "date": "2022-08-12T14:18:02.782-04:00",
-                        "content": [
-                            {
-                                "attachment": {
-                                    "contentType": "text/plain",
-                                    "language": "en-US",
-                                    "data": "VGhpcyA1NyB5ZWFyIG9sZCBtYW4gd2FzIHRoZSB1bnJlc3RyYWluZWQgZHJpdmVyIG9mIGEgVG95b3RhIENvcm9sbGEgd2hvIHdhcyBlamVjdGVkIGluIGEgcm9sbG92ZXIgY29sbGlzaW9uIG9uIERlY2VtYmVyIDE4LCAyMDIxIHdoZW4gaGUgZmFpbGVkIHRvIG5hdmlnYXRlIGEgaGFpcnBpbiB0dXJuIG9uIFJ0IDQ3Njg5IHdoaWxlIHRyYXZlbGluZyBhdCBhIGhpZ2ggcmF0ZSBvZiBzcGVlZC4gIEhlIHdhcyB1bnJlc3BvbnNpdmUgYXQgdGhlIHNjZW5lIGFuZCB3YXMgdGFrZW4gdmlhIHJlc2N1ZSBoZWxpY29wdGVyIHRvIE1hbuKAmXMgR3JlYXRlc3QgVHJhdW1hIENlbnRlci4gIEEgaGVhZCBDVCBzaG93ZWQgc2t1bGwgZnJhY3R1cmVzLCBhIGxhcmdlIHJpZ2h0IHN1YmR1cmFsIGhlbWF0b21hIGFuZCBiaWxhdGVyYWwgZnJvbnRvdGVtcG9yYWwgYnJhaW4gY29udHVzaW9ucy4gIEJsb29kIGNvbnRhaW5lZCAwLjAyOCBnbS9kbCBvZiBldGhhbm9sLiAgQSBkcnVnIHNjcmVlbiB3YXMgbmVnYXRpdmUuICBIZSB3YXMgdGFrZW4gdG8gdGhlIE9SIGZvciBldmFjdWF0aW9uIG9mIHRoZSBzdWJkdXJhbCBoZW1hdG9tYS4gIEFmdGVyd2FyZHMsIGhlIHJlbWFpbmVkIG1pbmltYWxseSByZXNwb25zaXZlLiAgT25lIHdlZWsgYWZ0ZXIgYWRtaXNzaW9uLCBoaXMgcmlnaHQgbGVnIHdhcyBub3RlZCB0byBiZSBzd29sbGVuLiAgQSBkb3BwbGVyIHVsdHJhc291bmQgc3R1ZHkgc2hvd2VkIGRlZXAgdmVub3VzIHRocm9tYmkgaW4gdGhlIHJpZ2h0IGxlZyBhbmQgdGhpZ2guICBIZSB3YXMgc3RhcnRlZCBvbiBhbnRpY29hZ3VsYXRpb24uICBPdmVyIHRoZSBuZXh0IHdlZWssIGhlIGJlY2FtZSBwcm9ncmVzc2l2ZWx5IG1vcmUgYWxlcnQuIE9uIDEvMS8yMiBoZSB3YXMgdHJhbnNmZXJyZWQgZnJvbSB0aGUgYmVkIHRvIGEgY2hhaXIuICBTaG9ydGx5IHRoZXJlYWZ0ZXIsIGhlIGJlY2FtZSB0YWNoeXBuZWljLCBoeXBvdGVuc2l2ZSBhbmQgb2J0dW5kZWQuICBBbiBlbWVyZ2VuY3kgQ1Qgc2NhbiBzaG93ZWQgYSBsYXJnZSBwdWxtb25hcnkgZW1ib2x1cy4gSGUgaGFkIGEgY2FyZGlhYyBhcnJlc3QgaW4gdGhlIENUIHN1aXRlIGFuZCBjb3VsZCBub3QgYmUgcmVzdXNjaXRhdGVkLg=="
-                                }
-                            }
-                        ]
-                    },
-                    "request": {
-                        "method": "POST"
-                    }
-                }
-            ]
-        },
-        "fhirResponse": {
-            "name": "Joseph S. Ramirez",
-            "status": "Not Submitted",
-            "statusCode": "",
-            "state": ""
-        },
-        "Narrative": "",
-        "fields": {
-            "SYSTEMID": {
-                "status": "not mapped",
-                "FHIRResource": {},
-                "value": ""
-            },
-            "CASEID": {
-                "status": "mapped",
-                "FHIRResource": {},
-                "value": "000011\n\n\n"
-            },
-            "FIRSTNAME": {
-                "status": "mapped",
-                "FHIRResource": {},
-                "value": "Joseph"
-            },
-            "MIDNAME": {
-                "status": "mapped",
-                "FHIRResource": {},
-                "value": "S."
-            },
-            "LASTNAME": {
-                "status": "mapped",
-                "FHIRResource": {},
-                "value": "Ramirez"
-            },
-            "AGE": {
-                "status": "mapped",
-                "FHIRResource": {},
-                "value": "57"
-            },
-            "AGEUNIT": {
-                "status": "mapped",
-                "FHIRResource": {},
-                "value": "years"
-            },
-            "RACE": {
-                "status": "not mapped",
-                "FHIRResource": {},
-                "value": ""
-            },
-            "GENDER": {
-                "status": "mapped",
-                "FHIRResource": {},
-                "value": "M"
-            },
-            "ETHNICITY": {
-                "status": "mapped",
-                "FHIRResource": {},
-                "value": "Cuban"
-            },
-            "BIRTHDATE": {
-                "status": "mapped",
-                "FHIRResource": {},
-                "value": "02/24/1964"
-            },
-            "MRNNUMBER": {
-                "status": "mapped",
-                "FHIRResource": {},
-                "value": "456023789"
-            },
-            "JOBTITLE": {
-                "status": "not mapped",
-                "FHIRResource": {},
-                "value": ""
-            },
-            "INDUSTRY": {
-                "status": "mapped",
-                "FHIRResource": {},
-                "value": "construction"
-            },
-            "LANGUAGE": {
-                "status": "not mapped",
-                "FHIRResource": {},
-                "value": ""
-            },
-            "MARITAL": {
-                "status": "mapped",
-                "FHIRResource": {},
-                "value": "married"
-            },
-            "POSSIBLEID": {
-                "status": "not mapped",
-                "FHIRResource": {},
-                "value": ""
-            },
-            "CAUSEA": {
-                "status": "mapped",
-                "FHIRResource": {},
-                "value": "Pulmonary thromboembolism"
-            },
-            "CAUSEB": {
-                "status": "mapped",
-                "FHIRResource": {},
-                "value": "Deep venous thrombosis of leg"
-            },
-            "CAUSEC": {
-                "status": "mapped",
-                "FHIRResource": {},
-                "value": "Blunt head trauma"
-            },
-            "CAUSED": {
-                "status": "not mapped",
-                "FHIRResource": {},
-                "value": ""
-            },
-            "OSCOND": {
-                "status": "not mapped",
-                "FHIRResource": {},
-                "value": ""
-            },
-            "MANNER": {
-                "status": "mapped",
-                "FHIRResource": {},
-                "value": "Accidental"
-            },
-            "DISPMETHOD": {
-                "status": "not mapped",
-                "FHIRResource": {},
-                "value": ""
-            },
-            "CHOWNINJURY": {
-                "status": "mapped",
-                "FHIRResource": {},
-                "value": "unrestrained ejected driver in rollover motor vehicle accident"
-            },
-            "DURATIONA": {
-                "status": "mapped",
-                "FHIRResource": {},
-                "value": "1 hour"
-            },
-            "DURATIONB": {
-                "status": "mapped",
-                "FHIRResource": {},
-                "value": "1 week"
-            },
-            "DURATIONC": {
-                "status": "mapped",
-                "FHIRResource": {},
-                "value": "2 weeks"
-            },
-            "DURATIOND": {
-                "status": "not mapped",
-                "FHIRResource": {},
-                "value": ""
-            },
-            "CASENOTES": {
-                "status": "mapped",
-                "FHIRResource": {},
-                "value": "This 57 year old man was the unrestrained driver of a Toyota Corolla who was ejected in a rollover collision on December 18, 2021 when he failed to navigate a hairpin turn on Rt 47689 while traveling at a high rate of speed.  He was unresponsive at the scene and was taken via rescue helicopter to Man’s Greatest Trauma Center.  A head CT showed skull fractures, a large right subdural hematoma and bilateral frontotemporal brain contusions.  Blood contained 0.028 gm/dl of ethanol.  A drug screen was negative.  He was taken to the OR for evacuation of the subdural hematoma.  Afterwards, he remained minimally responsive.  One week after admission, his right leg was noted to be swollen.  A doppler ultrasound study showed deep venous thrombi in the right leg and thigh.  He was started on anticoagulation.  Over the next week, he became progressively more alert. On 1/1/22 he was transferred from the bed to a chair.  Shortly thereafter, he became tachypneic, hypotensive and obtunded.  An emergency CT scan showed a large pulmonary embolus. He had a cardiac arrest in the CT suite and could not be resuscitated."
-            },
-            "ATWORK": {
-                "status": "mapped",
-                "FHIRResource": {},
-                "value": "yes"
-            },
-            "JOBRELATED": {
-                "status": "not mapped",
-                "FHIRResource": {},
-                "value": ""
-            },
-            "REPORTDATE": {
-                "status": "not mapped",
-                "FHIRResource": {},
-                "value": ""
-            },
-            "REPORTTIME": {
-                "status": "not mapped",
-                "FHIRResource": {},
-                "value": ""
-            },
-            "FOUNDDATE": {
-                "status": "not mapped",
-                "FHIRResource": {},
-                "value": ""
-            },
-            "FOUNDTIME": {
-                "status": "not mapped",
-                "FHIRResource": {},
-                "value": ""
-            },
-            "CDEATHDATE": {
-                "status": "mapped",
-                "FHIRResource": {},
-                "value": "01/01/2022"
-            },
-            "CDEATHTIME": {
-                "status": "mapped",
-                "FHIRResource": {},
-                "value": "1135"
-            },
-            "EVENTDATE": {
-                "status": "not mapped",
-                "FHIRResource": {},
-                "value": ""
-            },
-            "EVENTTIME": {
-                "status": "not mapped",
-                "FHIRResource": {},
-                "value": ""
-            },
-            "PRNDATE": {
-                "status": "not mapped",
-                "FHIRResource": {},
-                "value": ""
-            },
-            "PRNTIME": {
-                "status": "not mapped",
-                "FHIRResource": {},
-                "value": ""
-            },
-            "EXAMDATE": {
-                "status": "not mapped",
-                "FHIRResource": {},
-                "value": ""
-            },
-            "CINJDATE": {
-                "status": "not mapped",
-                "FHIRResource": {},
-                "value": ""
-            },
-            "CINJTIME": {
-                "status": "not mapped",
-                "FHIRResource": {},
-                "value": ""
-            },
-            "CIDATEFLAG": {
-                "status": "not mapped",
-                "FHIRResource": {},
-                "value": ""
-            },
-            "CDEATHFLAG": {
-                "status": "not mapped",
-                "FHIRResource": {},
-                "value": ""
-            },
-            "LKADATE": {
-                "status": "not mapped",
-                "FHIRResource": {},
-                "value": ""
-            },
-            "LKATIME": {
-                "status": "not mapped",
-                "FHIRResource": {},
-                "value": ""
-            },
-            "CASEYEAR": {
-                "status": "not mapped",
-                "FHIRResource": {},
-                "value": ""
-            },
-            "ATHOSPDATE": {
-                "status": "not mapped",
-                "FHIRResource": {},
-                "value": ""
-            },
-            "ATHOSPTIME": {
-                "status": "not mapped",
-                "FHIRResource": {},
-                "value": ""
-            },
-            "RESSTREET": {
-                "status": "not mapped",
-                "FHIRResource": {},
-                "value": ""
-            },
-            "RESCITY": {
-                "status": "not mapped",
-                "FHIRResource": {},
-                "value": ""
-            },
-            "RESCOUNTY": {
-                "status": "not mapped",
-                "FHIRResource": {},
-                "value": ""
-            },
-            "RESSTATE": {
-                "status": "not mapped",
-                "FHIRResource": {},
-                "value": ""
-            },
-            "RESZIP": {
-                "status": "not mapped",
-                "FHIRResource": {},
-                "value": ""
-            },
-            "DEATHPLACE": {
-                "status": "not mapped",
-                "FHIRResource": {},
-                "value": ""
-            },
-            "DEATHSTREET": {
-                "status": "mapped",
-                "FHIRResource": {},
-                "value": "198 Westridge Drive"
-            },
-            "DEATHCITY": {
-                "status": "not mapped",
-                "FHIRResource": {},
-                "value": ""
-            },
-            "DEATHCOUNTY": {
-                "status": "not mapped",
-                "FHIRResource": {},
-                "value": ""
-            },
-            "DEATHSTATE": {
-                "status": "not mapped",
-                "FHIRResource": {},
-                "value": ""
-            },
-            "DEATHZIP": {
-                "status": "not mapped",
-                "FHIRResource": {},
-                "value": ""
-            },
-            "FOUNDADDR_STREET": {
-                "status": "not mapped",
-                "FHIRResource": {},
-                "value": ""
-            },
-            "FOUNDADDR_CITY": {
-                "status": "not mapped",
-                "FHIRResource": {},
-                "value": ""
-            },
-            "FOUNDADDR_COUNTY": {
-                "status": "not mapped",
-                "FHIRResource": {},
-                "value": ""
-            },
-            "FOUNDADDR_STATE": {
-                "status": "not mapped",
-                "FHIRResource": {},
-                "value": ""
-            },
-            "FOUNDADDR_ZIP": {
-                "status": "not mapped",
-                "FHIRResource": {},
-                "value": ""
-            },
-            "EVENTPLACE": {
-                "status": "not mapped",
-                "FHIRResource": {},
-                "value": ""
-            },
-            "EVENTADDR_STREET": {
-                "status": "not mapped",
-                "FHIRResource": {},
-                "value": ""
-            },
-            "EVENTADDR_CITY": {
-                "status": "not mapped",
-                "FHIRResource": {},
-                "value": ""
-            },
-            "EVENTADDR_COUNTY": {
-                "status": "not mapped",
-                "FHIRResource": {},
-                "value": ""
-            },
-            "EVENTADDR_STATE": {
-                "status": "not mapped",
-                "FHIRResource": {},
-                "value": ""
-            },
-            "EVENTADDR_ZIP": {
-                "status": "not mapped",
-                "FHIRResource": {},
-                "value": ""
-            },
-            "PRNPLACE": {
-                "status": "not mapped",
-                "FHIRResource": {},
-                "value": ""
-            },
-            "PRNSTREET": {
-                "status": "not mapped",
-                "FHIRResource": {},
-                "value": ""
-            },
-            "PRNCITY": {
-                "status": "not mapped",
-                "FHIRResource": {},
-                "value": ""
-            },
-            "PRNCOUNTY": {
-                "status": "not mapped",
-                "FHIRResource": {},
-                "value": ""
-            },
-            "PRNSTATE": {
-                "status": "not mapped",
-                "FHIRResource": {},
-                "value": ""
-            },
-            "PRNZIP": {
-                "status": "not mapped",
-                "FHIRResource": {},
-                "value": ""
-            },
-            "DISP_PLACE": {
-                "status": "not mapped",
-                "FHIRResource": {},
-                "value": ""
-            },
-            "DISP_STREET": {
-                "status": "not mapped",
-                "FHIRResource": {},
-                "value": ""
-            },
-            "DISP_CITY": {
-                "status": "not mapped",
-                "FHIRResource": {},
-                "value": ""
-            },
-            "DISP_COUNTY": {
-                "status": "not mapped",
-                "FHIRResource": {},
-                "value": ""
-            },
-            "DISP_STATE": {
-                "status": "not mapped",
-                "FHIRResource": {},
-                "value": ""
-            },
-            "DISP_ZIP": {
-                "status": "not mapped",
-                "FHIRResource": {},
-                "value": ""
-            },
-            "CINJPLACE": {
-                "status": "not mapped",
-                "FHIRResource": {},
-                "value": ""
-            },
-            "CINJSTREET": {
-                "status": "not mapped",
-                "FHIRResource": {},
-                "value": ""
-            },
-            "CINJCITY": {
-                "status": "not mapped",
-                "FHIRResource": {},
-                "value": ""
-            },
-            "CINJCOUNTY": {
-                "status": "not mapped",
-                "FHIRResource": {},
-                "value": ""
-            },
-            "CINJSTATE": {
-                "status": "not mapped",
-                "FHIRResource": {},
-                "value": ""
-            },
-            "CINJZIP": {
-                "status": "not mapped",
-                "FHIRResource": {},
-                "value": ""
-            },
-            "RESNAME": {
-                "status": "not mapped",
-                "FHIRResource": {},
-                "value": ""
-            },
-            "LKAWHERE": {
-                "status": "not mapped",
-                "FHIRResource": {},
-                "value": ""
-            },
-            "HOSPNAME": {
-                "status": "not mapped",
-                "FHIRResource": {},
-                "value": ""
-            },
-            "SCENEADDR_STREET": {
-                "status": "not mapped",
-                "FHIRResource": {},
-                "value": ""
-            },
-            "SCENEADDR_CITY": {
-                "status": "not mapped",
-                "FHIRResource": {},
-                "value": ""
-            },
-            "SCENEADDR_COUNTY": {
-                "status": "not mapped",
-                "FHIRResource": {},
-                "value": ""
-            },
-            "SCENEADDR_STATE": {
-                "status": "not mapped",
-                "FHIRResource": {},
-                "value": ""
-            },
-            "SCENEADDR_ZIP": {
-                "status": "not mapped",
-                "FHIRResource": {},
-                "value": ""
-            },
-            "CERTIFIER_NAME": {
-                "status": "mapped",
-                "FHIRResource": {},
-                "value": "Hope Lost"
-            },
-            "CERTIFIER_TYPE": {
-                "status": "not mapped",
-                "FHIRResource": {},
-                "value": ""
-            },
-            "SURGERY": {
-                "status": "not mapped",
-                "FHIRResource": {},
-                "value": ""
-            },
-            "SURGDATE": {
-                "status": "not mapped",
-                "FHIRResource": {},
-                "value": ""
-            },
-            "SURGREASON": {
-                "status": "not mapped",
-                "FHIRResource": {},
-                "value": ""
-            },
-            "HCPROVIDER": {
-                "status": "not mapped",
-                "FHIRResource": {},
-                "value": ""
-            },
-            "CAUTOPSY": {
-                "status": "not mapped",
-                "FHIRResource": {},
-                "value": ""
-            },
-            "AUTOPUSED": {
-                "status": "not mapped",
-                "FHIRResource": {},
-                "value": ""
-            },
-            "CUSTODY": {
-                "status": "not mapped",
-                "FHIRResource": {},
-                "value": ""
-            },
-            "PREGNANT": {
-                "status": "mapped",
-                "FHIRResource": {},
-                "value": "not applicable"
-            },
-            "TOBACCO": {
-                "status": "mapped",
-                "FHIRResource": {},
-                "value": "no"
+                "value": "3301"
             },
             "success": {
                 "status": "not mapped",
