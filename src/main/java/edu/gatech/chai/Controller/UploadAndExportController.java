@@ -78,12 +78,6 @@ public class UploadAndExportController {
 	@Autowired
 	FhirCMSToVRDRService fhirCMSToVRDRService;
 	@Autowired
-	private NightingaleSubmissionService nightingaleSubmissionService;
-	@Autowired
-	private VitalcheckSubmissionService vitalcheckSubmissionService;
-	@Autowired
-	private SubmissionSourcesConfiguration submissionSourcesConfiguration;
-	@Autowired
 	private PatientSubmitRepository patientSubmitRepository;
 	@Autowired
 	private XLSXToMDIFhirCMSService xLSXToMDIFhirCMSService;
