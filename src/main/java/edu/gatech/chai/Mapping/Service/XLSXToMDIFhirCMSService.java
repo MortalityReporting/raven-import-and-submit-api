@@ -26,7 +26,7 @@ public class XLSXToMDIFhirCMSService {
 
     private static final String[] FIELDS = {"Tracking Number: Mdi Case Number", "Tracking Number: EDRS File Number"
         ,"Decedent Name", "Decedent Race", "Decedent Ethnicity", "Decedent SexAtDeath", "Decedent SSN", "Decedent Age", "Decedent DOB"
-        ,"Decedent Marital status", "Decedent Residence: Street", "Decedent Residence: city","Decedent Residence: State, U.S. Territory or Canadian Province", "Decedent Residence: Postal Code", "Decedent Residence: Country"
+        ,"Decedent Marital status", "Decedent Residence: Street", "Decedent Residence: city","Decedent Residence: county","Decedent Residence: State, U.S. Territory or Canadian Province", "Decedent Residence: Postal Code", "Decedent Residence: Country"
         ,"Cause of Death Part I Line a", "Cause of Death Part I Line b", "Cause of Death Part I Line c", "Cause of Death Part I Line d", "Cause of Death Part I Interval, Line a"
         ,"Cause of Death Part I Interval, Line b","Cause of Death Part I Interval, Line c","Cause of Death Part I Interval, Line d","Cause of Death Part II", "Manner of Death"
         ,"Date of Injury", "Time of Injury", "Estimated Date of Injury Interval: Earliest", "Estimated Date of Injury Interval: Latest", "Did Injury Occur at Work?", "Decedent's Transportation Role During Injury"
@@ -129,7 +129,7 @@ public class XLSXToMDIFhirCMSService {
         returnModel.setRESNAME(getStringForColumnAndName(sheet,fieldMap,currentColumn,"Decedent Residence: Street"));
         returnModel.setRESCITY(getStringForColumnAndName(sheet,fieldMap,currentColumn,"Decedent Residence: city"));
         returnModel.setRESCOUNTY(getStringForColumnAndName(sheet,fieldMap,currentColumn,"Decedent Residence: county"));
-        returnModel.setRESSTATE(getStringForColumnAndName(sheet,fieldMap,currentColumn,"Decedent Residence: State, U.S. Territory or Candian Province"));
+        returnModel.setRESSTATE(getStringForColumnAndName(sheet,fieldMap,currentColumn,"Decedent Residence: State, U.S. Territory or Canadian Province"));
         returnModel.setRESCOUNTRY(getStringForColumnAndName(sheet,fieldMap,currentColumn,"Decedent Residence: Country"));
         returnModel.setPREGNANT(getStringForColumnAndName(sheet,fieldMap,currentColumn,"Pregnancy status"));        
         returnModel.setTOBACCO(getStringForColumnAndName(sheet,fieldMap,currentColumn,"Did Tobacco Use Contribute to Death?"));

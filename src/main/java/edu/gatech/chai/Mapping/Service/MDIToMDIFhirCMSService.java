@@ -10,7 +10,9 @@ import java.util.stream.Stream;
 import org.hl7.fhir.r4.model.Address;
 import org.hl7.fhir.r4.model.Address.AddressUse;
 import org.hl7.fhir.r4.model.Bundle;
+import org.hl7.fhir.r4.model.Bundle.BundleEntryRequestComponent;
 import org.hl7.fhir.r4.model.Bundle.BundleType;
+import org.hl7.fhir.r4.model.Bundle.HTTPVerb;
 import org.hl7.fhir.r4.model.CodeableConcept;
 import org.hl7.fhir.r4.model.Coding;
 import org.hl7.fhir.r4.model.Composition.CompositionStatus;
@@ -88,6 +90,8 @@ public class MDIToMDIFhirCMSService {
 		if(inputFields.EDRSCASEID != null && !inputFields.EDRSCASEID.isEmpty()){
 			mainComposition.addEDRSCaseIdExtension(inputFields.EDRSCASEID);
 		}
+		//Since we're creating a batch bundle we need to set the request type on all resources. However this one is handled special from "addResourceToBatchBundle"
+		returnBundle.getEntryFirstRep().setRequest(new BundleEntryRequestComponent().setMethod(HTTPVerb.POST));
 		//MDIToFhirCMSUtil.addResourceToBatchBundle(returnBundle, mainComposition);
 
 		Patient patientResource = null;
@@ -133,7 +137,7 @@ public class MDIToMDIFhirCMSService {
 			mainComposition.addAttester(certifierReference);
 			ProcedureDeathCertification deathCertification = createDeathCertification(inputFields, patientReference, certifierReference);
 			MDIToFhirCMSUtil.addResourceToBatchBundle(returnBundle, deathCertification);
-			mainComposition.getJurisdictionSection().addEntry(new Reference("Procedure/"+deathCertification));
+			mainComposition.getJurisdictionSection().addEntry(new Reference("Procedure/"+deathCertification.getId()));
 		}
 		
 		// Handle Death Location

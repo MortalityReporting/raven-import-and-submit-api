@@ -127,6 +127,7 @@ public class UploadAndExportController {
 
 	@PostMapping(value = "upload-xlsx-file")
     public ResponseEntity<JsonNode> uploadXLSXFile(@RequestParam(name = "file", required = true) MultipartFile file) throws JsonProcessingException {
+		//Read XLSX File submitted
 		Tika tika = new Tika();
 		String detectedType;
 		XSSFWorkbook workbook = null;
@@ -142,18 +143,20 @@ public class UploadAndExportController {
 		}
 
 		List<MDIModelFields> mappedXLSXData;
-		ObjectMapper mapper = new ObjectMapper();
-		mapper.setVisibility(PropertyAccessor.ALL, Visibility.NONE);
-		mapper.setVisibility(PropertyAccessor.FIELD, Visibility.ANY);
-		ArrayNode responseJson = mapper.createArrayNode();
-
+		//Map data to internal definition
 		try {
 			mappedXLSXData = xLSXToMDIFhirCMSService.convertToMDIModelFields(workbook);
 		} catch (Exception e) {
 			throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, e.getLocalizedMessage());
 		}
-
+		//Setup mapper
+		ObjectMapper mapper = new ObjectMapper();
+		mapper.setVisibility(PropertyAccessor.ALL, Visibility.NONE);
+		mapper.setVisibility(PropertyAccessor.FIELD, Visibility.ANY);
+		ArrayNode responseJson = mapper.createArrayNode();
+		//For each mapped field
 		for(MDIModelFields modelFields:mappedXLSXData){
+			//Convert 
 			String bundleString = "";
 			try {
 				bundleString = mappingToMDIService.convertToMDIString(modelFields);
@@ -162,23 +165,13 @@ public class UploadAndExportController {
 				continue;
 			}
 			ObjectNode responseObject = mapper.createObjectNode();
-
-			ObjectNode patientInfo = mapper.createObjectNode();
-			patientInfo.put("name", modelFields.FIRSTNAME + " " + modelFields.MIDNAME + " " + modelFields.LASTNAME);
-			patientInfo.put("status", "Not Submitted");
 			try {
 				responseObject.set("fhirBundle", mapper.readTree(bundleString));
 			} catch (IOException e1) {
 				e1.printStackTrace();
 				continue;
 			}
-
-			ObjectNode fhirResponse = mapper.createObjectNode();
-			patientInfo.put("statusCode", "");
-			patientInfo.put("state", "");
-			responseObject.set("fhirResponse", patientInfo);
-
-			responseObject.put("Narrative", "");
+			//Collect mapping of objects here.
 			ObjectNode fields = mapper.createObjectNode();
 			for(Field f:modelFields.getClass().getDeclaredFields()){
 				String keyName = f.getName();
@@ -211,12 +204,37 @@ public class UploadAndExportController {
 				fields.set(keyName, fieldObject);
 			}
 			responseObject.set("fields", fields);
+			//Actually submit to the fhir server here!
+			JsonNode patientInfo = submitToFhirBase(bundleString, modelFields, mapper);
+			responseObject.set("fhirResponse", patientInfo);
+			responseObject.put("Narrative", "");
 			responseJson.add(responseObject);
 		}
-
 		//JsonNode responseJson = mapper.valueToTree(mappedXLSXData);
 		return new ResponseEntity<JsonNode>(responseJson, HttpStatus.CREATED);
     }
+
+	private JsonNode submitToFhirBase(String fhirBundleString, MDIModelFields modelFields, ObjectMapper mapper){
+		ObjectNode patientInfo = mapper.createObjectNode();
+		patientInfo.put("name", modelFields.FIRSTNAME + " " + modelFields.MIDNAME + " " + modelFields.LASTNAME);
+		patientInfo.put("status", "Not Submitted");
+		patientInfo.put("statusCode", "");
+		patientInfo.put("state", "");
+		try {
+			ResponseEntity<String> response = submitBundleService.submitBundle(fhirBundleString);
+			System.out.println("Client response body:" + response.getBody());
+			// save users list on model
+			if(response.getStatusCode() == HttpStatus.OK ) {
+				patientInfo.put("status", "Success");
+				patientInfo.put("statusCode", response.getStatusCode().value());
+			}
+		}
+		catch (HttpStatusCodeException e) {
+			patientInfo.put("status", "Error");
+			patientInfo.put("statusCode", e.getRawStatusCode());
+		}
+		return patientInfo;
+	}
     
     private Map<String, Object> readCSVFileAndSubmitToFhirBase(MultipartFile file, String mappingType) throws IOException, ParseException{
     	if(mappingType == null) {
