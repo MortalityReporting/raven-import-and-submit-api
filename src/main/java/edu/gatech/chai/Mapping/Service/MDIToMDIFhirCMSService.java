@@ -16,7 +16,9 @@ import org.hl7.fhir.r4.model.Bundle.HTTPVerb;
 import org.hl7.fhir.r4.model.CodeableConcept;
 import org.hl7.fhir.r4.model.Coding;
 import org.hl7.fhir.r4.model.Composition.CompositionStatus;
+import org.hl7.fhir.r4.model.Composition.SectionComponent;
 import org.hl7.fhir.r4.model.ContactPoint;
+import org.hl7.fhir.r4.model.ContactPoint.ContactPointSystem;
 import org.hl7.fhir.r4.model.ContactPoint.ContactPointUse;
 import org.hl7.fhir.r4.model.DateTimeType;
 import org.hl7.fhir.r4.model.Enumerations.AdministrativeGender;
@@ -28,6 +30,7 @@ import org.hl7.fhir.r4.model.Location;
 import org.hl7.fhir.r4.model.Meta;
 import org.hl7.fhir.r4.model.Observation;
 import org.hl7.fhir.r4.model.Observation.ObservationStatus;
+import org.hl7.fhir.r4.model.Procedure.ProcedureStatus;
 import org.hl7.fhir.r4.model.Patient;
 import org.hl7.fhir.r4.model.Practitioner;
 import org.hl7.fhir.r4.model.Reference;
@@ -72,12 +75,18 @@ public class MDIToMDIFhirCMSService {
 	public Bundle convertToMDI(MDIModelFields inputFields) throws ParseException {
 		BundleDocumentMDIToEDRS returnBundle = new BundleDocumentMDIToEDRS();
 		CommonUtil.setUUID(returnBundle);
+		Date now = new Date();
+		returnBundle.setTimestamp(now);
+		//Assigning a raven generated system identifier
+		returnBundle.setIdentifier(new Identifier().setSystem("urn:mdi:raven:temporary").setValue(returnBundle.getId()+"_"+now.getTime()));
+		CommonUtil.setUUID(returnBundle);
 		returnBundle.setType(BundleType.BATCH);
 		Identifier caseIdentifier = new Identifier().setSystem(inputFields.SYSTEMID);
 		caseIdentifier.setValue("TestIdentifier");
 		caseIdentifier.setType(new CodeableConcept().addCoding(new Coding().setCode("1000007").setSystem("urn:mdi:temporary:code").setDisplay("Case Number")));
 		
 		CompositionMDIToEDRS mainComposition = returnBundle.getCompositionMDIToEDRS();
+		mainComposition.setTitle("Raven generated MDI-To-EDRS Document");
 		//Some bookkeeping to set the mainComposition id
 		CommonUtil.setUUID(mainComposition);
 		returnBundle.getEntryFirstRep().setFullUrl(mainComposition.getId());
@@ -212,6 +221,8 @@ public class MDIToMDIFhirCMSService {
 			mainComposition.getCauseMannerSection().addEntry(new Reference("Observation/"+deathInjuryDescription.getId()));
 			MDIToFhirCMSUtil.addResourceToBatchBundle(returnBundle, deathInjuryDescription);
 		}
+		SectionComponent medicationHistorySection = mainComposition.getMedicalHistorySection();
+		medicationHistorySection.setEmptyReason(new CodeableConcept().addCoding(new Coding("http://terminology.hl7.org/CodeSystem/list-empty-reason","unavailable","Unavailable")));
 		// Handle CaseNotes
 		/*if(inputFields.CASENOTES != null && !inputFields.CASENOTES.isEmpty()) {
 			for(String caseNote: inputFields.CASENOTES.split(";")) {
@@ -348,6 +359,7 @@ public class MDIToMDIFhirCMSService {
 		}
 		Address residentAddress = MDIToFhirCMSUtil.createAddress("", inputFields.RESSTREET,
 				inputFields.RESCITY, inputFields.RESCOUNTY, inputFields.RESSTATE, inputFields.RESZIP);
+		/*
 		if(inputFields.RESNAME != null && !inputFields.RESNAME.isEmpty()) {
 			Extension resNameExt = new Extension();
 			resNameExt.setUrl("urn:oid:2.16.840.1.113883.11.20.9.49");
@@ -356,7 +368,7 @@ public class MDIToMDIFhirCMSService {
 			resNameTextExt.setValue(new StringType(inputFields.RESNAME));
 			resNameExt.addExtension(resNameTextExt);
 			residentAddress.addExtension(resNameTextExt);
-		}
+		} */
 		residentAddress.setUse(AddressUse.HOME);
 		returnDecedent.addAddress(residentAddress);
 		if(inputFields.LKAWHERE != null && !inputFields.LKAWHERE.isEmpty()) {
@@ -387,11 +399,12 @@ public class MDIToMDIFhirCMSService {
 		}
 		if(inputFields.MELICENSE != null && !inputFields.MELICENSE.isEmpty()) {
 			Identifier melicenseIdentifier = new Identifier();
+			melicenseIdentifier.setSystem("unknown");
 			melicenseIdentifier.setValue(inputFields.MELICENSE);
 			returnPractitioner.addIdentifier(melicenseIdentifier);
 		}
 		if(inputFields.MEPHONE != null && !inputFields.MEPHONE.isEmpty()){
-			returnPractitioner.addTelecom(new ContactPoint().setUse(ContactPointUse.WORK).setValue(inputFields.MEPHONE));
+			returnPractitioner.addTelecom(new ContactPoint().setSystem(ContactPointSystem.PHONE).setUse(ContactPointUse.WORK).setValue(inputFields.MEPHONE));
 		}
 		Stream<String> meAddrFields = Stream.of(inputFields.ME_STREET, inputFields.ME_CITY,
 				inputFields.ME_COUNTY, inputFields.ME_STATE, inputFields.ME_ZIP);
@@ -419,6 +432,7 @@ public class MDIToMDIFhirCMSService {
 
 	private ProcedureDeathCertification createDeathCertification(MDIModelFields inputFields, Reference decedentReference, Reference certifierReference) {
 		ProcedureDeathCertification returnCertification = new ProcedureDeathCertification(decedentReference, certifierReference, inputFields.CERTIFIER_TYPE);
+		returnCertification.setStatus(ProcedureStatus.NOTDONE);
 		CommonUtil.setUUID(returnCertification);
 		return returnCertification;
 	}
@@ -467,6 +481,7 @@ public class MDIToMDIFhirCMSService {
 			if(cause != null && !cause.isEmpty()) {
 				int lineNumber = i + 1; //entry 0 = line number 1
 				ObservationCauseOfDeathPart1 causeOfDeathCondition = new ObservationCauseOfDeathPart1(patientResource, practitionerResource, cause, lineNumber, interval);
+				causeOfDeathCondition.setStatus(ObservationStatus.PRELIMINARY);
 				CommonUtil.setUUID(causeOfDeathCondition);
 				returnList.add(causeOfDeathCondition);
 			}
@@ -478,6 +493,7 @@ public class MDIToMDIFhirCMSService {
 				continue;
 			}
 			ObservationContributingCauseOfDeathPart2 conditionContrib = new ObservationContributingCauseOfDeathPart2(patientResource, practitionerResource, otherCause);
+			conditionContrib.setStatus(ObservationStatus.PRELIMINARY);
 			CommonUtil.setUUID(conditionContrib);
 			returnList.add(conditionContrib);
 		}
@@ -589,6 +605,7 @@ public class MDIToMDIFhirCMSService {
 		Location returnDeathLocation = new Location();
 		returnDeathLocation.setMeta(new Meta().addProfile("http://hl7.org/fhir/us/core/StructureDefinition/us-core-location"));
 		CommonUtil.setUUID(returnDeathLocation);
+		returnDeathLocation.setName(inputFields.DEATHLOCATION);
 		returnDeathLocation.setAddress(new Address().setText(inputFields.DEATHLOCATION));
 		return returnDeathLocation;
 	}

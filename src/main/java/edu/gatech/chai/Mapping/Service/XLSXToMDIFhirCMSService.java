@@ -126,7 +126,7 @@ public class XLSXToMDIFhirCMSService {
         returnModel.setMRNNUMBER(getStringForColumnAndName(sheet,fieldMap,currentColumn,"Decedent SSN"));
         returnModel.setOSCOND(getStringForColumnAndName(sheet,fieldMap,currentColumn,"Cause of Death Part II"));
         returnModel.setRACE(getStringForColumnAndName(sheet,fieldMap,currentColumn,"Decedent Race"));
-        returnModel.setRESNAME(getStringForColumnAndName(sheet,fieldMap,currentColumn,"Decedent Residence: Street"));
+        returnModel.setRESSTREET(getStringForColumnAndName(sheet,fieldMap,currentColumn,"Decedent Residence: Street"));
         returnModel.setRESCITY(getStringForColumnAndName(sheet,fieldMap,currentColumn,"Decedent Residence: city"));
         returnModel.setRESCOUNTY(getStringForColumnAndName(sheet,fieldMap,currentColumn,"Decedent Residence: county"));
         returnModel.setRESSTATE(getStringForColumnAndName(sheet,fieldMap,currentColumn,"Decedent Residence: State, U.S. Territory or Canadian Province"));
