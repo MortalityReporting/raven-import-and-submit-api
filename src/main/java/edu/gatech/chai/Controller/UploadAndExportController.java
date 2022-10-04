@@ -55,7 +55,6 @@ import com.opencsv.bean.CsvToBean;
 import com.opencsv.bean.CsvToBeanBuilder;
 
 import edu.gatech.chai.MDI.Model.MDIModelFields;
-import edu.gatech.chai.Mapping.Service.FhirCMSToVRDRService;
 import edu.gatech.chai.Mapping.Service.MDIToMDIFhirCMSService;
 import edu.gatech.chai.Mapping.Service.NightingaleSubmissionService;
 import edu.gatech.chai.Mapping.Service.VitalcheckSubmissionService;
@@ -75,8 +74,6 @@ public class UploadAndExportController {
 	MDIToMDIFhirCMSService mappingToMDIService;
 	@Autowired
 	SubmitBundleService submitBundleService;
-	@Autowired
-	FhirCMSToVRDRService fhirCMSToVRDRService;
 	@Autowired
 	private PatientSubmitRepository patientSubmitRepository;
 	@Autowired
