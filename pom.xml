@@ -25,11 +25,6 @@
 	
   <dependencies>
     <dependency>
-    	<groupId>edu.gatech</groupId>
-    	<artifactId>VRDR</artifactId>
-    	<version>v1.2.3-R4-STU1.2</version>
-    </dependency>
-    <dependency>
     	<groupId>edu.gatech.chai</groupId>
     	<artifactId>MDI</artifactId>
     	<version>1.0.1-STU1-CI</version>
