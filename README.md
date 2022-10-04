@@ -14,11 +14,11 @@ Raven-Mapper-Api provides:
 Requirements for installation are:
 * [Java-jdk version 10 or higher](https://www.oracle.com/java/technologies/javase-downloads.html)
 * [The build tool maven](http://maven.apache.org/)
-* A version of the VRDR java library. The correct version of the library is contained as a git submodule in this repository.
+* A version of the MDI java library. The correct version of the library is contained as a git submodule in this repository.
 
 ### Installation
 
-Install VRDR javalib: Move into ```${PROJECT_HOME}/VRDR_javalib``` and run ```mvn install``` from the command line.
+Install MDI javalib: Move into ```${PROJECT_HOME}/MDI_javalib``` and run ```mvn install``` from the command line.
 
 Package the main project into a war: Move into ```${PROJECT_HOME}``` and run ```mvn package```.
 
@@ -42,9 +42,6 @@ All configuration for the project can be found in ```src/main/resources/applicat
 * ```fhircms.basicAuth.username``` If [basic authentication](https://swagger.io/docs/specification/authentication/basic-authentication/) is used to access raven-fhir-server, specify the username to authenticate with.
 * ```fhircms.basicAuth.password``` If [basic authentication](https://swagger.io/docs/specification/authentication/basic-authentication/) is used to access raven-fhir-server, specify the password to authenticate with.
 * ```fhircms.submit=true```. Specifies whether to use [fhir's batch submission](https://www.hl7.org/fhir/http.html#transaction) when importing into the system. Should not be changed unless you know what you're doing.
-* ```canary.url=${CANARY_URL}```. Specifies a [canary instance](https://github.com/nightingaleproject/canary/) url for validating VRDR records before exporting records from the cms. If left blank, the VRDR records won't be validated from the canary tool, and is unnecessary if a canary instance is unavailable for use.
-*```submission.sources.sourceurl[x]``` Specifies a url source to export towards in the "export-all" workflow. The service will export VRDR records to each url specified. Can be omitted if the export-targeted mode is used instead (more on that in the exporting section)
-*```submission.sources.mode[x]``` Specifies a workflow submission mode to export towards in the "export-all" workflow. The currently supported modes are "axiell", "nightingale", and "vitalcheck", which are 3 different state registrar vendors with different workflows for exporting. As more vendors become available, more modes will be added to the system. Can be omitted if the export-targeted mode is used instead (more on that in the exporting section)
 
 ## Importing Tool
 Importing is accomplished through a web client ui hosted at the web root url. Once you are deploy, access the root with your web client, and you'll be greeted with a file selector. Selecting a csv of case data will allow the user to import the case data, convert to fhir, and submit to the raven-fhir-server. A UI report of each case imported, their name, age, and import status is shown in a table for review.
