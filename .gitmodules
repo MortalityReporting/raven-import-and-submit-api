@@ -1,7 +1,7 @@
 [submodule "VRDR_javalib"]
 	path = VRDR_javalib
 	url = https://github.com/MortalityReporting/VRDR_javalib
-	branch = r4
+	branch = master
 [submodule "MDI_javalib"]
 	path = MDI_javalib
 	url = https://github.com/MortalityReporting/MDI_javalib
