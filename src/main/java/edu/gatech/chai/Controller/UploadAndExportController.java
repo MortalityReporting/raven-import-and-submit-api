@@ -208,6 +208,10 @@ public class UploadAndExportController {
 			responseJson.add(responseObject);
 		}
 		//JsonNode responseJson = mapper.valueToTree(mappedXLSXData);
+		HttpStatus returnStatus = HttpStatus.CREATED;
+		if(mappedXLSXData.size() == 0){
+			returnStatus = HttpStatus.NO_CONTENT;
+		}
 		return new ResponseEntity<JsonNode>(responseJson, HttpStatus.CREATED);
     }
 
