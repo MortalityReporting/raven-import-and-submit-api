@@ -266,19 +266,14 @@ public class UploadAndExportController {
             	prettyFhirOutput = mapper.writerWithDefaultPrettyPrinter().writeValueAsString(submitBundleNode);
             }
             // Submit to fhir server
-            inputField.setSuccess(false);
             System.out.println(jsonBundle);
             if(submitFlag) {
                 try {
 	                ResponseEntity<String> response = submitBundleService.submitBundle(jsonBundle);
 	                System.out.println("Client response body:" + response.getBody());
 	                // save users list on model
-	                if(response.getStatusCode() == HttpStatus.OK ) {
-	                	inputField.setSuccess(true);
-	                }
                 }
                 catch (HttpStatusCodeException e) {
-                	inputField.setSuccess(false);
                 	continue;
                 }
 				//Until we resolve what the right request from the FHIR server is, we need to not use this.

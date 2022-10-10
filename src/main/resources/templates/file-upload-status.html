@@ -29,7 +29,6 @@
                     <th scope="col">LASTNAME</th>
                     <th scope="col">Date Prn Dead</th>
                     <th scope="col">AGE</th>
-                    <th scope="col">Submission Received?</th>
                 </tr>
                 </thead>
                 <tbody>
@@ -40,8 +39,6 @@
                     <td th:text="${case.LASTNAME}"></td>
                     <td th:text="${case.PRNDATE}"></td>
                     <td th:text="${case.AGE}"></td>
-                    <td th:if=${case.success}><span class="glyphicon glyphicon-ok"></span></td>
-                    <td th:unless=${case.success}><span class="glyphicon glyphicon-remove"></span></td>
                 </tr>
                 </tbody>
             </table>

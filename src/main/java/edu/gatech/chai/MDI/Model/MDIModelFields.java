@@ -231,8 +231,6 @@ public class MDIModelFields {
 	public String ME_STATE = "";
 	@CsvBindByName
 	public String ME_ZIP = "";
-
-	public boolean success = false;
 	
 	public MDIModelFields() {
 		
@@ -1150,18 +1148,6 @@ public class MDIModelFields {
 
 	public void setME_ZIP(String ME_ZIP) {
 		this.ME_ZIP = ME_ZIP;
-	}
-
-	public boolean getSuccess() {
-		return this.success;
-	}
-
-	public boolean isSuccess() {
-		return success;
-	}
-
-	public void setSuccess(boolean success) {
-		this.success = success;
 	}
 	
 }
