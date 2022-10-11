@@ -122,7 +122,7 @@ public class MDIToFhirCMSUtil {
 			resource.setId(new IdType(UUID.randomUUID().toString()));
 		}
 		BundleEntryComponent bec = new BundleEntryComponent();
-		bec.setFullUrl(resource.getId());
+		bec.setFullUrl(resource.getResourceType().name()+"/"+resource.getId());
 		bec.setRequest(new BundleEntryRequestComponent().setMethod(HTTPVerb.POST));
 		bec.setResource(resource);
 		bundle.addEntry(bec);
