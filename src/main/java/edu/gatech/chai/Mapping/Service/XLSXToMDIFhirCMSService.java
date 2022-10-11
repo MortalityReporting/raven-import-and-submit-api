@@ -45,7 +45,7 @@ public class XLSXToMDIFhirCMSService {
         XSSFRow headerRow = sheet.getRow(0); //Header should be first row
         Cell headerElementCell = findCellFromRow(headerRow, ELEMENT_HEADER);
         if(headerElementCell == null){
-            throw new Exception("Couldn't find field header cell in row 1");
+            throw new Exception("Couldn't find field header cell in row 1. Are you sure the template file is the correct file?");
         }
         int elementColumnIndex = headerElementCell.getColumnIndex();
         

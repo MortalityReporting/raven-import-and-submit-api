@@ -224,10 +224,10 @@ public class UploadAndExportController {
 		try {
 			ResponseEntity<String> response = submitBundleService.submitBundle(fhirBundleString);
 			System.out.println("Client response body:" + response.getBody());
+			patientInfo.put("statusCode", response.getStatusCode().value());
 			// save users list on model
 			if(response.getStatusCode() == HttpStatus.OK ) {
 				patientInfo.put("status", "Success");
-				patientInfo.put("statusCode", response.getStatusCode().value());
 			}
 		}
 		catch (HttpStatusCodeException e) {
