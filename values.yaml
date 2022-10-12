@@ -1,6 +1,6 @@
 # The namespace to deploy your application
 global:
-  namespace: mortality-reporting
+  namespace: raven-import-and-submit-api
 
 # Default values for webapp.
 # This is a YAML-formatted file.
@@ -8,7 +8,7 @@ global:
 # REMOVE THIS SECTION IF YOUR APPLICATION DOES NOT HAVE A FRONT END
 frontend2:
   #name is a DNS-1035 label and must consist of lower case alphanumeric characters or '-', start with an alphabetic character, and end with an alphanumeric character (e.g. 'my-name',  or 'abc-123')
-  name: raven-import-api
+  name: raven-import-and-submit-api
   port: 8080
   replicaCount: 1
   proxy:

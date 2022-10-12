@@ -7,6 +7,11 @@ steps:
   image: docker:git
   commands:
     - git submodule update --init --recursive --remote
+# Retrieve chart builder
+- name: get_chart_builder
+  image: docker:git
+  commands:
+    - git clone https://github.gatech.edu/es130/HDAP_helm_deploy_templates.git
 # Create Docker image from WAR file and push to HDAP Docker registry
 - name: create_docker_image_raven-mapper-api
   image: plugins/docker
@@ -14,6 +19,22 @@ steps:
     repo: gt-build.hdap.gatech.edu/raven-import-and-submit-api
     context: .
     dockerfile: ./Dockerfile
+# Configure chart bulider
+- name: copy_namespace
+  image: busybox:1.31
+  commands:
+    - userns=`awk '/namespace:/{print $2}' ./values.yaml`
+    - sed -i "s/REPLACE_WITH_NAMESPACE/$userns/g" ./HDAP_helm_deploy_templates/deploy/Dockerfile
+#Deploy to kubernetes
+- name: deploy_to_k8s
+  image: docker:dind
+  volumes:
+    - name: dockersock
+      path: /var/run
+  commands:
+    - sleep 10
+    - docker build -t deploytok8s -f ./HDAP_helm_deploy_templates/deploy/Dockerfile .
+    - docker run deploytok8s
 
 services:
   - name: docker
