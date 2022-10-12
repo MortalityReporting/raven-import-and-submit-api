@@ -18,5 +18,5 @@ frontend2:
     repository: gt-build.hdap.gatech.edu/raven-import-and-submit-api
     tag: latest
     pullPolicy: Always
-#  envFrom:
-#    name: forte-fhir-mapper-environment-variables
+  envFrom:
+    name: raven-import-and-submit-api-environment-variables-2
