@@ -31,7 +31,7 @@ public class XLSXToMDIFhirCMSService {
         ,"Cause of Death Part I Interval, Line b","Cause of Death Part I Interval, Line c","Cause of Death Part I Interval, Line d","Cause of Death Part II", "Manner of Death"
         ,"Date of Injury", "Time of Injury", "Estimated Date of Injury Interval: Earliest", "Estimated Date of Injury Interval: Latest", "Did Injury Occur at Work?", "Decedent's Transportation Role During Injury"
         ,"Location of Death","Location of Injury","Place of death","Pregnancy status","Did Tobacco Use Contribute to Death?"
-        ,"Decedent Date of death","Decedent Time of death","Estimated Date of Death Interval: Earliest", "Estimated Date of Death Interval: Latest","Date pronounced dead","Time pronounced dead","Place of death"
+        ,"Decedent Date of death","Decedent Time of death","Date establishment method","Estimated Date of Death Interval: Earliest", "Estimated Date of Death Interval: Latest","Date pronounced dead","Time pronounced dead","Place of death"
         ,"Autopsy Performed?", "Autopsy Results Available?"
         ,"Did Injury Occur at Work?", "How injury occurred"
         ,"Medical Examiner Name","Medical Examiner Phone Number", "Medical Examiner License Number"
@@ -83,16 +83,15 @@ public class XLSXToMDIFhirCMSService {
         MDIModelFields returnModel = new MDIModelFields(); //This is going to be replaced SOON with new sheet column definitions!
         handleAge(returnModel, currentColumn, sheet, fieldMap);
         handleName(returnModel, currentColumn, sheet, fieldMap);
-        returnModel.setATWORK(getStringForColumnAndName(sheet,fieldMap,currentColumn,"Did Injury Occur at Work?"));
+        returnModel.setAUTOPSYPERFORMED(getStringForColumnAndName(sheet, fieldMap, currentColumn, "Autopsy Performed?"));
         returnModel.setAUTOPSYRESULTSAVAILABLE(getStringForColumnAndName(sheet, fieldMap, currentColumn, "Autopsy Results Available?"));
+        returnModel.setATWORK(getStringForColumnAndName(sheet,fieldMap,currentColumn,"Did Injury Occur at Work?"));
         returnModel.setBIRTHDATE(getStringForColumnAndName(sheet,fieldMap,currentColumn,"Decedent DOB"));
         returnModel.setCASENOTES(getStringForColumnAndName(sheet,fieldMap,currentColumn,"Case History"));
         returnModel.setCAUSEA(getStringForColumnAndName(sheet,fieldMap,currentColumn,"Cause of Death Part I Line a"));
         returnModel.setCAUSEB(getStringForColumnAndName(sheet,fieldMap,currentColumn,"Cause of Death Part I Line b"));
         returnModel.setCAUSEC(getStringForColumnAndName(sheet,fieldMap,currentColumn,"Cause of Death Part I Line c"));
         returnModel.setCAUSED(getStringForColumnAndName(sheet,fieldMap,currentColumn,"Cause of Death Part I Line d"));
-        returnModel.setCDEATHDATE(getStringForColumnAndName(sheet,fieldMap,currentColumn,"Date pronounced dead"));
-        returnModel.setCDEATHTIME(getStringForColumnAndName(sheet,fieldMap,currentColumn,"Time pronounced dead"));
         returnModel.setCERTIFIER_NAME(getStringForColumnAndName(sheet,fieldMap,currentColumn,"Certifier Name"));
         returnModel.setCERTIFIER_TYPE(getStringForColumnAndName(sheet,fieldMap,currentColumn,"Certifier Type"));
         returnModel.setCHOWNINJURY(getStringForColumnAndName(sheet,fieldMap,currentColumn,"How injury occurred"));
@@ -100,10 +99,12 @@ public class XLSXToMDIFhirCMSService {
         returnModel.setCINJTIME(getStringForColumnAndName(sheet,fieldMap,currentColumn,"Time of Injury"));
         //New Fields
         returnModel.setDEATHLOCATION(getStringForColumnAndName(sheet,fieldMap,currentColumn,"Location of Death"));
+        returnModel.setDEATHLOCATIONTYPE(getStringForColumnAndName(sheet,fieldMap,currentColumn,"Place of death"));
         returnModel.setINJURYLOCATION(getStringForColumnAndName(sheet,fieldMap,currentColumn,"Location of Injury"));
 
         returnModel.setCDEATHDATE(getStringForColumnAndName(sheet,fieldMap,currentColumn,"Decedent Date of death"));
-        returnModel.setCDEATHDATE(getStringForColumnAndName(sheet,fieldMap,currentColumn,"Decedent Time of death"));
+        returnModel.setCDEATHTIME(getStringForColumnAndName(sheet,fieldMap,currentColumn,"Decedent Time of death"));
+        returnModel.setCDEATHESTABLISHEMENTMETHOD(getStringForColumnAndName(sheet,fieldMap,currentColumn,"Date establishment method"));
         returnModel.setETHNICITY(getStringForColumnAndName(sheet,fieldMap,currentColumn,"Decedent Ethnicity"));
         returnModel.setEDRSCASEID(getStringForColumnAndName(sheet,fieldMap,currentColumn,"Tracking Number: EDRS File Number"));
         returnModel.setDURATIONA(getStringForColumnAndName(sheet,fieldMap,currentColumn,"Cause of Death Part I Interval, Line a"));
@@ -125,11 +126,14 @@ public class XLSXToMDIFhirCMSService {
         returnModel.setMARITAL(getStringForColumnAndName(sheet,fieldMap,currentColumn,"Decedent Marital status"));
         returnModel.setMRNNUMBER(getStringForColumnAndName(sheet,fieldMap,currentColumn,"Decedent SSN"));
         returnModel.setOSCOND(getStringForColumnAndName(sheet,fieldMap,currentColumn,"Cause of Death Part II"));
+        returnModel.setPRNDATE(getStringForColumnAndName(sheet,fieldMap,currentColumn,"Date pronounced dead"));
+        returnModel.setPRNTIME(getStringForColumnAndName(sheet,fieldMap,currentColumn,"Time pronounced dead"));
         returnModel.setRACE(getStringForColumnAndName(sheet,fieldMap,currentColumn,"Decedent Race"));
         returnModel.setRESSTREET(getStringForColumnAndName(sheet,fieldMap,currentColumn,"Decedent Residence: Street"));
         returnModel.setRESCITY(getStringForColumnAndName(sheet,fieldMap,currentColumn,"Decedent Residence: city"));
         returnModel.setRESCOUNTY(getStringForColumnAndName(sheet,fieldMap,currentColumn,"Decedent Residence: county"));
         returnModel.setRESSTATE(getStringForColumnAndName(sheet,fieldMap,currentColumn,"Decedent Residence: State, U.S. Territory or Canadian Province"));
+        returnModel.setRESZIP(getStringForColumnAndName(sheet,fieldMap,currentColumn,"Decedent Residence: Postal Code"));
         returnModel.setRESCOUNTRY(getStringForColumnAndName(sheet,fieldMap,currentColumn,"Decedent Residence: Country"));
         returnModel.setPREGNANT(getStringForColumnAndName(sheet,fieldMap,currentColumn,"Pregnancy status"));        
         returnModel.setTOBACCO(getStringForColumnAndName(sheet,fieldMap,currentColumn,"Did Tobacco Use Contribute to Death?"));
@@ -155,18 +159,19 @@ public class XLSXToMDIFhirCMSService {
 
     protected MDIModelFields handleName(MDIModelFields returnModel, int currentColumn, XSSFSheet sheet, Map<String, Integer> fieldMap){
         String fullName = getStringForColumnAndName(sheet,fieldMap,currentColumn,"Decedent Name");
-        Pattern pattern = Pattern.compile("(\\w+)\\s*([^\\s]+)?\\s*(\\w+).*");
+        Pattern pattern = Pattern.compile("(\\w+)\\s+(\\w+)(\\s+(\\w+))?");
         Matcher matcher = pattern.matcher(fullName);
-        if(matcher.groupCount() == 3){
+        if(matcher.groupCount() == 4){
             matcher.matches();
-            returnModel.setFIRSTNAME(matcher.group(1));
-            returnModel.setMIDNAME(matcher.group(2));
-            returnModel.setLASTNAME(matcher.group(3));
-        }
-        else if(matcher.groupCount() == 2){
-            matcher.matches();
-            returnModel.setFIRSTNAME(matcher.group(1));
-            returnModel.setLASTNAME(matcher.group(3));
+            if(matcher.group(3) != null){
+                returnModel.setFIRSTNAME(matcher.group(1));
+                returnModel.setMIDNAME(matcher.group(2));
+                returnModel.setLASTNAME(matcher.group(3));
+            }
+            else{
+                returnModel.setFIRSTNAME(matcher.group(1));
+                returnModel.setLASTNAME(matcher.group(2));
+            }
         }
         return returnModel;
     }

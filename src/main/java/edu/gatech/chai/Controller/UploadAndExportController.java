@@ -9,21 +9,9 @@ import java.text.ParseException;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.NoSuchElementException;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.apache.tika.Tika;
-import org.hl7.fhir.r4.model.Bundle;
-import org.hl7.fhir.r4.model.Bundle.BundleEntryComponent;
-import org.hl7.fhir.r4.model.DetectedIssue;
-import org.hl7.fhir.r4.model.Extension;
-import org.hl7.fhir.r4.model.IntegerType;
-import org.hl7.fhir.r4.model.MessageHeader;
-import org.hl7.fhir.r4.model.OperationOutcome;
-import org.hl7.fhir.r4.model.Resource;
-import org.hl7.fhir.r4.model.ResourceType;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpHeaders;
@@ -35,16 +23,12 @@ import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.client.HttpStatusCodeException;
-import org.springframework.web.client.ResourceAccessException;
-import org.springframework.web.client.RestClientException;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.server.ResponseStatusException;
 
 import com.fasterxml.jackson.annotation.JsonAutoDetect.Visibility;
 import com.fasterxml.jackson.annotation.PropertyAccessor;
-import com.fasterxml.jackson.core.JsonParseException;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -56,16 +40,10 @@ import com.opencsv.bean.CsvToBeanBuilder;
 
 import edu.gatech.chai.MDI.Model.MDIModelFields;
 import edu.gatech.chai.Mapping.Service.MDIToMDIFhirCMSService;
-import edu.gatech.chai.Mapping.Service.NightingaleSubmissionService;
-import edu.gatech.chai.Mapping.Service.VitalcheckSubmissionService;
 import edu.gatech.chai.Mapping.Service.XLSXToMDIFhirCMSService;
-import edu.gatech.chai.Submission.Configuration.SubmissionSourcesConfiguration;
 import edu.gatech.chai.Submission.Entity.PatientSubmit;
-import edu.gatech.chai.Submission.Entity.SourceStatus;
-import edu.gatech.chai.Submission.Entity.Status;
 import edu.gatech.chai.Submission.Repository.PatientSubmitRepository;
 import edu.gatech.chai.Submission.Service.SubmitBundleService;
-import edu.gatech.chai.VRDR.model.DeathCertificateDocument;
 
 @Controller
 @CrossOrigin(origins = "*")
@@ -202,9 +180,11 @@ public class UploadAndExportController {
 			}
 			responseObject.set("fields", fields);
 			//Actually submit to the fhir server here!
-			JsonNode patientInfo = submitToFhirBase(bundleString, modelFields, mapper);
-			responseObject.set("fhirResponse", patientInfo);
-			responseObject.put("Narrative", "");
+			if(submitFlag){
+				JsonNode patientInfo = submitToFhirBase(bundleString, modelFields, mapper);
+				responseObject.set("fhirResponse", patientInfo);
+				responseObject.put("Narrative", "");
+			}
 			responseJson.add(responseObject);
 		}
 		//JsonNode responseJson = mapper.valueToTree(mappedXLSXData);
@@ -212,7 +192,7 @@ public class UploadAndExportController {
 		if(mappedXLSXData.size() == 0){
 			returnStatus = HttpStatus.NO_CONTENT;
 		}
-		return new ResponseEntity<JsonNode>(responseJson, HttpStatus.CREATED);
+		return new ResponseEntity<JsonNode>(responseJson, returnStatus);
     }
 
 	private JsonNode submitToFhirBase(String fhirBundleString, MDIModelFields modelFields, ObjectMapper mapper){

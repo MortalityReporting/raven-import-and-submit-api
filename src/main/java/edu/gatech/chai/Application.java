@@ -7,7 +7,6 @@ import org.springframework.context.annotation.Bean;
 
 import edu.gatech.chai.VRDR.context.VRDRFhirContext;
 import edu.gatech.chai.MDI.context.MDIFhirContext;
-import edu.gatech.chai.Mapping.Service.CanaryValidationService;
 import edu.gatech.chai.Mapping.Service.NightingaleSubmissionService;
 
 @SpringBootApplication

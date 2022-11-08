@@ -16,13 +16,8 @@ import org.hl7.fhir.r4.model.Bundle;
 import org.hl7.fhir.r4.model.Bundle.BundleEntryComponent;
 import org.hl7.fhir.r4.model.Bundle.BundleEntryRequestComponent;
 import org.hl7.fhir.r4.model.Bundle.HTTPVerb;
-
-import edu.gatech.chai.VRDR.model.util.CommonUtil;
-
-import org.hl7.fhir.r4.model.CodeableConcept;
 import org.hl7.fhir.r4.model.HumanName;
 import org.hl7.fhir.r4.model.IdType;
-import org.hl7.fhir.r4.model.Meta;
 import org.hl7.fhir.r4.model.Quantity;
 import org.hl7.fhir.r4.model.Resource;
 

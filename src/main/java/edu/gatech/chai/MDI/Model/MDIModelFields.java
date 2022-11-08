@@ -102,7 +102,7 @@ public class MDIModelFields {
 	@CsvBindByName
 	public String CIDATEFLAG = "";
 	@CsvBindByName
-	public String CDEATHFLAG = "";
+	public String CDEATHESTABLISHEMENTMETHOD = "";
 	@CsvBindByName
 	public String LKADATE = "";
 	@CsvBindByName
@@ -127,6 +127,8 @@ public class MDIModelFields {
 	public String RESCOUNTRY = "";
 	@CsvBindByName
 	public String DEATHLOCATION = "";
+	@CsvBindByName
+	public String DEATHLOCATIONTYPE = "";
 	@CsvBindByName
 	public String INJURYLOCATION = "";
 	@CsvBindByName
@@ -204,7 +206,7 @@ public class MDIModelFields {
 	@CsvBindByName
 	public String HCPROVIDER = "";
 	@CsvBindByName
-	public String CAUTOPSY = "";
+	public String AUTOPSYPERFORMED = "";
 	@CsvBindByName
 	public String AUTOPSYRESULTSAVAILABLE = "";
 	@CsvBindByName
@@ -588,12 +590,12 @@ public class MDIModelFields {
 		CIDATEFLAG = cIDATEFLAG;
 	}
 
-	public String getCDEATHFLAG() {
-		return CDEATHFLAG;
+	public String getCDEATHESTABLISHEMENTMETHOD() {
+		return CDEATHESTABLISHEMENTMETHOD;
 	}
 
-	public void setCDEATHFLAG(String cDEATHFLAG) {
-		CDEATHFLAG = cDEATHFLAG;
+	public void setCDEATHESTABLISHEMENTMETHOD(String cDEATHESTABLISHEMENTMETHOD) {
+		CDEATHESTABLISHEMENTMETHOD = cDEATHESTABLISHEMENTMETHOD;
 	}
 
 	public String getCDEATHTIME() {
@@ -698,6 +700,14 @@ public class MDIModelFields {
 
 	public void setDEATHLOCATION(String dEATHLOCATION) {
 		DEATHLOCATION = dEATHLOCATION;
+	}
+
+	public String getDEATHLOCATIONTYPE() {
+		return DEATHLOCATIONTYPE;
+	}
+
+	public void setDEATHLOCATIONTYPE(String dEATHLOCATIONTYPE) {
+		DEATHLOCATIONTYPE = dEATHLOCATIONTYPE;
 	}
 
 	public String getINJURYLOCATION() {
@@ -948,12 +958,12 @@ public class MDIModelFields {
 		HCPROVIDER = hCPROVIDER;
 	}
 
-	public String getCAUTOPSY() {
-		return CAUTOPSY;
+	public String getAUTOPSYPERFORMED() {
+		return AUTOPSYPERFORMED;
 	}
 
-	public void setCAUTOPSY(String cAUTOPSY) {
-		CAUTOPSY = cAUTOPSY;
+	public void setAUTOPSYPERFORMED(String aUTOPSYPERFORMED) {
+		AUTOPSYPERFORMED = aUTOPSYPERFORMED;
 	}
 
 	public String getAUTOPSYRESULTSAVAILABLE() {

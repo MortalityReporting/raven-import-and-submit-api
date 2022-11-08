@@ -43,6 +43,7 @@ import edu.gatech.chai.MDI.Model.MDIModelFields;
 import edu.gatech.chai.MDI.context.MDIFhirContext;
 import edu.gatech.chai.MDI.model.resource.BundleDocumentMDIToEDRS;
 import edu.gatech.chai.MDI.model.resource.CompositionMDIToEDRS;
+import edu.gatech.chai.MDI.model.resource.ObservationAutopsyPerformedIndicator;
 import edu.gatech.chai.MDI.model.resource.ObservationCauseOfDeathPart1;
 import edu.gatech.chai.MDI.model.resource.ObservationContributingCauseOfDeathPart2;
 import edu.gatech.chai.MDI.model.resource.ObservationDeathDate;
@@ -178,14 +179,6 @@ public class MDIToMDIFhirCMSService {
 			mainComposition.getCircumstancesSection().addEntry(new Reference("Location/"+injuryLocation.getId()));
 			MDIToFhirCMSUtil.addResourceToBatchBundle(returnBundle, injuryLocation);
 		}
-		//Handle HowDeathInjuryOccured
-		Stream<String> injuryIncidentFields = Stream.of(inputFields.CHOWNINJURY, inputFields.ATWORK,
-				inputFields.TRANSPORTATION);
-		if(!injuryIncidentFields.allMatch(x -> x == null || x.isEmpty())) {
-			ObservationHowDeathInjuryOccurred howDeathInjuryOccurred = createObservationHowDeathInjuryOccurred(inputFields, patientResource, practitionerResource);
-			mainComposition.getCircumstancesSection().addEntry(new Reference("Observation/"+howDeathInjuryOccurred.getId()));
-			MDIToFhirCMSUtil.addResourceToBatchBundle(returnBundle, howDeathInjuryOccurred);
-		}
 		// Handle Death Date
 		Stream<String> deathDateFields = Stream.of(inputFields.PRNDATE, inputFields.PRNTIME,
 				inputFields.CDEATHDATE, inputFields.CDEATHTIME);
@@ -215,7 +208,8 @@ public class MDIToMDIFhirCMSService {
 			MDIToFhirCMSUtil.addResourceToBatchBundle(returnBundle, manner);
 		}
 		// Handle HowDeathInjuryOccurred
-		Stream<String> deathInjuryFields = Stream.of(inputFields.CHOWNINJURY);
+		Stream<String> deathInjuryFields = Stream.of(inputFields.CHOWNINJURY, inputFields.CINJDATE, inputFields.CINJTIME, inputFields.INJURYLOCATION,
+				inputFields.ATWORK,inputFields.TRANSPORTATION);
 		if(!deathInjuryFields.allMatch(x -> x == null || x.isEmpty())) {
 			ObservationHowDeathInjuryOccurred deathInjuryDescription = createHowDeathInjuryOccurred(inputFields, patientResource, practitionerResource);
 			mainComposition.getCauseMannerSection().addEntry(new Reference("Observation/"+deathInjuryDescription.getId()));
@@ -231,6 +225,14 @@ public class MDIToMDIFhirCMSService {
 				MDIToFhirCMSUtil.addResourceToBatchBundle(returnBundle, caseNoteResource);
 			}
 		}*/
+
+		SectionComponent examAutopsySection = mainComposition.getExamAutopsySection();
+		Stream<String> autopsyFields = Stream.of(inputFields.AUTOPSYPERFORMED, inputFields.AUTOPSYRESULTSAVAILABLE);
+		if(!autopsyFields.allMatch(x -> x == null || x.isEmpty())) {
+			ObservationAutopsyPerformedIndicator autopsyPerformedIndicator = createAutopsyPerformedIndicator(inputFields, patientReference, practitionerReference);
+			examAutopsySection.addEntry(new Reference("Observation/"+autopsyPerformedIndicator.getId()));
+			MDIToFhirCMSUtil.addResourceToBatchBundle(returnBundle, autopsyPerformedIndicator);
+		}
 		return returnBundle;
 	}
 	
@@ -359,16 +361,6 @@ public class MDIToMDIFhirCMSService {
 		}
 		Address residentAddress = MDIToFhirCMSUtil.createAddress("", inputFields.RESSTREET,
 				inputFields.RESCITY, inputFields.RESCOUNTY, inputFields.RESSTATE, inputFields.RESZIP);
-		/*
-		if(inputFields.RESNAME != null && !inputFields.RESNAME.isEmpty()) {
-			Extension resNameExt = new Extension();
-			resNameExt.setUrl("urn:oid:2.16.840.1.113883.11.20.9.49");
-			Extension resNameTextExt = new Extension();
-			resNameTextExt.setUrl("Text");
-			resNameTextExt.setValue(new StringType(inputFields.RESNAME));
-			resNameExt.addExtension(resNameTextExt);
-			residentAddress.addExtension(resNameTextExt);
-		} */
 		residentAddress.setUse(AddressUse.HOME);
 		returnDecedent.addAddress(residentAddress);
 		if(inputFields.LKAWHERE != null && !inputFields.LKAWHERE.isEmpty()) {
@@ -437,11 +429,6 @@ public class MDIToMDIFhirCMSService {
 		return returnCertification;
 	}
 	
-	private ObservationHowDeathInjuryOccurred createObservationHowDeathInjuryOccurred(MDIModelFields inputFields, Patient decedent, Practitioner practitioner) throws ParseException {
-		ObservationHowDeathInjuryOccurred returnObservation = new ObservationHowDeathInjuryOccurred(decedent, practitioner, inputFields.CHOWNINJURY, "", inputFields.ATWORK, inputFields.TRANSPORTATION);
-		CommonUtil.setUUID(returnObservation);
-		return returnObservation;
-	}
 	
 	private ObservationTobaccoUseContributedToDeath createObservationTobaccoUseContributedToDeath(MDIModelFields inputFields, Reference decedentReference) throws ParseException {
 		ObservationTobaccoUseContributedToDeath tobacco = new ObservationTobaccoUseContributedToDeath();
@@ -457,7 +444,7 @@ public class MDIToMDIFhirCMSService {
 		pregnant.setStatus(ObservationStatus.PRELIMINARY);
 		CommonUtil.setUUID(pregnant);
 		pregnant.setSubject(decedentReference);
-		pregnant.setValue(inputFields.PREGNANT);
+		pregnant.setValue(new StringType(inputFields.PREGNANT));
 		return pregnant;
 	}
 
@@ -540,9 +527,25 @@ public class MDIToMDIFhirCMSService {
 		return manner;
 	}
 	
-	private ObservationHowDeathInjuryOccurred createHowDeathInjuryOccurred(MDIModelFields inputFields, Patient patientResource, Practitioner practitionerResource) {
+	private ObservationHowDeathInjuryOccurred createHowDeathInjuryOccurred(MDIModelFields inputFields, Patient patientResource, Practitioner practitionerResource) throws ParseException {
 		ObservationHowDeathInjuryOccurred injuryDescription = new ObservationHowDeathInjuryOccurred(patientResource, practitionerResource, inputFields.CHOWNINJURY);
 		CommonUtil.setUUID(injuryDescription);
+
+		if(inputFields.CINJDATE != null && !inputFields.CINJDATE.isEmpty()) {
+			Date injDate = MDIToFhirCMSUtil.parseDate(inputFields.CINJDATE);
+			if(inputFields.CINJTIME != null && !inputFields.CINJTIME.isEmpty()) {
+				MDIToFhirCMSUtil.addTimeToDate(injDate, inputFields.CINJTIME);
+			}
+			DateTimeType injEffectiveDT = new DateTimeType(injDate);
+			injuryDescription.setEffective(injEffectiveDT);
+		}
+
+		if(inputFields.ATWORK != null && !inputFields.ATWORK.isEmpty()){
+			injuryDescription.addWorkInjuryIndicator(inputFields.ATWORK);
+		}
+		if(inputFields.TRANSPORTATION != null && !inputFields.TRANSPORTATION.isEmpty()){
+			injuryDescription.addTransportationRole(inputFields.TRANSPORTATION);
+		}
 		return injuryDescription;
 	}
 
@@ -598,6 +601,12 @@ public class MDIToMDIFhirCMSService {
 			DateTimeType prnDT = new DateTimeType(prnDate);
 			returnDeathDate.addDatePronouncedDead(prnDT);
 		}
+		if(inputFields.DEATHLOCATIONTYPE != null && !inputFields.DEATHLOCATIONTYPE.isEmpty()){
+			returnDeathDate.addPlaceOfDeath(inputFields.DEATHLOCATIONTYPE);
+		}
+		if(inputFields.CDEATHESTABLISHEMENTMETHOD != null && !inputFields.CDEATHESTABLISHEMENTMETHOD.isEmpty()){
+			returnDeathDate.setEstablishmentMethod(inputFields.CDEATHESTABLISHEMENTMETHOD);
+		}
 		return returnDeathDate;
 	}
 	
@@ -608,6 +617,13 @@ public class MDIToMDIFhirCMSService {
 		returnDeathLocation.setName(inputFields.DEATHLOCATION);
 		returnDeathLocation.setAddress(new Address().setText(inputFields.DEATHLOCATION));
 		return returnDeathLocation;
+	}
+
+	private ObservationAutopsyPerformedIndicator createAutopsyPerformedIndicator(MDIModelFields inputFields,Reference decedentReference,Reference practitionerReference){
+		ObservationAutopsyPerformedIndicator autopsyPerformedIndicator = new ObservationAutopsyPerformedIndicator(decedentReference, inputFields.AUTOPSYPERFORMED, inputFields.AUTOPSYRESULTSAVAILABLE);
+		CommonUtil.setUUID(autopsyPerformedIndicator);
+		autopsyPerformedIndicator.addPerformer(practitionerReference);
+		return autopsyPerformedIndicator;
 	}
 	
 	protected Patient addRace(Patient patient, String ombCategory, String detailed, String text) {
