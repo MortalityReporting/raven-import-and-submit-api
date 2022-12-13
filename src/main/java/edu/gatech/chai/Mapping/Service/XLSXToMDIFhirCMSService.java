@@ -14,12 +14,15 @@ import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.xssf.usermodel.XSSFRow;
 import org.apache.poi.xssf.usermodel.XSSFSheet;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
 import edu.gatech.chai.MDI.Model.MDIModelFields;
 
 @Service
 public class XLSXToMDIFhirCMSService {
+    private static final Logger logger = LoggerFactory.getLogger(XLSXToMDIFhirCMSService.class);
     private static final int FIRST_ROW = 1;
     // private static final String SECTION_HEADER = "Highlighted yellow items have been changed"; //Note this will ofc change to a reasonable "section name" in the future
     private static final String ELEMENT_HEADER = "Elements";
@@ -36,7 +39,7 @@ public class XLSXToMDIFhirCMSService {
         ,"Did Injury Occur at Work?", "How injury occurred"
         ,"Medical Examiner Name","Medical Examiner Phone Number", "Medical Examiner License Number"
         ,"Medical Examiner Office: Street", "Medical Examiner Office: City", "Medical Examiner Office: County", "Medical Examiner Office: State, U.S. Territory or Canadian Province", "Medical Examiner Office: Postal Code"
-        ,"Certifier Name", "Certifier Type"};
+        ,"Certifier Name", "Certifier Type", "Case History"};
     private static final String endCapColumnHeader = "End of Cases"; //Cell text we expect at the end of the row.
 
     public List<MDIModelFields> convertToMDIModelFields(XSSFWorkbook workbook) throws Exception{
@@ -73,13 +76,13 @@ public class XLSXToMDIFhirCMSService {
                 returnMap.put(fieldName, Integer.valueOf(rowOffset));
             }
             catch(NullPointerException e){
-                System.out.println("Couldn't find field '"+fieldName+"'.");
+                logger.debug("Couldn't find field '"+fieldName+"'.");
             }
         }
         return returnMap;
     }
 
-    public MDIModelFields convertColumnToModelFields(int currentColumn, XSSFSheet sheet, Map<String, Integer> fieldMap){
+    public MDIModelFields convertColumnToModelFields(int currentColumn, XSSFSheet sheet, Map<String, Integer> fieldMap) throws Exception{
         MDIModelFields returnModel = new MDIModelFields(); //This is going to be replaced SOON with new sheet column definitions!
         handleAge(returnModel, currentColumn, sheet, fieldMap);
         handleName(returnModel, currentColumn, sheet, fieldMap);
@@ -157,12 +160,11 @@ public class XLSXToMDIFhirCMSService {
         return returnModel;
     }
 
-    protected MDIModelFields handleName(MDIModelFields returnModel, int currentColumn, XSSFSheet sheet, Map<String, Integer> fieldMap){
+    protected MDIModelFields handleName(MDIModelFields returnModel, int currentColumn, XSSFSheet sheet, Map<String, Integer> fieldMap) throws Exception{
         String fullName = getStringForColumnAndName(sheet,fieldMap,currentColumn,"Decedent Name");
-        Pattern pattern = Pattern.compile("(\\w+)\\s+(\\w+)(\\s+(\\w+))?");
+        Pattern pattern = Pattern.compile("([\\w-]+)\\s+([\\w-]+)(\\s+([\\w-]+))?");
         Matcher matcher = pattern.matcher(fullName);
-        if(matcher.groupCount() == 4){
-            matcher.matches();
+        if(matcher.groupCount() == 4 && matcher.matches()){
             if(matcher.group(3) != null){
                 returnModel.setFIRSTNAME(matcher.group(1));
                 returnModel.setMIDNAME(matcher.group(2));
@@ -172,6 +174,9 @@ public class XLSXToMDIFhirCMSService {
                 returnModel.setFIRSTNAME(matcher.group(1));
                 returnModel.setLASTNAME(matcher.group(2));
             }
+        }
+        else{
+            throw new Exception("Unable to capture the name components of name '"+fullName+"'.");
         }
         return returnModel;
     }
@@ -218,7 +223,6 @@ public class XLSXToMDIFhirCMSService {
 
     private String getStringForColumnAndName(XSSFSheet sheet, Map<String, Integer> fieldMap, int columnIndex,String name){
         if(fieldMap.get(name) == null){
-            System.out.println("Couldn't find key: '"+name+"' in excel sheet.");
             return "";
         }
         DataFormatter formatter = new DataFormatter();
