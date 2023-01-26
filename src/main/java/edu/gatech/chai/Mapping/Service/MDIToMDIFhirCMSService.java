@@ -247,13 +247,16 @@ public class MDIToMDIFhirCMSService {
 			identifier.setType(new CodeableConcept().addCoding(new Coding().setCode("1000007").setSystem("urn:mdi:temporary:code").setDisplay("Case Number")));
 			returnDecedent.addIdentifier(identifier);
 		}*/
-		Stream<String> nameFields = Stream.of(inputFields.FIRSTNAME,inputFields.LASTNAME,inputFields.MIDNAME);
+		Stream<String> nameFields = Stream.of(inputFields.FIRSTNAME,inputFields.LASTNAME,inputFields.MIDNAME, inputFields.SUFFIXNAME);
 		if(!nameFields.allMatch(x -> x == null || x.isEmpty())) {
 			HumanName name = new HumanName();
 			name.addGiven(inputFields.FIRSTNAME);
-			name.setFamily(inputFields.LASTNAME);
 			name.addGiven(inputFields.MIDNAME);
+			name.setFamily(inputFields.LASTNAME);
 			name.setUse(NameUse.OFFICIAL);
+			if(inputFields.SUFFIXNAME != null && !inputFields.SUFFIXNAME.isEmpty()){
+				name.addSuffix(inputFields.SUFFIXNAME);
+			}
 			returnDecedent.addName(name);
 		}
 		if(inputFields.RACE != null && !inputFields.RACE.isEmpty()) {

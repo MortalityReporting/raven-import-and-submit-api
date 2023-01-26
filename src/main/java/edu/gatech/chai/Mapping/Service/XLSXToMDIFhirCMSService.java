@@ -162,17 +162,25 @@ public class XLSXToMDIFhirCMSService {
 
     protected MDIModelFields handleName(MDIModelFields returnModel, int currentColumn, XSSFSheet sheet, Map<String, Integer> fieldMap) throws Exception{
         String fullName = getStringForColumnAndName(sheet,fieldMap,currentColumn,"Decedent Name");
-        Pattern pattern = Pattern.compile("([\\w-]+)\\s+([\\w-]+)(\\s+([\\w-]+))?");
-        Matcher matcher = pattern.matcher(fullName);
-        if(matcher.groupCount() == 4 && matcher.matches()){
-            if(matcher.group(3) != null){
-                returnModel.setFIRSTNAME(matcher.group(1));
-                returnModel.setMIDNAME(matcher.group(2));
-                returnModel.setLASTNAME(matcher.group(3));
+        Pattern suffixPattern = Pattern.compile("(?<Suffix>Jr\\.|Sr\\.|IV|III|II|)");
+        Matcher suffixMatcher = suffixPattern.matcher(fullName);
+        if(suffixMatcher.matches()){
+            String suffixFound = suffixMatcher.group("Suffix");
+            returnModel.setSUFFIXNAME(suffixFound);
+            //Remove suffix from the system to make it easier to parse the first, middle, and last name
+            fullName.replaceAll(suffixFound, "");
+        }
+        Pattern fullNamePattern = Pattern.compile("([\\w-]+)\\s+([\\w-]+)(\\s+([\\w-]+))?");
+        Matcher fullNameMatcher = fullNamePattern.matcher(fullName);
+        if(fullNameMatcher.groupCount() == 4 && fullNameMatcher.matches()){
+            if(fullNameMatcher.group(3) != null){
+                returnModel.setFIRSTNAME(fullNameMatcher.group(1));
+                returnModel.setMIDNAME(fullNameMatcher.group(2));
+                returnModel.setLASTNAME(fullNameMatcher.group(3));
             }
             else{
-                returnModel.setFIRSTNAME(matcher.group(1));
-                returnModel.setLASTNAME(matcher.group(2));
+                returnModel.setFIRSTNAME(fullNameMatcher.group(1));
+                returnModel.setLASTNAME(fullNameMatcher.group(2));
             }
         }
         else{

@@ -16,6 +16,8 @@ public class MDIModelFields {
 	@CsvBindByName
 	public String LASTNAME = "";
 	@CsvBindByName
+	public String SUFFIXNAME = "";
+	@CsvBindByName
 	public String AGE = "";
 	@CsvBindByName
 	public String AGEUNIT = "";
@@ -284,6 +286,14 @@ public class MDIModelFields {
 
 	public void setLASTNAME(String lASTNAME) {
 		LASTNAME = lASTNAME;
+	}
+
+	public String getSUFFIXNAME() {
+		return SUFFIXNAME;
+	}
+
+	public void setSUFFIXNAME(String sUFFIXNAME) {
+		SUFFIXNAME = sUFFIXNAME;
 	}
 
 	public String getAGE() {
