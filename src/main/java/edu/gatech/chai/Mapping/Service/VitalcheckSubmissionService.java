@@ -104,7 +104,6 @@ public class VitalcheckSubmissionService{
 		messageBundle.addEntry().setResource(dcd);
 		String bundleMessageJson  = vrdrFhirContext.getCtx().newJsonParser().encodeResourceToString(messageBundle);
 		System.out.println(bundleMessageJson);
-		//TODO: Submit messageheader bundle to vitalcheck
 		HttpEntity<String> directRequestEntity = new HttpEntity<String>(bundleMessageJson, headerStrings);
 		ResponseEntity<String> response = restTemplate.postForEntity(POSTendpoint, directRequestEntity, String.class);
 		return response;

@@ -167,7 +167,6 @@ public class UploadAndExportController {
 						continue;
 					}
 				}
-				
 				if(value.isEmpty()){
 					fieldObject.put("status", "not mapped");
 				}

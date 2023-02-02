@@ -4,7 +4,7 @@
 
   <groupId>edu.gatech</groupId>
   <artifactId>raven-import-and-submit-api</artifactId>
-  <version>1.0.0</version>
+  <version>1.1.0</version>
   <packaging>war</packaging>
 
   <name>raven-import-and-submit-api</name>

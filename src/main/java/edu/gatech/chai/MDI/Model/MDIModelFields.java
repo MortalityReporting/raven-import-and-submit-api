@@ -4,6 +4,8 @@ import com.opencsv.bean.CsvBindByName;
 
 public class MDIModelFields {
 	@CsvBindByName
+	public String BASEFHIRID = "";
+	@CsvBindByName
 	public String SYSTEMID = "";
 	@CsvBindByName
 	public String MDICASEID = "";
@@ -238,6 +240,14 @@ public class MDIModelFields {
 	
 	public MDIModelFields() {
 		
+	}
+
+	public String getBASEFHIRID() {
+		return BASEFHIRID;
+	}
+
+	public void setBASEFHIRID(String bASEFHIRID) {
+		BASEFHIRID = bASEFHIRID;
 	}
 
 	public String getSYSTEMID() {

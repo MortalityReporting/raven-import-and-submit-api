@@ -24,8 +24,12 @@ import edu.gatech.chai.MDI.Model.MDIModelFields;
 public class XLSXToMDIFhirCMSService {
     private static final Logger logger = LoggerFactory.getLogger(XLSXToMDIFhirCMSService.class);
     private static final int FIRST_ROW = 1;
+    private static String file_id = "";
     // private static final String SECTION_HEADER = "Highlighted yellow items have been changed"; //Note this will ofc change to a reasonable "section name" in the future
     private static final String ELEMENT_HEADER = "Elements";
+    //Static index for the FILE ID
+    private static final int FILE_ID_ROW = 2;
+    private static final int FILE_ID_COL = 1;
 
     private static final String[] FIELDS = {"Tracking Number: Mdi Case Number", "Tracking Number: EDRS File Number"
         ,"Decedent Name", "Decedent Race", "Decedent Ethnicity", "Decedent SexAtDeath", "Decedent SSN", "Decedent Age", "Decedent DOB"
@@ -50,8 +54,10 @@ public class XLSXToMDIFhirCMSService {
         if(headerElementCell == null){
             throw new Exception("Couldn't find field header cell in row 1. Are you sure the template file is the correct file?");
         }
+        //Grab the file id
+        file_id = sheet.getRow(FILE_ID_ROW).getCell(FILE_ID_COL).getStringCellValue();
+        //Creating mapping of elements 
         int elementColumnIndex = headerElementCell.getColumnIndex();
-        
         Map<String, Integer> fieldMap = createFieldsToRowMap(sheet, elementColumnIndex);
         int currentColumn = 1;
         Cell headerCell = sheet.getRow(0).getCell(currentColumn);
@@ -84,6 +90,8 @@ public class XLSXToMDIFhirCMSService {
 
     public MDIModelFields convertColumnToModelFields(int currentColumn, XSSFSheet sheet, Map<String, Integer> fieldMap) throws Exception{
         MDIModelFields returnModel = new MDIModelFields(); //This is going to be replaced SOON with new sheet column definitions!
+        //Every model is going to have a similar base fhir id
+        returnModel.setBASEFHIRID(file_id+ "-" + (currentColumn - 2) + "-");
         handleAge(returnModel, currentColumn, sheet, fieldMap);
         handleName(returnModel, currentColumn, sheet, fieldMap);
         returnModel.setAUTOPSYPERFORMED(getStringForColumnAndName(sheet, fieldMap, currentColumn, "Autopsy Performed?"));

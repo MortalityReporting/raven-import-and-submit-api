@@ -53,7 +53,6 @@ import edu.gatech.chai.MDI.model.resource.ObservationMannerOfDeath;
 import edu.gatech.chai.MDI.model.resource.ObservationTobaccoUseContributedToDeath;
 import edu.gatech.chai.MDI.model.resource.ProcedureDeathCertification;
 import edu.gatech.chai.Mapping.Util.MDIToFhirCMSUtil;
-import edu.gatech.chai.VRDR.model.util.CommonUtil;
 import edu.gatech.chai.VRDR.model.util.DecedentUtil;
 
 @Service
@@ -75,12 +74,11 @@ public class MDIToMDIFhirCMSService {
 	
 	public Bundle convertToMDI(MDIModelFields inputFields) throws ParseException {
 		BundleDocumentMDIToEDRS returnBundle = new BundleDocumentMDIToEDRS();
-		CommonUtil.setUUID(returnBundle);
+		returnBundle.setId(inputFields.BASEFHIRID + "MDIToEDRS-Document-Bundle");
 		Date now = new Date();
 		returnBundle.setTimestamp(now);
 		//Assigning a raven generated system identifier
-		returnBundle.setIdentifier(new Identifier().setSystem("urn:mdi:raven:temporary").setValue(returnBundle.getId()+"_"+now.getTime()));
-		CommonUtil.setUUID(returnBundle);
+		returnBundle.setIdentifier(new Identifier().setSystem("urn:mdi:raven:temporary").setValue(Long.toString(now.getTime())));
 		returnBundle.setType(BundleType.BATCH);
 		Identifier caseIdentifier = new Identifier().setSystem(inputFields.SYSTEMID);
 		caseIdentifier.setValue("TestIdentifier");
@@ -89,7 +87,7 @@ public class MDIToMDIFhirCMSService {
 		CompositionMDIToEDRS mainComposition = returnBundle.getCompositionMDIToEDRS();
 		mainComposition.setTitle("Raven generated MDI-To-EDRS Document");
 		//Some bookkeeping to set the mainComposition id
-		CommonUtil.setUUID(mainComposition);
+		mainComposition.setId(inputFields.BASEFHIRID + "MDIToEDRS-Composition");
 		returnBundle.getEntryFirstRep().setFullUrl(mainComposition.getId());
 		mainComposition.setIdentifier(caseIdentifier);
 		mainComposition.setStatus(CompositionStatus.PRELIMINARY);
@@ -239,7 +237,7 @@ public class MDIToMDIFhirCMSService {
 	private Patient createPatient(MDIModelFields inputFields) throws ParseException {
 		Patient returnDecedent = new Patient();
 		returnDecedent.setMeta(new Meta().addProfile("http://hl7.org/fhir/us/core/StructureDefinition/us-core-patient"));
-		CommonUtil.setUUID(returnDecedent);
+		returnDecedent.setId(inputFields.BASEFHIRID + "Decedent");
 		/*Stream<String> caseIdFields = Stream.of(inputFields.SYSTEMID,inputFields.CASEID);
 		if(!caseIdFields.allMatch(x -> x == null || x.isEmpty())) {
 			Identifier identifier = new Identifier().setSystem(inputFields.SYSTEMID);
@@ -384,7 +382,7 @@ public class MDIToMDIFhirCMSService {
 	private Practitioner createPractitioner(MDIModelFields inputFields) {
 		Practitioner returnPractitioner = new Practitioner();
 		returnPractitioner.setMeta(new Meta().addProfile("http://hl7.org/fhir/us/core/StructureDefinition/us-core-practitioner"));
-		CommonUtil.setUUID(returnPractitioner);
+		returnPractitioner.setId(inputFields.BASEFHIRID + "Practitioner");
 		if(inputFields.MENAME != null && !inputFields.MENAME.isEmpty()) {
 			HumanName certName = MDIToFhirCMSUtil.parseHumanName(inputFields.MENAME);
 			if (certName != null){
@@ -414,7 +412,7 @@ public class MDIToMDIFhirCMSService {
 	private Practitioner createCertifier(MDIModelFields inputFields) {
 		Practitioner returnCertifier = new Practitioner();
 		returnCertifier.setMeta(new Meta().addProfile("http://hl7.org/fhir/us/core/StructureDefinition/us-core-practitioner"));
-		CommonUtil.setUUID(returnCertifier);
+		returnCertifier.setId(inputFields.BASEFHIRID + "Certifier");
 		if(inputFields.CERTIFIER_NAME != null && !inputFields.CERTIFIER_NAME.isEmpty()) {
 			HumanName certName = MDIToFhirCMSUtil.parseHumanName(inputFields.CERTIFIER_NAME);
 			returnCertifier.addName(certName);
@@ -428,7 +426,7 @@ public class MDIToMDIFhirCMSService {
 	private ProcedureDeathCertification createDeathCertification(MDIModelFields inputFields, Reference decedentReference, Reference certifierReference) {
 		ProcedureDeathCertification returnCertification = new ProcedureDeathCertification(decedentReference, certifierReference, inputFields.CERTIFIER_TYPE);
 		returnCertification.setStatus(ProcedureStatus.NOTDONE);
-		CommonUtil.setUUID(returnCertification);
+		returnCertification.setId(inputFields.BASEFHIRID + "Certification");
 		return returnCertification;
 	}
 	
@@ -436,7 +434,7 @@ public class MDIToMDIFhirCMSService {
 	private ObservationTobaccoUseContributedToDeath createObservationTobaccoUseContributedToDeath(MDIModelFields inputFields, Reference decedentReference) throws ParseException {
 		ObservationTobaccoUseContributedToDeath tobacco = new ObservationTobaccoUseContributedToDeath();
 		tobacco.setStatus(ObservationStatus.PRELIMINARY);
-		CommonUtil.setUUID(tobacco);
+		tobacco.setId(inputFields.BASEFHIRID + "Tobacco");
 		tobacco.setSubject(decedentReference);
 		tobacco.setValue(inputFields.TOBACCO);
 		return tobacco;
@@ -445,7 +443,7 @@ public class MDIToMDIFhirCMSService {
 	private ObservationDecedentPregnancy createObservationDecedentPregnancy(MDIModelFields inputFields, Reference decedentReference) throws ParseException {
 		ObservationDecedentPregnancy pregnant = new ObservationDecedentPregnancy();
 		pregnant.setStatus(ObservationStatus.PRELIMINARY);
-		CommonUtil.setUUID(pregnant);
+		pregnant.setId(inputFields.BASEFHIRID + "Pregnancy");
 		pregnant.setSubject(decedentReference);
 		pregnant.setValue(new StringType(inputFields.PREGNANT));
 		return pregnant;
@@ -453,7 +451,7 @@ public class MDIToMDIFhirCMSService {
 
 	private Location createInjuryLocation(MDIModelFields inputFields, Reference decedentReference){
 		Location injuryLocation = new Location();
-    	CommonUtil.setUUID(injuryLocation);
+		injuryLocation.setId(inputFields.BASEFHIRID + "Injury-Location");
     	injuryLocation.getMeta().addProfile("http://hl7.org/fhir/us/core/StructureDefinition/us-core-location");
     	injuryLocation.setName(inputFields.INJURYLOCATION);
     	injuryLocation.setAddress(new Address().setText(inputFields.INJURYLOCATION));
@@ -471,28 +469,30 @@ public class MDIToMDIFhirCMSService {
 			if(cause != null && !cause.isEmpty()) {
 				int lineNumber = i + 1; //entry 0 = line number 1
 				ObservationCauseOfDeathPart1 causeOfDeathCondition = new ObservationCauseOfDeathPart1(patientResource, practitionerResource, cause, lineNumber, interval);
+				causeOfDeathCondition.setId(inputFields.BASEFHIRID+"CauseOfDeathPart1-"+i);
 				causeOfDeathCondition.setStatus(ObservationStatus.PRELIMINARY);
-				CommonUtil.setUUID(causeOfDeathCondition);
 				returnList.add(causeOfDeathCondition);
 			}
 		}
 		String[] otherCauses = inputFields.OSCOND.split("[;\n]");
 		List<String> listArrayOtherCauses = Arrays.asList(otherCauses);
+		int i = 0;
 		for(String otherCause:listArrayOtherCauses) {
 			if(otherCause.isEmpty()) {
 				continue;
 			}
 			ObservationContributingCauseOfDeathPart2 conditionContrib = new ObservationContributingCauseOfDeathPart2(patientResource, practitionerResource, otherCause);
+			conditionContrib.setId(inputFields.BASEFHIRID+"CauseOfDeathPart2-"+i);
 			conditionContrib.setStatus(ObservationStatus.PRELIMINARY);
-			CommonUtil.setUUID(conditionContrib);
 			returnList.add(conditionContrib);
+			i++;
 		}
 		return returnList;
 	}
 	
 	private ObservationMannerOfDeath createMannerOfDeath(MDIModelFields inputFields, Reference decedentReference, Reference practitionerReference) {
 		ObservationMannerOfDeath manner = new ObservationMannerOfDeath();
-		CommonUtil.setUUID(manner);
+		manner.setId(inputFields.BASEFHIRID+"MannerOfDeath");
 		manner.addPerformer(practitionerReference);
 		Coding mannerCoding = new Coding();
 		if(inputFields.MANNER != null && !inputFields.MANNER.isEmpty()) {
@@ -532,7 +532,7 @@ public class MDIToMDIFhirCMSService {
 	
 	private ObservationHowDeathInjuryOccurred createHowDeathInjuryOccurred(MDIModelFields inputFields, Patient patientResource, Practitioner practitionerResource) throws ParseException {
 		ObservationHowDeathInjuryOccurred injuryDescription = new ObservationHowDeathInjuryOccurred(patientResource, practitionerResource, inputFields.CHOWNINJURY);
-		CommonUtil.setUUID(injuryDescription);
+		injuryDescription.setId(inputFields.BASEFHIRID+"InjuryDescription");
 
 		if(inputFields.CINJDATE != null && !inputFields.CINJDATE.isEmpty()) {
 			Date injDate = MDIToFhirCMSUtil.parseDate(inputFields.CINJDATE);
@@ -551,24 +551,10 @@ public class MDIToMDIFhirCMSService {
 		}
 		return injuryDescription;
 	}
-
-	/*private DocumentReferenceMDICaseNotesSummary createCaseNote(String caseNoteString, Patient patient) {
-		DocumentReferenceMDICaseNotesSummary caseNote = new DocumentReferenceMDICaseNotesSummary(patient);
-		CommonUtil.setUUID(caseNote);
-		caseNote.setDate(new Date());
-		DocumentReferenceContentComponent contentComponent = new DocumentReferenceContentComponent();
-		Attachment attachment = new Attachment();
-		attachment.setContentType("text/plain");
-		attachment.setLanguage("en-US");
-		attachment.setData(caseNoteString.getBytes());
-		contentComponent.setAttachment(attachment);
-		caseNote.addContent(contentComponent);
-		return caseNote;
-	}*/
 	
 	private Observation createFoundObs(MDIModelFields inputFields, Reference decedentReference) throws ParseException {
 		Observation foundObs = new Observation();
-		CommonUtil.setUUID(foundObs);
+		foundObs.setId(inputFields.BASEFHIRID+"FoundObs");
 		foundObs.setStatus(ObservationStatus.FINAL);
 		foundObs.setSubject(decedentReference);
 		foundObs.setCode(new CodeableConcept().addCoding(new Coding(
@@ -585,7 +571,7 @@ public class MDIToMDIFhirCMSService {
 	
 	private ObservationDeathDate createDeathDate(MDIModelFields inputFields, Reference decedentReference, Location location) throws ParseException {
 		ObservationDeathDate returnDeathDate = new ObservationDeathDate();
-		CommonUtil.setUUID(returnDeathDate);
+		returnDeathDate.setId(inputFields.BASEFHIRID+"DeathDate");
 		returnDeathDate.setSubject(decedentReference);
 		if(inputFields.CDEATHDATE != null && !inputFields.CDEATHDATE.isEmpty()) {
 			Date certDate = MDIToFhirCMSUtil.parseDate(inputFields.CDEATHDATE);
@@ -616,7 +602,7 @@ public class MDIToMDIFhirCMSService {
 	private Location createDeathLocation(MDIModelFields inputFields) {
 		Location returnDeathLocation = new Location();
 		returnDeathLocation.setMeta(new Meta().addProfile("http://hl7.org/fhir/us/core/StructureDefinition/us-core-location"));
-		CommonUtil.setUUID(returnDeathLocation);
+		returnDeathLocation.setId(inputFields.BASEFHIRID+"DeathLocation");
 		returnDeathLocation.setName(inputFields.DEATHLOCATION);
 		returnDeathLocation.setAddress(new Address().setText(inputFields.DEATHLOCATION));
 		return returnDeathLocation;
@@ -624,7 +610,7 @@ public class MDIToMDIFhirCMSService {
 
 	private ObservationAutopsyPerformedIndicator createAutopsyPerformedIndicator(MDIModelFields inputFields,Reference decedentReference,Reference practitionerReference){
 		ObservationAutopsyPerformedIndicator autopsyPerformedIndicator = new ObservationAutopsyPerformedIndicator(decedentReference, inputFields.AUTOPSYPERFORMED, inputFields.AUTOPSYRESULTSAVAILABLE);
-		CommonUtil.setUUID(autopsyPerformedIndicator);
+		autopsyPerformedIndicator.setId(inputFields.BASEFHIRID+"Autopsy");
 		autopsyPerformedIndicator.addPerformer(practitionerReference);
 		return autopsyPerformedIndicator;
 	}
