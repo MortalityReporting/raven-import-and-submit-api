@@ -2,6 +2,9 @@ package edu.gatech.chai.Mapping.Util;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.ZoneOffset;
 import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
@@ -87,6 +90,12 @@ public class MDIToFhirCMSUtil {
 	public static Date parseDateAndTime(String dateString, String timeString) throws ParseException {
 		Date date = parseDate(dateString);
 		date = addTimeToDate(date, timeString);
+		return date;
+	}
+
+	public static Date parseDateAndTime(String dateAndTimeString) throws ParseException {
+		LocalDateTime localDateTime = LocalDateTime.parse(dateAndTimeString);
+		Date date = Date.from(localDateTime.toInstant(ZoneOffset.UTC));
 		return date;
 	}
 	public static boolean containsIgnoreCase(String src, String what) {

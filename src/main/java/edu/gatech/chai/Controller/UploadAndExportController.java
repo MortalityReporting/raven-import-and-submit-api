@@ -38,9 +38,10 @@ import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.opencsv.bean.CsvToBean;
 import com.opencsv.bean.CsvToBeanBuilder;
 
-import edu.gatech.chai.MDI.Model.MDIModelFields;
-import edu.gatech.chai.Mapping.Service.MDIToMDIFhirCMSService;
-import edu.gatech.chai.Mapping.Service.XLSXToMDIFhirCMSService;
+import edu.gatech.chai.MDI.Model.MDIToEDRSModelFields;
+import edu.gatech.chai.Mapping.Service.MDIToMDIToEDRSService;
+import edu.gatech.chai.Mapping.Service.XLSXToMDIToEDRSService;
+import edu.gatech.chai.Mapping.Service.XLSXToToxToMDIService;
 import edu.gatech.chai.Submission.Entity.PatientSubmit;
 import edu.gatech.chai.Submission.Repository.PatientSubmitRepository;
 import edu.gatech.chai.Submission.Service.SubmitBundleService;
@@ -49,13 +50,13 @@ import edu.gatech.chai.Submission.Service.SubmitBundleService;
 @CrossOrigin(origins = "*")
 public class UploadAndExportController {
 	@Autowired
-	MDIToMDIFhirCMSService mappingToMDIService;
+	MDIToMDIToEDRSService mappingToMDIService;
 	@Autowired
 	SubmitBundleService submitBundleService;
 	@Autowired
 	private PatientSubmitRepository patientSubmitRepository;
 	@Autowired
-	private XLSXToMDIFhirCMSService xLSXToMDIFhirCMSService;
+	private XLSXToMDIToEDRSService xLSXToMDIToEDRSService;
 	@Value("${fhircms.submit}")
 	boolean submitFlag;
 	
@@ -87,7 +88,7 @@ public class UploadAndExportController {
     public String uploadCSVFile(@RequestParam(name = "file", required = true) MultipartFile file, @RequestParam(name = "mappingType", required = false) String mappingType, Model model) throws JsonProcessingException {
 		try {
 			Map<String, Object> object = readCSVFileAndSubmitToFhirBase(file, mappingType);
-			List<MDIModelFields> inputFields = (List<MDIModelFields>)object.get("viewmodel");
+			List<MDIToEDRSModelFields> inputFields = (List<MDIToEDRSModelFields>)object.get("viewmodel");
 			String prettyFhirOutput = (String) object.get("prettyFhirOutput");
 			model.addAttribute("inputFields", inputFields);
 			model.addAttribute("status", true);
@@ -117,10 +118,10 @@ public class UploadAndExportController {
 			"but instead found media type of:"+detectedType);
 		}
 
-		List<MDIModelFields> mappedXLSXData;
+		List<MDIToEDRSModelFields> mappedXLSXData;
 		//Map data to internal definition
 		try {
-			mappedXLSXData = xLSXToMDIFhirCMSService.convertToMDIModelFields(workbook);
+			mappedXLSXData = xLSXToMDIToEDRSService.convertToMDIModelFields(workbook);
 		} catch (Exception e) {
 			throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, e.getLocalizedMessage());
 		}
@@ -130,7 +131,7 @@ public class UploadAndExportController {
 		mapper.setVisibility(PropertyAccessor.FIELD, Visibility.ANY);
 		ArrayNode responseJson = mapper.createArrayNode();
 		//For each mapped field
-		for(MDIModelFields modelFields:mappedXLSXData){
+		for(MDIToEDRSModelFields modelFields:mappedXLSXData){
 			//Convert 
 			String bundleString = "";
 			try {
@@ -194,7 +195,7 @@ public class UploadAndExportController {
 		return new ResponseEntity<JsonNode>(responseJson, returnStatus);
     }
 
-	private JsonNode submitToFhirBase(String fhirBundleString, MDIModelFields modelFields, ObjectMapper mapper){
+	private JsonNode submitToFhirBase(String fhirBundleString, MDIToEDRSModelFields modelFields, ObjectMapper mapper){
 		ObjectNode patientInfo = mapper.createObjectNode();
 		patientInfo.put("name", modelFields.FIRSTNAME + " " + modelFields.MIDNAME + " " + modelFields.LASTNAME);
 		patientInfo.put("status", "Not Submitted");
@@ -225,15 +226,15 @@ public class UploadAndExportController {
     	// parse CSV file to create a list of `InputField` objects
         Reader reader = new BufferedReader(new InputStreamReader(file.getInputStream()));
         // create csv bean reader
-        CsvToBean<MDIModelFields> csvToBean = new CsvToBeanBuilder(reader)
-                .withType(MDIModelFields.class)
+        CsvToBean<MDIToEDRSModelFields> csvToBean = new CsvToBeanBuilder(reader)
+                .withType(MDIToEDRSModelFields.class)
                 .withIgnoreLeadingWhiteSpace(true)
                 .build();
 
         // convert `CsvToBean` object to list of users
-        List<MDIModelFields> inputFields = csvToBean.parse();
+        List<MDIToEDRSModelFields> inputFields = csvToBean.parse();
         String prettyFhirOutput = "";
-        for(MDIModelFields inputField: inputFields) {
+        for(MDIToEDRSModelFields inputField: inputFields) {
         	String jsonBundle = "";
         	if(mappingType.equalsIgnoreCase("MDI")) {
         		jsonBundle = mappingToMDIService.convertToMDIString(inputField);

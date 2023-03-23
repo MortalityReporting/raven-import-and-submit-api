@@ -7,7 +7,6 @@ import org.springframework.context.annotation.Bean;
 
 import edu.gatech.chai.VRDR.context.VRDRFhirContext;
 import edu.gatech.chai.MDI.context.MDIFhirContext;
-import edu.gatech.chai.Mapping.Service.NightingaleSubmissionService;
 
 @SpringBootApplication
 public class Application extends SpringBootServletInitializer{
@@ -24,11 +23,6 @@ public class Application extends SpringBootServletInitializer{
     @Bean
     public MDIFhirContext mdiFhirContext() {
     	return new MDIFhirContext();
-    }
-    
-    @Bean
-    public NightingaleSubmissionService nightingaleSubmissionService() {
-    	return new NightingaleSubmissionService();
     }
     
 }
