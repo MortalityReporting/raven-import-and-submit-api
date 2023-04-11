@@ -12,6 +12,8 @@ import java.util.Map;
 
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.apache.tika.Tika;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpHeaders;
@@ -39,7 +41,11 @@ import com.opencsv.bean.CsvToBean;
 import com.opencsv.bean.CsvToBeanBuilder;
 
 import edu.gatech.chai.MDI.Model.MDIToEDRSModelFields;
+import edu.gatech.chai.MDI.Model.ToxResult;
+import edu.gatech.chai.MDI.Model.ToxSpecimen;
+import edu.gatech.chai.MDI.Model.ToxToMDIModelFields;
 import edu.gatech.chai.Mapping.Service.MDIToMDIToEDRSService;
+import edu.gatech.chai.Mapping.Service.MDIToToxToMDIService;
 import edu.gatech.chai.Mapping.Service.XLSXToMDIToEDRSService;
 import edu.gatech.chai.Mapping.Service.XLSXToToxToMDIService;
 import edu.gatech.chai.Submission.Entity.PatientSubmit;
@@ -50,16 +56,21 @@ import edu.gatech.chai.Submission.Service.SubmitBundleService;
 @CrossOrigin(origins = "*")
 public class UploadAndExportController {
 	@Autowired
-	MDIToMDIToEDRSService mappingToMDIService;
+	MDIToMDIToEDRSService mDIToMDIToEDRSService;
+	@Autowired
+	MDIToToxToMDIService mDIToToxToMDIService;
 	@Autowired
 	SubmitBundleService submitBundleService;
 	@Autowired
 	private PatientSubmitRepository patientSubmitRepository;
 	@Autowired
 	private XLSXToMDIToEDRSService xLSXToMDIToEDRSService;
+	@Autowired
+	private XLSXToToxToMDIService xLSXToToxToMDIService;
 	@Value("${fhircms.submit}")
 	boolean submitFlag;
 	
+	private static final Logger logger = LoggerFactory.getLogger(UploadAndExportController.class);
 	public UploadAndExportController() {
 	}
 	
@@ -101,8 +112,191 @@ public class UploadAndExportController {
     	return "file-upload-status";
     }
 
-	@PostMapping(value = "upload-xlsx-file")
-    public ResponseEntity<JsonNode> uploadXLSXFile(@RequestParam(name = "file", required = true) MultipartFile file) throws JsonProcessingException {
+	@PostMapping(value = {"upload-xlsx-file"})
+	public ResponseEntity<JsonNode> uploadXLSXFile(@RequestParam(name = "file", required = true) MultipartFile file, @RequestParam(name = "type", defaultValue = "mdi-to-edrs", required = false) String type) throws JsonProcessingException {
+		if(type.equalsIgnoreCase("mdi-to-edrs")){
+			return uploadXLSXFileForMDIToEDRS(file);
+		}
+		else{
+			return uploadXLSXFileForToxToMDI(file);
+		}
+	}
+
+	@PostMapping(value = {"upload-tox-to-mdi-xlsx-file"})
+	public ResponseEntity<JsonNode> uploadXLSXFileForToxToMDI(@RequestParam(name = "file", required = true) MultipartFile file) throws JsonProcessingException {
+		logger.info("XLSX MDI-To-Tox Upload: Starting XLSX File Read");
+		//Read XLSX File submitted
+		Tika tika = new Tika();
+		String detectedType;
+		XSSFWorkbook workbook = null;
+		try {
+			detectedType = tika.detect(file.getBytes());
+			workbook = new XSSFWorkbook(file.getInputStream());
+		} catch (IOException e1) {
+			throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, e1.getLocalizedMessage());
+		}
+		if(detectedType.equalsIgnoreCase("application/vnd.openxmlformats-officedocument.spreadsheetml.sheet")){
+			throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "Expected a file media type of:application/vnd.openxmlformats-officedocument.spreadsheetml.sheet" +
+			"but instead found media type of:"+detectedType);
+		}
+
+		List<ToxToMDIModelFields> mappedXLSXData;
+		//Map data to internal definition
+		logger.info("XLSX MDI-To-Tox Upload: Mapping Data");
+		try {
+			mappedXLSXData = xLSXToToxToMDIService.convertToMDIModelFields(workbook);
+		} catch (Exception e) {
+			e.printStackTrace();
+			throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, e.getLocalizedMessage());
+		}
+		//Setup mapper
+		ObjectMapper mapper = new ObjectMapper();
+		mapper.setVisibility(PropertyAccessor.ALL, Visibility.NONE);
+		mapper.setVisibility(PropertyAccessor.FIELD, Visibility.ANY);
+		ArrayNode responseJson = mapper.createArrayNode();
+		//For each model field
+		for(ToxToMDIModelFields modelFields:mappedXLSXData){
+			//Convert
+			logger.info("XLSX MDI-To-Tox Upload: Creating FHIR Data");
+			String bundleString = "";
+			try {
+				bundleString = mDIToToxToMDIService.convertToMDIString(modelFields);
+			} catch (ParseException e1) {
+				e1.printStackTrace();
+				continue;
+			}
+			logger.info("XLSX MDI-To-Tox Upload: Creating Response Object");
+			ObjectNode responseObject = mapper.createObjectNode();
+			try {
+				responseObject.set("fhirBundle", mapper.readTree(bundleString));
+			} catch (IOException e1) {
+				e1.printStackTrace();
+				continue;
+			}
+			//Collect mapping of objects here.
+			ObjectNode fields = mapper.createObjectNode();
+			for(Field f:modelFields.getClass().getDeclaredFields()){
+				String keyName = f.getName();
+				ObjectNode fieldObject = mapper.createObjectNode();
+				String value = "";
+				if(f.getType().equals(String.class)){
+					try{
+						value = ((String)f.get(modelFields));
+					}
+					catch(IllegalArgumentException | IllegalAccessException e){
+						continue;
+					}
+				}
+				else if(f.getType().equals(Boolean.class)){
+					try {
+						value = Boolean.toString(((Boolean)f.get(modelFields)));
+					} catch (IllegalArgumentException | IllegalAccessException e) {
+						continue;
+					}
+				}
+				if(value.isEmpty()){
+					fieldObject.put("status", "not mapped");
+				}
+				else{
+					fieldObject.put("status", "mapped");
+				}
+				fieldObject.set("FHIRResource", mapper.createObjectNode());
+				fieldObject.put("value",value);
+				fields.set(keyName, fieldObject);
+			}
+			//Handle Specimen
+			if(modelFields.SPECIMENS != null && !modelFields.SPECIMENS.isEmpty()){
+				ArrayNode specimenArrayNode = mapper.createArrayNode();
+				for(ToxSpecimen toxSpecimen: modelFields.SPECIMENS){
+					ObjectNode specimenFields = mapper.createObjectNode();
+					for(Field f:toxSpecimen.getClass().getDeclaredFields()){
+						String keyName = f.getName();
+						ObjectNode fieldObject = mapper.createObjectNode();
+						String value = "";
+						if(f.getType().equals(String.class)){
+							try{
+								value = ((String)f.get(toxSpecimen));
+							}
+							catch(IllegalArgumentException | IllegalAccessException e){
+								continue;
+							}
+						}
+						if(value.isEmpty()){
+							fieldObject.put("status", "not mapped");
+						}
+						else{
+							fieldObject.put("status", "mapped");
+						}
+						fieldObject.set("FHIRResource", mapper.createObjectNode());
+						fieldObject.put("value",value);
+						specimenFields.set(keyName, fieldObject);
+					}
+					specimenArrayNode.add(specimenFields);
+				}
+				fields.set("SPECIMENS",specimenArrayNode);
+			}
+			//Handle Results
+			if(modelFields.RESULTS != null && !modelFields.RESULTS.isEmpty()){
+				ArrayNode resultsArrayNode = mapper.createArrayNode();
+				for(ToxResult toxResults: modelFields.RESULTS){
+					ObjectNode resultFields = mapper.createObjectNode();
+					for(Field f:toxResults.getClass().getDeclaredFields()){
+						String keyName = f.getName();
+						ObjectNode fieldObject = mapper.createObjectNode();
+						String value = "";
+						if(f.getType().equals(String.class)){
+							try{
+								value = ((String)f.get(toxResults));
+							}
+							catch(IllegalArgumentException | IllegalAccessException e){
+								continue;
+							}
+						}
+						if(value.isEmpty()){
+							fieldObject.put("status", "not mapped");
+						}
+						else{
+							fieldObject.put("status", "mapped");
+						}
+						fieldObject.set("FHIRResource", mapper.createObjectNode());
+						fieldObject.put("value",value);
+						resultFields.set(keyName, fieldObject);
+					}
+					resultsArrayNode.add(resultFields);
+				}
+				fields.set("RESULTS",resultsArrayNode);
+			}
+			//Handle Notes
+			if(modelFields.NOTES != null && !modelFields.NOTES.isEmpty()){
+				ArrayNode notesArrayNode = mapper.createArrayNode();
+				for(String note: modelFields.NOTES){
+					ObjectNode fieldObject = mapper.createObjectNode();
+					fieldObject.put("status", "mapped");
+					fieldObject.put("value", note);
+					fieldObject.set("FHIRResource", mapper.createObjectNode());
+				}
+				fields.set("NOTES",notesArrayNode);
+			}
+			responseObject.set("fields", fields);
+			//Actually submit to the fhir server here!
+			if(submitFlag){
+				logger.info("XLSX MDI-To-Tox Upload: Uploading Tox-To-MDI To FhirBase");
+				JsonNode patientInfo = submitToFhirBase(bundleString, modelFields, mapper);
+				responseObject.set("fhirResponse", patientInfo);
+				responseObject.put("Narrative", "");
+			}
+			responseJson.add(responseObject);
+		}
+		//JsonNode responseJson = mapper.valueToTree(mappedXLSXData);
+		HttpStatus returnStatus = HttpStatus.CREATED;
+		if(mappedXLSXData.size() == 0){
+			returnStatus = HttpStatus.NO_CONTENT;
+		}
+		return new ResponseEntity<JsonNode>(responseJson, returnStatus);
+	}
+
+	@PostMapping(value = {"upload-mdi-to-edrs-xlsx-file"})
+    public ResponseEntity<JsonNode> uploadXLSXFileForMDIToEDRS(@RequestParam(name = "file", required = true) MultipartFile file) throws JsonProcessingException {
 		//Read XLSX File submitted
 		Tika tika = new Tika();
 		String detectedType;
@@ -135,7 +329,7 @@ public class UploadAndExportController {
 			//Convert 
 			String bundleString = "";
 			try {
-				bundleString = mappingToMDIService.convertToMDIString(modelFields);
+				bundleString = mDIToMDIToEDRSService.convertToMDIString(modelFields);
 			} catch (ParseException e1) {
 				e1.printStackTrace();
 				continue;
@@ -216,6 +410,28 @@ public class UploadAndExportController {
 		}
 		return patientInfo;
 	}
+
+	private JsonNode submitToFhirBase(String fhirBundleString, ToxToMDIModelFields modelFields, ObjectMapper mapper){
+		ObjectNode patientInfo = mapper.createObjectNode();
+		patientInfo.put("name", modelFields.FIRSTNAME + " " + modelFields.MIDNAME + " " + modelFields.LASTNAME);
+		patientInfo.put("status", "Not Submitted");
+		patientInfo.put("statusCode", "");
+		patientInfo.put("state", "");
+		try {
+			ResponseEntity<String> response = submitBundleService.submitBundle(fhirBundleString);
+			System.out.println("Client response body:" + response.getBody());
+			patientInfo.put("statusCode", response.getStatusCode().value());
+			// save users list on model
+			if(response.getStatusCode() == HttpStatus.OK ) {
+				patientInfo.put("status", "Success");
+			}
+		}
+		catch (HttpStatusCodeException e) {
+			patientInfo.put("status", "Error");
+			patientInfo.put("statusCode", e.getRawStatusCode());
+		}
+		return patientInfo;
+	}
     
     private Map<String, Object> readCSVFileAndSubmitToFhirBase(MultipartFile file, String mappingType) throws IOException, ParseException{
     	if(mappingType == null) {
@@ -237,7 +453,7 @@ public class UploadAndExportController {
         for(MDIToEDRSModelFields inputField: inputFields) {
         	String jsonBundle = "";
         	if(mappingType.equalsIgnoreCase("MDI")) {
-        		jsonBundle = mappingToMDIService.convertToMDIString(inputField);
+        		jsonBundle = mDIToMDIToEDRSService.convertToMDIString(inputField);
         	}
         	System.out.println("JSON BUNDLE:");
         	System.out.println(jsonBundle);

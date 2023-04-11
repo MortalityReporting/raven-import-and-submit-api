@@ -5,6 +5,7 @@ import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.ZoneOffset;
+import java.time.format.DateTimeParseException;
 import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
@@ -25,7 +26,7 @@ import org.hl7.fhir.r4.model.Quantity;
 import org.hl7.fhir.r4.model.Resource;
 
 public class MDIToFhirCMSUtil {
-	public static List<String> dateFormatStrings = Arrays.asList("M/d/yy", "M/d/yyyy", "d-M-yy",
+	public static List<String> dateFormatStrings = Arrays.asList("yyyy-MM-dd", "M/d/yy", "M/d/yyyy", "d-M-yy",
 			"Mdyyyy", "Mdyy", "d-M-yyyy", "d MMMM yy", "d MMMM yyyy", "d MMMM yy zzzz",
 			"d MMMM yyyy zzzz", "E, d MMM yy","E, d MMM yyyy","M-d-yy","M-d-yyyy", "MMMM DD, yy",
 			"MMMM DD, yyyy", "yy", "yyyy");
@@ -93,10 +94,33 @@ public class MDIToFhirCMSUtil {
 		return date;
 	}
 
-	public static Date parseDateAndTime(String dateAndTimeString) throws ParseException {
-		LocalDateTime localDateTime = LocalDateTime.parse(dateAndTimeString);
-		Date date = Date.from(localDateTime.toInstant(ZoneOffset.UTC));
-		return date;
+	public static Date parseDateAndTime(String dateAndTimeString) {
+		LocalDateTime localDateTime = null;
+		try{
+			localDateTime = LocalDateTime.parse(dateAndTimeString);
+		}
+		catch (DateTimeParseException e) {}
+		Date date = null;
+		if (localDateTime != null){
+			date = Date.from(localDateTime.toInstant(ZoneOffset.UTC));
+			return date;
+		}
+		else{
+			for(String dateString : dateFormatStrings){
+				for(String timeString : timeFormatStrings){
+					try{
+						String dateTimeFormat = dateString + " " + timeString;
+						SimpleDateFormat sdf = new SimpleDateFormat(dateTimeFormat);
+	            		sdf.setTimeZone(TimeZone.getDefault());
+	            		date = sdf.parse(dateAndTimeString);
+						if(date != null)
+							return date;
+					}
+					catch(ParseException e) {}
+				}
+			}
+		}
+		return null;
 	}
 	public static boolean containsIgnoreCase(String src, String what) {
 	    final int length = what.length();
@@ -121,7 +145,7 @@ public class MDIToFhirCMSUtil {
 	
 	
 	
-	public static Bundle addResourceToBatchBundle(Bundle bundle,Resource resource) {
+	public static Bundle addResourceToBundle(Bundle bundle,Resource resource) {
 		if(resource.getId() == null || resource.getId().isEmpty()) {
 			resource.setId(new IdType(UUID.randomUUID().toString()));
 		}

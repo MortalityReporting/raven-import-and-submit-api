@@ -16,27 +16,24 @@ public class ToxSpecimen {
 	@CsvBindByName
 	public String CONTAINER = "";
 	@CsvBindByName
-	public String COLLECTED_DATE = "";
+	public String COLLECTED_DATETIME = "";
 	@CsvBindByName
-	public String COLLECTED_TIME = "";
+	public String RECEIPT_DATETIME = "";
 	@CsvBindByName
-	public String RECORD_DATE = "";
-	@CsvBindByName
-	public String RECORD_TIME = "";
+	public String CONDITION = "";
 
 	public ToxSpecimen() {
 	}
 
-	public ToxSpecimen(String NAME, String IDENTIFIER, String BODYSITE, String AMOUNT, String CONTAINER, String COLLECTED_DATE, String COLLECTED_TIME, String RECORD_DATE, String RECORD_TIME) {
+	public ToxSpecimen(String NAME, String IDENTIFIER, String BODYSITE, String AMOUNT, String CONTAINER, String COLLECTED_DATETIME, String RECEIPT_DATETIME, String CONDITION) {
 		this.NAME = NAME;
 		this.IDENTIFIER = IDENTIFIER;
 		this.BODYSITE = BODYSITE;
 		this.AMOUNT = AMOUNT;
 		this.CONTAINER = CONTAINER;
-		this.COLLECTED_DATE = COLLECTED_DATE;
-		this.COLLECTED_TIME = COLLECTED_TIME;
-		this.RECORD_DATE = RECORD_DATE;
-		this.RECORD_TIME = RECORD_TIME;
+		this.COLLECTED_DATETIME = COLLECTED_DATETIME;
+		this.RECEIPT_DATETIME = RECEIPT_DATETIME;
+		this.CONDITION = CONDITION;
 	}
 
 	public String getNAME() {
@@ -79,36 +76,28 @@ public class ToxSpecimen {
 		this.CONTAINER = CONTAINER;
 	}
 
-	public String getCOLLECTED_DATE() {
-		return this.COLLECTED_DATE;
+	public String getCOLLECTED_DATETIME() {
+		return this.COLLECTED_DATETIME;
 	}
 
-	public void setCOLLECTED_DATE(String COLLECTED_DATE) {
-		this.COLLECTED_DATE = COLLECTED_DATE;
+	public void setCOLLECTED_DATETIME(String COLLECTED_DATETIME) {
+		this.COLLECTED_DATETIME = COLLECTED_DATETIME;
 	}
 
-	public String getCOLLECTED_TIME() {
-		return this.COLLECTED_TIME;
+	public String getRECEIPT_DATETIME() {
+		return this.RECEIPT_DATETIME;
 	}
 
-	public void setCOLLECTED_TIME(String COLLECTED_TIME) {
-		this.COLLECTED_TIME = COLLECTED_TIME;
+	public void setRECEIPT_DATETIME(String RECEIPT_DATETIME) {
+		this.RECEIPT_DATETIME = RECEIPT_DATETIME;
 	}
 
-	public String getRECORD_DATE() {
-		return this.RECORD_DATE;
+	public String getCONDITION() {
+		return this.CONDITION;
 	}
 
-	public void setRECORD_DATE(String RECORD_DATE) {
-		this.RECORD_DATE = RECORD_DATE;
-	}
-
-	public String getRECORD_TIME() {
-		return this.RECORD_TIME;
-	}
-
-	public void setRECORD_TIME(String RECORD_TIME) {
-		this.RECORD_TIME = RECORD_TIME;
+	public void setCONDITION(String CONDITION) {
+		this.CONDITION = CONDITION;
 	}
 
 	public ToxSpecimen NAME(String NAME) {
@@ -136,23 +125,18 @@ public class ToxSpecimen {
 		return this;
 	}
 
-	public ToxSpecimen COLLECTED_DATE(String COLLECTED_DATE) {
-		setCOLLECTED_DATE(COLLECTED_DATE);
+	public ToxSpecimen COLLECTED_DATETIME(String COLLECTED_DATETIME) {
+		setCOLLECTED_DATETIME(COLLECTED_DATETIME);
 		return this;
 	}
 
-	public ToxSpecimen COLLECTED_TIME(String COLLECTED_TIME) {
-		setCOLLECTED_TIME(COLLECTED_TIME);
+	public ToxSpecimen RECEIPT_DATETIME(String RECEIPT_DATETIME) {
+		setRECEIPT_DATETIME(RECEIPT_DATETIME);
 		return this;
 	}
 
-	public ToxSpecimen RECORD_DATE(String RECORD_DATE) {
-		setRECORD_DATE(RECORD_DATE);
-		return this;
-	}
-
-	public ToxSpecimen RECORD_TIME(String RECORD_TIME) {
-		setRECORD_TIME(RECORD_TIME);
+	public ToxSpecimen CONDITION(String CONDITION) {
+		setCONDITION(CONDITION);
 		return this;
 	}
 
@@ -164,12 +148,12 @@ public class ToxSpecimen {
 			return false;
 		}
 		ToxSpecimen toxSpecimen = (ToxSpecimen) o;
-		return Objects.equals(NAME, toxSpecimen.NAME) && Objects.equals(IDENTIFIER, toxSpecimen.IDENTIFIER) && Objects.equals(BODYSITE, toxSpecimen.BODYSITE) && Objects.equals(AMOUNT, toxSpecimen.AMOUNT) && Objects.equals(CONTAINER, toxSpecimen.CONTAINER) && Objects.equals(COLLECTED_DATE, toxSpecimen.COLLECTED_DATE) && Objects.equals(COLLECTED_TIME, toxSpecimen.COLLECTED_TIME) && Objects.equals(RECORD_DATE, toxSpecimen.RECORD_DATE) && Objects.equals(RECORD_TIME, toxSpecimen.RECORD_TIME);
+		return Objects.equals(NAME, toxSpecimen.NAME) && Objects.equals(IDENTIFIER, toxSpecimen.IDENTIFIER) && Objects.equals(BODYSITE, toxSpecimen.BODYSITE) && Objects.equals(AMOUNT, toxSpecimen.AMOUNT) && Objects.equals(CONTAINER, toxSpecimen.CONTAINER) && Objects.equals(COLLECTED_DATETIME, toxSpecimen.COLLECTED_DATETIME) && Objects.equals(RECEIPT_DATETIME, toxSpecimen.RECEIPT_DATETIME) && Objects.equals(CONDITION, toxSpecimen.CONDITION);
 	}
 
 	@Override
 	public int hashCode() {
-		return Objects.hash(NAME, IDENTIFIER, BODYSITE, AMOUNT, CONTAINER, COLLECTED_DATE, COLLECTED_TIME, RECORD_DATE, RECORD_TIME);
+		return Objects.hash(NAME, IDENTIFIER, BODYSITE, AMOUNT, CONTAINER, COLLECTED_DATETIME, RECEIPT_DATETIME, CONDITION);
 	}
 
 	@Override
@@ -180,12 +164,9 @@ public class ToxSpecimen {
 			", BODYSITE='" + getBODYSITE() + "'" +
 			", AMOUNT='" + getAMOUNT() + "'" +
 			", CONTAINER='" + getCONTAINER() + "'" +
-			", COLLECTED_DATE='" + getCOLLECTED_DATE() + "'" +
-			", COLLECTED_TIME='" + getCOLLECTED_TIME() + "'" +
-			", RECORD_DATE='" + getRECORD_DATE() + "'" +
-			", RECORD_TIME='" + getRECORD_TIME() + "'" +
+			", COLLECTED_DATETIME='" + getCOLLECTED_DATETIME() + "'" +
+			", RECEIPT_DATETIME='" + getRECEIPT_DATETIME() + "'" +
+			", CONDITION='" + getCONDITION() + "'" +
 			"}";
 	}
-	
-	
 }

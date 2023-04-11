@@ -12,9 +12,13 @@ public class ToxToMDIModelFields {
 	@CsvBindByName
 	public String TOXORGNAME = "";
 	@CsvBindByName
+	public String TOXORDERCODE = "";
+	@CsvBindByName
 	public String TOXPERFORMER = "";
 	@CsvBindByName
 	public String TOXORGSTREET = "";
+	@CsvBindByName
+	public String TOXORGCITY = "";
 	@CsvBindByName
 	public String TOXORGCOUNTY = "";
 	@CsvBindByName
@@ -36,33 +40,31 @@ public class ToxToMDIModelFields {
 	@CsvBindByName
 	public String SUFFIXNAME = "";
 	@CsvBindByName
-	public String RACE = "";
-	@CsvBindByName
-	public String ETHNICITY = "";
-	@CsvBindByName
 	public String BIRTHDATE = "";
 	@CsvBindByName
 	public String MECNOTES = "";
 	@CsvBindByName
-	public String SPECIMENCOLLECTION_DATE = "";
-	@CsvBindByName
-	public String SPECIMENCOLLECTION_TIME = "";
+	public String SPECIMENCOLLECTION_DATETIME = "";
 	@CsvBindByName
 	public String REPORTDATE = "";
 	@CsvBindByName
 	public List<ToxSpecimen> SPECIMENS = new ArrayList<ToxSpecimen>();
 	@CsvBindByName
 	public List<ToxResult> RESULTS = new ArrayList<ToxResult>();
+	@CsvBindByName
+	public List<String> NOTES = new ArrayList<String>();
+
 
 	public ToxToMDIModelFields() {
-		
 	}
 
-	public ToxToMDIModelFields(String TOXCASENUMBER, String TOXORGNAME, String TOXPERFORMER, String TOXORGSTREET, String TOXORGCOUNTY, String TOXORGSTATE, String TOXORGZIP, String TOXORGCOUNTRY, String MDICASEID, String MDICASESYSTEM, String FIRSTNAME, String MIDNAME, String LASTNAME, String SUFFIXNAME, String RACE, String ETHNICITY, String BIRTHDATE, String MECNOTES, String SPECIMENCOLLECTION_DATE, String SPECIMENCOLLECTION_TIME, String REPORTDATE, List<ToxSpecimen> SPECIMENS, List<ToxResult> RESULTS) {
+	public ToxToMDIModelFields(String TOXCASENUMBER, String TOXORGNAME, String TOXORDERCODE, String TOXPERFORMER, String TOXORGSTREET, String TOXORGCITY, String TOXORGCOUNTY, String TOXORGSTATE, String TOXORGZIP, String TOXORGCOUNTRY, String MDICASEID, String MDICASESYSTEM, String FIRSTNAME, String MIDNAME, String LASTNAME, String SUFFIXNAME, String BIRTHDATE, String MECNOTES, String SPECIMENCOLLECTION_DATETIME, String REPORTDATE, List<ToxSpecimen> SPECIMENS, List<ToxResult> RESULTS, List<String> NOTES) {
 		this.TOXCASENUMBER = TOXCASENUMBER;
 		this.TOXORGNAME = TOXORGNAME;
+		this.TOXORDERCODE = TOXORDERCODE;
 		this.TOXPERFORMER = TOXPERFORMER;
 		this.TOXORGSTREET = TOXORGSTREET;
+		this.TOXORGCITY = TOXORGCITY;
 		this.TOXORGCOUNTY = TOXORGCOUNTY;
 		this.TOXORGSTATE = TOXORGSTATE;
 		this.TOXORGZIP = TOXORGZIP;
@@ -73,15 +75,13 @@ public class ToxToMDIModelFields {
 		this.MIDNAME = MIDNAME;
 		this.LASTNAME = LASTNAME;
 		this.SUFFIXNAME = SUFFIXNAME;
-		this.RACE = RACE;
-		this.ETHNICITY = ETHNICITY;
 		this.BIRTHDATE = BIRTHDATE;
 		this.MECNOTES = MECNOTES;
-		this.SPECIMENCOLLECTION_DATE = SPECIMENCOLLECTION_DATE;
-		this.SPECIMENCOLLECTION_TIME = SPECIMENCOLLECTION_TIME;
+		this.SPECIMENCOLLECTION_DATETIME = SPECIMENCOLLECTION_DATETIME;
 		this.REPORTDATE = REPORTDATE;
 		this.SPECIMENS = SPECIMENS;
 		this.RESULTS = RESULTS;
+		this.NOTES = NOTES;
 	}
 
 	public String getTOXCASENUMBER() {
@@ -100,6 +100,14 @@ public class ToxToMDIModelFields {
 		this.TOXORGNAME = TOXORGNAME;
 	}
 
+	public String getTOXORDERCODE() {
+		return this.TOXORDERCODE;
+	}
+
+	public void setTOXORDERCODE(String TOXORDERCODE) {
+		this.TOXORDERCODE = TOXORDERCODE;
+	}
+
 	public String getTOXPERFORMER() {
 		return this.TOXPERFORMER;
 	}
@@ -114,6 +122,14 @@ public class ToxToMDIModelFields {
 
 	public void setTOXORGSTREET(String TOXORGSTREET) {
 		this.TOXORGSTREET = TOXORGSTREET;
+	}
+
+	public String getTOXORGCITY() {
+		return this.TOXORGCITY;
+	}
+
+	public void setTOXORGCITY(String TOXORGCITY) {
+		this.TOXORGCITY = TOXORGCITY;
 	}
 
 	public String getTOXORGCOUNTY() {
@@ -196,22 +212,6 @@ public class ToxToMDIModelFields {
 		this.SUFFIXNAME = SUFFIXNAME;
 	}
 
-	public String getRACE() {
-		return this.RACE;
-	}
-
-	public void setRACE(String RACE) {
-		this.RACE = RACE;
-	}
-
-	public String getETHNICITY() {
-		return this.ETHNICITY;
-	}
-
-	public void setETHNICITY(String ETHNICITY) {
-		this.ETHNICITY = ETHNICITY;
-	}
-
 	public String getBIRTHDATE() {
 		return this.BIRTHDATE;
 	}
@@ -228,20 +228,12 @@ public class ToxToMDIModelFields {
 		this.MECNOTES = MECNOTES;
 	}
 
-	public String getSPECIMENCOLLECTION_DATE() {
-		return this.SPECIMENCOLLECTION_DATE;
+	public String getSPECIMENCOLLECTION_DATETIME() {
+		return this.SPECIMENCOLLECTION_DATETIME;
 	}
 
-	public void setSPECIMENCOLLECTION_DATE(String SPECIMENCOLLECTION_DATE) {
-		this.SPECIMENCOLLECTION_DATE = SPECIMENCOLLECTION_DATE;
-	}
-
-	public String getSPECIMENCOLLECTION_TIME() {
-		return this.SPECIMENCOLLECTION_TIME;
-	}
-
-	public void setSPECIMENCOLLECTION_TIME(String SPECIMENCOLLECTION_TIME) {
-		this.SPECIMENCOLLECTION_TIME = SPECIMENCOLLECTION_TIME;
+	public void setSPECIMENCOLLECTION_DATETIME(String SPECIMENCOLLECTION_DATETIME) {
+		this.SPECIMENCOLLECTION_DATETIME = SPECIMENCOLLECTION_DATETIME;
 	}
 
 	public String getREPORTDATE() {
@@ -268,6 +260,14 @@ public class ToxToMDIModelFields {
 		this.RESULTS = RESULTS;
 	}
 
+	public List<String> getNOTES() {
+		return this.NOTES;
+	}
+
+	public void setNOTES(List<String> NOTES) {
+		this.NOTES = NOTES;
+	}
+
 	public ToxToMDIModelFields TOXCASENUMBER(String TOXCASENUMBER) {
 		setTOXCASENUMBER(TOXCASENUMBER);
 		return this;
@@ -278,6 +278,11 @@ public class ToxToMDIModelFields {
 		return this;
 	}
 
+	public ToxToMDIModelFields TOXORDERCODE(String TOXORDERCODE) {
+		setTOXORDERCODE(TOXORDERCODE);
+		return this;
+	}
+
 	public ToxToMDIModelFields TOXPERFORMER(String TOXPERFORMER) {
 		setTOXPERFORMER(TOXPERFORMER);
 		return this;
@@ -285,6 +290,11 @@ public class ToxToMDIModelFields {
 
 	public ToxToMDIModelFields TOXORGSTREET(String TOXORGSTREET) {
 		setTOXORGSTREET(TOXORGSTREET);
+		return this;
+	}
+
+	public ToxToMDIModelFields TOXORGCITY(String TOXORGCITY) {
+		setTOXORGCITY(TOXORGCITY);
 		return this;
 	}
 
@@ -338,16 +348,6 @@ public class ToxToMDIModelFields {
 		return this;
 	}
 
-	public ToxToMDIModelFields RACE(String RACE) {
-		setRACE(RACE);
-		return this;
-	}
-
-	public ToxToMDIModelFields ETHNICITY(String ETHNICITY) {
-		setETHNICITY(ETHNICITY);
-		return this;
-	}
-
 	public ToxToMDIModelFields BIRTHDATE(String BIRTHDATE) {
 		setBIRTHDATE(BIRTHDATE);
 		return this;
@@ -358,13 +358,8 @@ public class ToxToMDIModelFields {
 		return this;
 	}
 
-	public ToxToMDIModelFields SPECIMENCOLLECTION_DATE(String SPECIMENCOLLECTION_DATE) {
-		setSPECIMENCOLLECTION_DATE(SPECIMENCOLLECTION_DATE);
-		return this;
-	}
-
-	public ToxToMDIModelFields SPECIMENCOLLECTION_TIME(String SPECIMENCOLLECTION_TIME) {
-		setSPECIMENCOLLECTION_TIME(SPECIMENCOLLECTION_TIME);
+	public ToxToMDIModelFields SPECIMENCOLLECTION_DATETIME(String SPECIMENCOLLECTION_DATETIME) {
+		setSPECIMENCOLLECTION_DATETIME(SPECIMENCOLLECTION_DATETIME);
 		return this;
 	}
 
@@ -383,6 +378,11 @@ public class ToxToMDIModelFields {
 		return this;
 	}
 
+	public ToxToMDIModelFields NOTES(List<String> NOTES) {
+		setNOTES(NOTES);
+		return this;
+	}
+
 	@Override
 	public boolean equals(Object o) {
 		if (o == this)
@@ -391,12 +391,12 @@ public class ToxToMDIModelFields {
 			return false;
 		}
 		ToxToMDIModelFields toxToMDIModelFields = (ToxToMDIModelFields) o;
-		return Objects.equals(TOXCASENUMBER, toxToMDIModelFields.TOXCASENUMBER) && Objects.equals(TOXORGNAME, toxToMDIModelFields.TOXORGNAME) && Objects.equals(TOXPERFORMER, toxToMDIModelFields.TOXPERFORMER) && Objects.equals(TOXORGSTREET, toxToMDIModelFields.TOXORGSTREET) && Objects.equals(TOXORGCOUNTY, toxToMDIModelFields.TOXORGCOUNTY) && Objects.equals(TOXORGSTATE, toxToMDIModelFields.TOXORGSTATE) && Objects.equals(TOXORGZIP, toxToMDIModelFields.TOXORGZIP) && Objects.equals(TOXORGCOUNTRY, toxToMDIModelFields.TOXORGCOUNTRY) && Objects.equals(MDICASEID, toxToMDIModelFields.MDICASEID) && Objects.equals(MDICASESYSTEM, toxToMDIModelFields.MDICASESYSTEM) && Objects.equals(FIRSTNAME, toxToMDIModelFields.FIRSTNAME) && Objects.equals(MIDNAME, toxToMDIModelFields.MIDNAME) && Objects.equals(LASTNAME, toxToMDIModelFields.LASTNAME) && Objects.equals(SUFFIXNAME, toxToMDIModelFields.SUFFIXNAME) && Objects.equals(RACE, toxToMDIModelFields.RACE) && Objects.equals(ETHNICITY, toxToMDIModelFields.ETHNICITY) && Objects.equals(BIRTHDATE, toxToMDIModelFields.BIRTHDATE) && Objects.equals(MECNOTES, toxToMDIModelFields.MECNOTES) && Objects.equals(SPECIMENCOLLECTION_DATE, toxToMDIModelFields.SPECIMENCOLLECTION_DATE) && Objects.equals(SPECIMENCOLLECTION_TIME, toxToMDIModelFields.SPECIMENCOLLECTION_TIME) && Objects.equals(REPORTDATE, toxToMDIModelFields.REPORTDATE) && Objects.equals(SPECIMENS, toxToMDIModelFields.SPECIMENS) && Objects.equals(RESULTS, toxToMDIModelFields.RESULTS);
+		return Objects.equals(TOXCASENUMBER, toxToMDIModelFields.TOXCASENUMBER) && Objects.equals(TOXORGNAME, toxToMDIModelFields.TOXORGNAME) && Objects.equals(TOXORDERCODE, toxToMDIModelFields.TOXORDERCODE) && Objects.equals(TOXPERFORMER, toxToMDIModelFields.TOXPERFORMER) && Objects.equals(TOXORGSTREET, toxToMDIModelFields.TOXORGSTREET) && Objects.equals(TOXORGCITY, toxToMDIModelFields.TOXORGCITY) && Objects.equals(TOXORGCOUNTY, toxToMDIModelFields.TOXORGCOUNTY) && Objects.equals(TOXORGSTATE, toxToMDIModelFields.TOXORGSTATE) && Objects.equals(TOXORGZIP, toxToMDIModelFields.TOXORGZIP) && Objects.equals(TOXORGCOUNTRY, toxToMDIModelFields.TOXORGCOUNTRY) && Objects.equals(MDICASEID, toxToMDIModelFields.MDICASEID) && Objects.equals(MDICASESYSTEM, toxToMDIModelFields.MDICASESYSTEM) && Objects.equals(FIRSTNAME, toxToMDIModelFields.FIRSTNAME) && Objects.equals(MIDNAME, toxToMDIModelFields.MIDNAME) && Objects.equals(LASTNAME, toxToMDIModelFields.LASTNAME) && Objects.equals(SUFFIXNAME, toxToMDIModelFields.SUFFIXNAME) && Objects.equals(BIRTHDATE, toxToMDIModelFields.BIRTHDATE) && Objects.equals(MECNOTES, toxToMDIModelFields.MECNOTES) && Objects.equals(SPECIMENCOLLECTION_DATETIME, toxToMDIModelFields.SPECIMENCOLLECTION_DATETIME) && Objects.equals(REPORTDATE, toxToMDIModelFields.REPORTDATE) && Objects.equals(SPECIMENS, toxToMDIModelFields.SPECIMENS) && Objects.equals(RESULTS, toxToMDIModelFields.RESULTS) && Objects.equals(NOTES, toxToMDIModelFields.NOTES);
 	}
 
 	@Override
 	public int hashCode() {
-		return Objects.hash(TOXCASENUMBER, TOXORGNAME, TOXPERFORMER, TOXORGSTREET, TOXORGCOUNTY, TOXORGSTATE, TOXORGZIP, TOXORGCOUNTRY, MDICASEID, MDICASESYSTEM, FIRSTNAME, MIDNAME, LASTNAME, SUFFIXNAME, RACE, ETHNICITY, BIRTHDATE, MECNOTES, SPECIMENCOLLECTION_DATE, SPECIMENCOLLECTION_TIME, REPORTDATE, SPECIMENS, RESULTS);
+		return Objects.hash(TOXCASENUMBER, TOXORGNAME, TOXORDERCODE, TOXPERFORMER, TOXORGSTREET, TOXORGCITY, TOXORGCOUNTY, TOXORGSTATE, TOXORGZIP, TOXORGCOUNTRY, MDICASEID, MDICASESYSTEM, FIRSTNAME, MIDNAME, LASTNAME, SUFFIXNAME, BIRTHDATE, MECNOTES, SPECIMENCOLLECTION_DATETIME, REPORTDATE, SPECIMENS, RESULTS, NOTES);
 	}
 
 	@Override
@@ -404,8 +404,10 @@ public class ToxToMDIModelFields {
 		return "{" +
 			" TOXCASENUMBER='" + getTOXCASENUMBER() + "'" +
 			", TOXORGNAME='" + getTOXORGNAME() + "'" +
+			", TOXORDERCODE='" + getTOXORDERCODE() + "'" +
 			", TOXPERFORMER='" + getTOXPERFORMER() + "'" +
 			", TOXORGSTREET='" + getTOXORGSTREET() + "'" +
+			", TOXORGCITY='" + getTOXORGCITY() + "'" +
 			", TOXORGCOUNTY='" + getTOXORGCOUNTY() + "'" +
 			", TOXORGSTATE='" + getTOXORGSTATE() + "'" +
 			", TOXORGZIP='" + getTOXORGZIP() + "'" +
@@ -416,16 +418,13 @@ public class ToxToMDIModelFields {
 			", MIDNAME='" + getMIDNAME() + "'" +
 			", LASTNAME='" + getLASTNAME() + "'" +
 			", SUFFIXNAME='" + getSUFFIXNAME() + "'" +
-			", RACE='" + getRACE() + "'" +
-			", ETHNICITY='" + getETHNICITY() + "'" +
 			", BIRTHDATE='" + getBIRTHDATE() + "'" +
 			", MECNOTES='" + getMECNOTES() + "'" +
-			", SPECIMENCOLLECTION_DATE='" + getSPECIMENCOLLECTION_DATE() + "'" +
-			", SPECIMENCOLLECTION_TIME='" + getSPECIMENCOLLECTION_TIME() + "'" +
+			", SPECIMENCOLLECTION_DATETIME='" + getSPECIMENCOLLECTION_DATETIME() + "'" +
 			", REPORTDATE='" + getREPORTDATE() + "'" +
 			", SPECIMENS='" + getSPECIMENS() + "'" +
 			", RESULTS='" + getRESULTS() + "'" +
+			", NOTES='" + getNOTES() + "'" +
 			"}";
-	}
-	
+	}	
 }

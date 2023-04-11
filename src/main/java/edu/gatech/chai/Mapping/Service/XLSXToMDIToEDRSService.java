@@ -122,7 +122,6 @@ public class XLSXToMDIToEDRSService {
         returnModel.setDURATIONB(getStringForColumnAndName(sheet,fieldMap,currentColumn,"Cause of Death Part I Interval, Line b"));
         returnModel.setDURATIONC(getStringForColumnAndName(sheet,fieldMap,currentColumn,"Cause of Death Part I Interval, Line c"));
         returnModel.setDURATIOND(getStringForColumnAndName(sheet,fieldMap,currentColumn,"Cause of Death Part I Interval, Line d"));
-        returnModel.setETHNICITY(getStringForColumnAndName(sheet,fieldMap,currentColumn,"Decedent Ethnicity"));
         returnModel.setGENDER(getStringForColumnAndName(sheet,fieldMap,currentColumn,"Decedent SexAtDeath"));
         returnModel.setMANNER(getStringForColumnAndName(sheet,fieldMap,currentColumn,"Manner of Death"));
         returnModel.setMELICENSE(getStringForColumnAndName(sheet,fieldMap,currentColumn,"Medical Examiner License Number"));
