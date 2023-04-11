@@ -2,7 +2,7 @@ package edu.gatech.chai.MDI.Model;
 
 import com.opencsv.bean.CsvBindByName;
 
-public class MDIModelFields {
+public class MDIToEDRSModelFields {
 	@CsvBindByName
 	public String BASEFHIRID = "";
 	@CsvBindByName
@@ -237,8 +237,10 @@ public class MDIModelFields {
 	public String ME_STATE = "";
 	@CsvBindByName
 	public String ME_ZIP = "";
+	@CsvBindByName
+	public String PRONOUNCERNAME = "";
 	
-	public MDIModelFields() {
+	public MDIToEDRSModelFields() {
 		
 	}
 
@@ -1180,4 +1182,12 @@ public class MDIModelFields {
 		this.ME_ZIP = ME_ZIP;
 	}
 	
+	public String getPRONOUNCERNAME() {
+		return this.PRONOUNCERNAME;
+	}
+
+	public void setPRONOUNCERNAME(String PRONOUNCERNAME) {
+		this.PRONOUNCERNAME = PRONOUNCERNAME;
+	}
+
 }
