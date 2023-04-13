@@ -18,11 +18,11 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
-import edu.gatech.chai.MDI.Model.MDIModelFields;
+import edu.gatech.chai.MDI.Model.MDIToEDRSModelFields;
 
 @Service
-public class XLSXToMDIFhirCMSService {
-    private static final Logger logger = LoggerFactory.getLogger(XLSXToMDIFhirCMSService.class);
+public class XLSXToMDIToEDRSService {
+    private static final Logger logger = LoggerFactory.getLogger(XLSXToToxToMDIService.class);
     private static final int FIRST_ROW = 1;
     private static String file_id = "";
     // private static final String SECTION_HEADER = "Highlighted yellow items have been changed"; //Note this will ofc change to a reasonable "section name" in the future
@@ -38,7 +38,7 @@ public class XLSXToMDIFhirCMSService {
         ,"Cause of Death Part I Interval, Line b","Cause of Death Part I Interval, Line c","Cause of Death Part I Interval, Line d","Cause of Death Part II", "Manner of Death"
         ,"Date of Injury", "Time of Injury", "Estimated Date of Injury Interval: Earliest", "Estimated Date of Injury Interval: Latest", "Did Injury Occur at Work?", "Decedent's Transportation Role During Injury"
         ,"Location of Death","Location of Injury","Place of death","Pregnancy status","Did Tobacco Use Contribute to Death?"
-        ,"Decedent Date of death","Decedent Time of death","Date establishment method","Estimated Date of Death Interval: Earliest", "Estimated Date of Death Interval: Latest","Date pronounced dead","Time pronounced dead","Place of death"
+        ,"Decedent Date of death","Decedent Time of death","Date establishment method","Estimated Date of Death Interval: Earliest", "Estimated Date of Death Interval: Latest","Date pronounced dead","Time pronounced dead","Pronouncer of death","Place of death"
         ,"Autopsy Performed?", "Autopsy Results Available?"
         ,"Did Injury Occur at Work?", "How injury occurred"
         ,"Medical Examiner Name","Medical Examiner Phone Number", "Medical Examiner License Number"
@@ -46,8 +46,8 @@ public class XLSXToMDIFhirCMSService {
         ,"Certifier Name", "Certifier Type", "Case History"};
     private static final String endCapColumnHeader = "End of Cases"; //Cell text we expect at the end of the row.
 
-    public List<MDIModelFields> convertToMDIModelFields(XSSFWorkbook workbook) throws Exception{
-        List<MDIModelFields> returnList = new ArrayList<MDIModelFields>();
+    public List<MDIToEDRSModelFields> convertToMDIModelFields(XSSFWorkbook workbook) throws Exception{
+        List<MDIToEDRSModelFields> returnList = new ArrayList<MDIToEDRSModelFields>();
         XSSFSheet sheet = workbook.getSheetAt(0); //Assuming first sheet for now
         XSSFRow headerRow = sheet.getRow(0); //Header should be first row
         Cell headerElementCell = findCellFromRow(headerRow, ELEMENT_HEADER);
@@ -64,7 +64,7 @@ public class XLSXToMDIFhirCMSService {
         Cell nameCell = sheet.getRow(fieldMap.get("Decedent Name")).getCell(currentColumn);
         while(!headerCell.getStringCellValue().equals(endCapColumnHeader) && !headerCell.getStringCellValue().isEmpty()){ //Check if we're at the end of the sheet
             if(nameCell != null && !nameCell.getStringCellValue().isEmpty() && headerCell.getStringCellValue().contains("Case")){ //A decedent name must be provided
-                MDIModelFields mdiFields = convertColumnToModelFields(currentColumn, sheet, fieldMap);
+                MDIToEDRSModelFields mdiFields = convertColumnToModelFields(currentColumn, sheet, fieldMap);
                 returnList.add(mdiFields);
             }
             currentColumn++;
@@ -88,8 +88,8 @@ public class XLSXToMDIFhirCMSService {
         return returnMap;
     }
 
-    public MDIModelFields convertColumnToModelFields(int currentColumn, XSSFSheet sheet, Map<String, Integer> fieldMap) throws Exception{
-        MDIModelFields returnModel = new MDIModelFields(); //This is going to be replaced SOON with new sheet column definitions!
+    public MDIToEDRSModelFields convertColumnToModelFields(int currentColumn, XSSFSheet sheet, Map<String, Integer> fieldMap) throws Exception{
+        MDIToEDRSModelFields returnModel = new MDIToEDRSModelFields(); //This is going to be replaced SOON with new sheet column definitions!
         //Every model is going to have a similar base fhir id
         returnModel.setBASEFHIRID(file_id+ "-" + (currentColumn - 2) + "-");
         handleAge(returnModel, currentColumn, sheet, fieldMap);
@@ -122,7 +122,6 @@ public class XLSXToMDIFhirCMSService {
         returnModel.setDURATIONB(getStringForColumnAndName(sheet,fieldMap,currentColumn,"Cause of Death Part I Interval, Line b"));
         returnModel.setDURATIONC(getStringForColumnAndName(sheet,fieldMap,currentColumn,"Cause of Death Part I Interval, Line c"));
         returnModel.setDURATIOND(getStringForColumnAndName(sheet,fieldMap,currentColumn,"Cause of Death Part I Interval, Line d"));
-        returnModel.setETHNICITY(getStringForColumnAndName(sheet,fieldMap,currentColumn,"Decedent Ethnicity"));
         returnModel.setGENDER(getStringForColumnAndName(sheet,fieldMap,currentColumn,"Decedent SexAtDeath"));
         returnModel.setMANNER(getStringForColumnAndName(sheet,fieldMap,currentColumn,"Manner of Death"));
         returnModel.setMELICENSE(getStringForColumnAndName(sheet,fieldMap,currentColumn,"Medical Examiner License Number"));
@@ -139,6 +138,7 @@ public class XLSXToMDIFhirCMSService {
         returnModel.setOSCOND(getStringForColumnAndName(sheet,fieldMap,currentColumn,"Cause of Death Part II"));
         returnModel.setPRNDATE(getStringForColumnAndName(sheet,fieldMap,currentColumn,"Date pronounced dead"));
         returnModel.setPRNTIME(getStringForColumnAndName(sheet,fieldMap,currentColumn,"Time pronounced dead"));
+        returnModel.setPRONOUNCERNAME(getStringForColumnAndName(sheet,fieldMap,currentColumn,"Pronouncer of death"));
         returnModel.setRACE(getStringForColumnAndName(sheet,fieldMap,currentColumn,"Decedent Race"));
         returnModel.setRESSTREET(getStringForColumnAndName(sheet,fieldMap,currentColumn,"Decedent Residence: Street"));
         returnModel.setRESCITY(getStringForColumnAndName(sheet,fieldMap,currentColumn,"Decedent Residence: city"));
@@ -152,7 +152,7 @@ public class XLSXToMDIFhirCMSService {
         return returnModel;
     }
 
-    protected MDIModelFields handleAge(MDIModelFields returnModel, int currentColumn, XSSFSheet sheet, Map<String, Integer> fieldMap){
+    protected MDIToEDRSModelFields handleAge(MDIToEDRSModelFields returnModel, int currentColumn, XSSFSheet sheet, Map<String, Integer> fieldMap){
         String ageValue = getStringForColumnAndName(sheet,fieldMap,currentColumn,"Decedent Age");
         ageValue.trim();
         String[] numberAndUnit = ageValue.split("\\s+"); //Looking for number + unit
@@ -168,7 +168,7 @@ public class XLSXToMDIFhirCMSService {
         return returnModel;
     }
 
-    protected MDIModelFields handleName(MDIModelFields returnModel, int currentColumn, XSSFSheet sheet, Map<String, Integer> fieldMap) throws Exception{
+    protected MDIToEDRSModelFields handleName(MDIToEDRSModelFields returnModel, int currentColumn, XSSFSheet sheet, Map<String, Integer> fieldMap) throws Exception{
         String fullName = getStringForColumnAndName(sheet,fieldMap,currentColumn,"Decedent Name");
         Pattern suffixPattern = Pattern.compile("(?<Suffix>Jr\\.|Sr\\.|IV|III|II|)");
         Matcher suffixMatcher = suffixPattern.matcher(fullName);
