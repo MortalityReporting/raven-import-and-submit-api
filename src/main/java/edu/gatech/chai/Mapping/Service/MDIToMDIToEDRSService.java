@@ -78,11 +78,11 @@ public class MDIToMDIToEDRSService {
 		Date now = new Date();
 		returnBundle.setTimestamp(now);
 		//Assigning a raven generated system identifier
-		returnBundle.setIdentifier(new Identifier().setSystem("urn:mdi:raven:temporary").setValue(Long.toString(now.getTime())));
+		returnBundle.setIdentifier(new Identifier().setSystem("urn:raven:temporary").setValue(Long.toString(now.getTime())));
 		returnBundle.setType(BundleType.BATCH);
 		Identifier caseIdentifier = new Identifier().setSystem(inputFields.SYSTEMID);
 		caseIdentifier.setValue("TestIdentifier");
-		caseIdentifier.setType(new CodeableConcept().addCoding(new Coding().setCode("1000007").setSystem("urn:mdi:temporary:code").setDisplay("Case Number")));
+		caseIdentifier.setType(new CodeableConcept().addCoding(new Coding().setCode("1000007").setSystem("urn:temporary:code").setDisplay("Case Number")));
 		
 		CompositionMDIToEDRS mainComposition = returnBundle.getCompositionMDIToEDRS();
 		mainComposition.setTitle("Raven generated MDI-To-EDRS Document");
@@ -388,13 +388,13 @@ public class MDIToMDIToEDRSService {
 		returnDecedent.addAddress(residentAddress);
 		if(inputFields.LKAWHERE != null && !inputFields.LKAWHERE.isEmpty()) {
 			Extension lkaExt = new Extension();
-			lkaExt.setUrl("urn:mdi:temporary:code:last-known-to-be-alive-or-okay-place");
+			lkaExt.setUrl("urn:temporary:code:last-known-to-be-alive-or-okay-place");
 			lkaExt.setValue(new StringType(inputFields.LKAWHERE));
 			returnDecedent.addExtension(lkaExt);
 		}
 		if(inputFields.HOSPNAME != null && !inputFields.HOSPNAME.isEmpty()) {
 			Extension hospExt = new Extension();
-			hospExt.setUrl("urn:mdi:temporary:code:hospital-name-decedent-was-first-taken");
+			hospExt.setUrl("urn:temporary:code:hospital-name-decedent-was-first-taken");
 			hospExt.setValue(new StringType(inputFields.HOSPNAME));
 			returnDecedent.addExtension(hospExt);
 		}
@@ -591,7 +591,7 @@ public class MDIToMDIToEDRSService {
 		foundObs.setStatus(ObservationStatus.FINAL);
 		foundObs.setSubject(decedentReference);
 		foundObs.setCode(new CodeableConcept().addCoding(new Coding(
-				"urn:mdi:temporary:code", "1000001", "Date and Time found dead, unconcious and in distress")));
+				"urn:temporary:code", "1000001", "Date and Time found dead, unconcious and in distress")));
 		if(inputFields.FOUNDDATE != null && !inputFields.FOUNDDATE.isEmpty()) {
 			Date reportDate = MDIToFhirCMSUtil.parseDate(inputFields.FOUNDDATE);
 			if(inputFields.FOUNDTIME != null && !inputFields.FOUNDTIME.isEmpty()) {
