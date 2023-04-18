@@ -8,6 +8,8 @@ import com.opencsv.bean.CsvBindByName;
 
 public class ToxToMDIModelFields {
 	@CsvBindByName
+	public String FILEID = "";
+	@CsvBindByName
 	public String TOXCASENUMBER = "";
 	@CsvBindByName
 	public String TOXORGNAME = "";
@@ -54,11 +56,11 @@ public class ToxToMDIModelFields {
 	@CsvBindByName
 	public List<String> NOTES = new ArrayList<String>();
 
-
 	public ToxToMDIModelFields() {
 	}
 
-	public ToxToMDIModelFields(String TOXCASENUMBER, String TOXORGNAME, String TOXORDERCODE, String TOXPERFORMER, String TOXORGSTREET, String TOXORGCITY, String TOXORGCOUNTY, String TOXORGSTATE, String TOXORGZIP, String TOXORGCOUNTRY, String MDICASEID, String MDICASESYSTEM, String FIRSTNAME, String MIDNAME, String LASTNAME, String SUFFIXNAME, String BIRTHDATE, String MECNOTES, String SPECIMENCOLLECTION_DATETIME, String REPORTDATE, List<ToxSpecimen> SPECIMENS, List<ToxResult> RESULTS, List<String> NOTES) {
+	public ToxToMDIModelFields(String FILEID, String TOXCASENUMBER, String TOXORGNAME, String TOXORDERCODE, String TOXPERFORMER, String TOXORGSTREET, String TOXORGCITY, String TOXORGCOUNTY, String TOXORGSTATE, String TOXORGZIP, String TOXORGCOUNTRY, String MDICASEID, String MDICASESYSTEM, String FIRSTNAME, String MIDNAME, String LASTNAME, String SUFFIXNAME, String BIRTHDATE, String MECNOTES, String SPECIMENCOLLECTION_DATETIME, String REPORTDATE, List<ToxSpecimen> SPECIMENS, List<ToxResult> RESULTS, List<String> NOTES) {
+		this.FILEID = FILEID;
 		this.TOXCASENUMBER = TOXCASENUMBER;
 		this.TOXORGNAME = TOXORGNAME;
 		this.TOXORDERCODE = TOXORDERCODE;
@@ -82,6 +84,14 @@ public class ToxToMDIModelFields {
 		this.SPECIMENS = SPECIMENS;
 		this.RESULTS = RESULTS;
 		this.NOTES = NOTES;
+	}
+
+	public String getFILEID() {
+		return this.FILEID;
+	}
+
+	public void setFILEID(String FILEID) {
+		this.FILEID = FILEID;
 	}
 
 	public String getTOXCASENUMBER() {
@@ -268,6 +278,11 @@ public class ToxToMDIModelFields {
 		this.NOTES = NOTES;
 	}
 
+	public ToxToMDIModelFields FILEID(String FILEID) {
+		setFILEID(FILEID);
+		return this;
+	}
+
 	public ToxToMDIModelFields TOXCASENUMBER(String TOXCASENUMBER) {
 		setTOXCASENUMBER(TOXCASENUMBER);
 		return this;
@@ -391,18 +406,19 @@ public class ToxToMDIModelFields {
 			return false;
 		}
 		ToxToMDIModelFields toxToMDIModelFields = (ToxToMDIModelFields) o;
-		return Objects.equals(TOXCASENUMBER, toxToMDIModelFields.TOXCASENUMBER) && Objects.equals(TOXORGNAME, toxToMDIModelFields.TOXORGNAME) && Objects.equals(TOXORDERCODE, toxToMDIModelFields.TOXORDERCODE) && Objects.equals(TOXPERFORMER, toxToMDIModelFields.TOXPERFORMER) && Objects.equals(TOXORGSTREET, toxToMDIModelFields.TOXORGSTREET) && Objects.equals(TOXORGCITY, toxToMDIModelFields.TOXORGCITY) && Objects.equals(TOXORGCOUNTY, toxToMDIModelFields.TOXORGCOUNTY) && Objects.equals(TOXORGSTATE, toxToMDIModelFields.TOXORGSTATE) && Objects.equals(TOXORGZIP, toxToMDIModelFields.TOXORGZIP) && Objects.equals(TOXORGCOUNTRY, toxToMDIModelFields.TOXORGCOUNTRY) && Objects.equals(MDICASEID, toxToMDIModelFields.MDICASEID) && Objects.equals(MDICASESYSTEM, toxToMDIModelFields.MDICASESYSTEM) && Objects.equals(FIRSTNAME, toxToMDIModelFields.FIRSTNAME) && Objects.equals(MIDNAME, toxToMDIModelFields.MIDNAME) && Objects.equals(LASTNAME, toxToMDIModelFields.LASTNAME) && Objects.equals(SUFFIXNAME, toxToMDIModelFields.SUFFIXNAME) && Objects.equals(BIRTHDATE, toxToMDIModelFields.BIRTHDATE) && Objects.equals(MECNOTES, toxToMDIModelFields.MECNOTES) && Objects.equals(SPECIMENCOLLECTION_DATETIME, toxToMDIModelFields.SPECIMENCOLLECTION_DATETIME) && Objects.equals(REPORTDATE, toxToMDIModelFields.REPORTDATE) && Objects.equals(SPECIMENS, toxToMDIModelFields.SPECIMENS) && Objects.equals(RESULTS, toxToMDIModelFields.RESULTS) && Objects.equals(NOTES, toxToMDIModelFields.NOTES);
+		return Objects.equals(FILEID, toxToMDIModelFields.FILEID) && Objects.equals(TOXCASENUMBER, toxToMDIModelFields.TOXCASENUMBER) && Objects.equals(TOXORGNAME, toxToMDIModelFields.TOXORGNAME) && Objects.equals(TOXORDERCODE, toxToMDIModelFields.TOXORDERCODE) && Objects.equals(TOXPERFORMER, toxToMDIModelFields.TOXPERFORMER) && Objects.equals(TOXORGSTREET, toxToMDIModelFields.TOXORGSTREET) && Objects.equals(TOXORGCITY, toxToMDIModelFields.TOXORGCITY) && Objects.equals(TOXORGCOUNTY, toxToMDIModelFields.TOXORGCOUNTY) && Objects.equals(TOXORGSTATE, toxToMDIModelFields.TOXORGSTATE) && Objects.equals(TOXORGZIP, toxToMDIModelFields.TOXORGZIP) && Objects.equals(TOXORGCOUNTRY, toxToMDIModelFields.TOXORGCOUNTRY) && Objects.equals(MDICASEID, toxToMDIModelFields.MDICASEID) && Objects.equals(MDICASESYSTEM, toxToMDIModelFields.MDICASESYSTEM) && Objects.equals(FIRSTNAME, toxToMDIModelFields.FIRSTNAME) && Objects.equals(MIDNAME, toxToMDIModelFields.MIDNAME) && Objects.equals(LASTNAME, toxToMDIModelFields.LASTNAME) && Objects.equals(SUFFIXNAME, toxToMDIModelFields.SUFFIXNAME) && Objects.equals(BIRTHDATE, toxToMDIModelFields.BIRTHDATE) && Objects.equals(MECNOTES, toxToMDIModelFields.MECNOTES) && Objects.equals(SPECIMENCOLLECTION_DATETIME, toxToMDIModelFields.SPECIMENCOLLECTION_DATETIME) && Objects.equals(REPORTDATE, toxToMDIModelFields.REPORTDATE) && Objects.equals(SPECIMENS, toxToMDIModelFields.SPECIMENS) && Objects.equals(RESULTS, toxToMDIModelFields.RESULTS) && Objects.equals(NOTES, toxToMDIModelFields.NOTES);
 	}
 
 	@Override
 	public int hashCode() {
-		return Objects.hash(TOXCASENUMBER, TOXORGNAME, TOXORDERCODE, TOXPERFORMER, TOXORGSTREET, TOXORGCITY, TOXORGCOUNTY, TOXORGSTATE, TOXORGZIP, TOXORGCOUNTRY, MDICASEID, MDICASESYSTEM, FIRSTNAME, MIDNAME, LASTNAME, SUFFIXNAME, BIRTHDATE, MECNOTES, SPECIMENCOLLECTION_DATETIME, REPORTDATE, SPECIMENS, RESULTS, NOTES);
+		return Objects.hash(FILEID, TOXCASENUMBER, TOXORGNAME, TOXORDERCODE, TOXPERFORMER, TOXORGSTREET, TOXORGCITY, TOXORGCOUNTY, TOXORGSTATE, TOXORGZIP, TOXORGCOUNTRY, MDICASEID, MDICASESYSTEM, FIRSTNAME, MIDNAME, LASTNAME, SUFFIXNAME, BIRTHDATE, MECNOTES, SPECIMENCOLLECTION_DATETIME, REPORTDATE, SPECIMENS, RESULTS, NOTES);
 	}
 
 	@Override
 	public String toString() {
 		return "{" +
-			" TOXCASENUMBER='" + getTOXCASENUMBER() + "'" +
+			" FILEID='" + getFILEID() + "'" +
+			", TOXCASENUMBER='" + getTOXCASENUMBER() + "'" +
 			", TOXORGNAME='" + getTOXORGNAME() + "'" +
 			", TOXORDERCODE='" + getTOXORDERCODE() + "'" +
 			", TOXPERFORMER='" + getTOXPERFORMER() + "'" +
@@ -426,5 +442,5 @@ public class ToxToMDIModelFields {
 			", RESULTS='" + getRESULTS() + "'" +
 			", NOTES='" + getNOTES() + "'" +
 			"}";
-	}	
+	}
 }

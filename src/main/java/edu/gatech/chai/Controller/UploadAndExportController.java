@@ -155,12 +155,13 @@ public class UploadAndExportController {
 		mapper.setVisibility(PropertyAccessor.FIELD, Visibility.ANY);
 		ArrayNode responseJson = mapper.createArrayNode();
 		//For each model field
-		for(ToxToMDIModelFields modelFields:mappedXLSXData){
+		for(int i=0;i<mappedXLSXData.size();i++){
+			ToxToMDIModelFields modelFields = mappedXLSXData.get(i);
 			//Convert
 			logger.info("XLSX MDI-To-Tox Upload: Creating FHIR Data");
 			String bundleString = "";
 			try {
-				bundleString = mDIToToxToMDIService.convertToMDIString(modelFields);
+				bundleString = mDIToToxToMDIService.convertToMDIString(modelFields, i);
 			} catch (ParseException e1) {
 				e1.printStackTrace();
 				continue;
@@ -298,6 +299,7 @@ public class UploadAndExportController {
 	@PostMapping(value = {"upload-mdi-to-edrs-xlsx-file"})
     public ResponseEntity<JsonNode> uploadXLSXFileForMDIToEDRS(@RequestParam(name = "file", required = true) MultipartFile file) throws JsonProcessingException {
 		//Read XLSX File submitted
+		logger.info("XLSX MDI-To-EDRS Upload: Starting XLSX File Read");
 		Tika tika = new Tika();
 		String detectedType;
 		XSSFWorkbook workbook = null;

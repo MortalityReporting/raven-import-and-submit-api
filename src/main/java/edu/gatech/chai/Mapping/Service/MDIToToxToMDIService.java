@@ -24,8 +24,10 @@ import org.hl7.fhir.r4.model.Enumerations.AdministrativeGender;
 import org.hl7.fhir.r4.model.Extension;
 import org.hl7.fhir.r4.model.HumanName;
 import org.hl7.fhir.r4.model.HumanName.NameUse;
+import org.hl7.fhir.r4.model.MessageHeader.MessageSourceComponent;
 import org.hl7.fhir.r4.model.Identifier;
 import org.hl7.fhir.r4.model.Location;
+import org.hl7.fhir.r4.model.MessageHeader;
 import org.hl7.fhir.r4.model.Meta;
 import org.hl7.fhir.r4.model.Observation;
 import org.hl7.fhir.r4.model.Organization;
@@ -73,8 +75,8 @@ public class MDIToToxToMDIService {
 	@Autowired
 	private MDIFhirContext mdiFhirContext;
 	
-	public String convertToMDIString(ToxToMDIModelFields inputFields) throws ParseException {
-		Bundle fullBundle = convertToMDI(inputFields);
+	public String convertToMDIString(ToxToMDIModelFields inputFields, int index) throws ParseException {
+		Bundle fullBundle = convertToMDI(inputFields, index);
 		return convertToMDIString(fullBundle);
 	}
 
@@ -84,18 +86,22 @@ public class MDIToToxToMDIService {
 		return returnString;
 	}
 	
-	public Bundle convertToMDI(ToxToMDIModelFields inputFields) throws ParseException {
+	public Bundle convertToMDI(ToxToMDIModelFields inputFields, int index) throws ParseException {
 		//Create Tox-to-MDI Bundle
 		BundleMessageToxToMDI returnBundle = new BundleMessageToxToMDI();
-		String idTemplate = inputFields.MDICASESYSTEM + "-" + inputFields.MDICASEID;
+		String idTemplate = inputFields.FILEID + "-" + index;
 		returnBundle.setId(idTemplate + "-Tox-Message-Bundle");
 		Date now = new Date();
 		//Assigning a raven generated system identifier
-		returnBundle.setIdentifier(new Identifier().setSystem("urn:mdi:raven:temporary").setValue(Long.toString(now.getTime())));
+		returnBundle.setIdentifier(new Identifier().setSystem("urn:raven:temporary").setValue(Long.toString(now.getTime())));
 		returnBundle.setType(BundleType.BATCH);
 		//Create Message Header
 		MessageHeaderToxicologyToMDI messageHeader = new MessageHeaderToxicologyToMDI();
 		messageHeader.setId(idTemplate + "-MessageHeader-Tox-To-MDI");
+		MessageSourceComponent msc = new MessageSourceComponent();
+		msc.setName("Raven Generated Import");
+		messageHeader.setSource(msc);
+		MDIToFhirCMSUtil.addResourceToBundle(returnBundle, messageHeader);
 		//Handle Performer
 		Resource performerResource = null; //Performer can be a US-Core-Practitioner or a PractitionerRole
 		Reference performerReference = null;
@@ -123,11 +129,17 @@ public class MDIToToxToMDIService {
 			toxOrderCodableConcept.setText(inputFields.TOXORDERCODE);
 		}
 		DiagnosticReportToxicologyToMDI diagnosticReport = new DiagnosticReportToxicologyToMDI(DiagnosticReportStatus.FINAL, patientResource, toxOrderCodableConcept, new Date(), MDIToFhirCMSUtil.parseDate(inputFields.REPORTDATE));
+		if(inputFields.TOXCASENUMBER != null && !inputFields.TOXCASENUMBER.isEmpty()){
+			Identifier identifier = new Identifier();
+			identifier.setSystem("urn:raven:toxicology:"+inputFields.FILEID);
+			diagnosticReport.addTrackingNumberExtension(inputFields.TOXCASENUMBER);
+		}
 		diagnosticReport.setId(idTemplate + "-DiagnosticReport-Tox-To-MDI");
 		if(performerReference != null){
 			diagnosticReport.addPerformer(performerReference);
 		}
 		MDIToFhirCMSUtil.addResourceToBundle(returnBundle, diagnosticReport);
+		messageHeader.addFocus(new Reference("DiagnosticReport/"+diagnosticReport.getId()));
 		//Create Specimen
 		Map<String, Reference> specimenNameToReference = new HashMap<String, Reference>(); //Local map to get a reference from a common string name for a specimen
 		for(int i=0;i<inputFields.SPECIMENS.size();i++){
@@ -225,10 +237,10 @@ public class MDIToToxToMDIService {
 		return returnPerformer;
 	}
 
-	private SpecimenToxicologyLab createSpecimen(ToxSpecimen toxSpecimen,int index, String idTemplate, Reference subjectReference) throws ParseException {
-		String idTemplateWithIndex = idTemplate + "-" + index + "-";
+	private SpecimenToxicologyLab createSpecimen(ToxSpecimen toxSpecimen,int specimenIndex, String idTemplate, Reference subjectReference) throws ParseException {
+		String idTemplateWithIndex = idTemplate + "-Specimen-" + specimenIndex;
 		SpecimenToxicologyLab specimenResource = new SpecimenToxicologyLab();
-		specimenResource.setId(idTemplateWithIndex + "Specimen");
+		specimenResource.setId(idTemplateWithIndex);
 		specimenResource.setSubject(subjectReference);
 		if(toxSpecimen.IDENTIFIER != null && toxSpecimen.IDENTIFIER.isEmpty()){
 			specimenResource.setAccessionIdentifier(new Identifier().setValue(toxSpecimen.IDENTIFIER));
@@ -266,10 +278,10 @@ public class MDIToToxToMDIService {
 		return specimenResource;
 	}
 
-	private ObservationToxicologyLabResult createResult(ToxResult toxResult,int index, String idTemplate, Map<String,Reference> specimenMap, Reference subjectReference) {
-		String idTemplateWithIndex = idTemplate + "-" + index + "-";
+	private ObservationToxicologyLabResult createResult(ToxResult toxResult,int resultIndex, String idTemplate, Map<String,Reference> specimenMap, Reference subjectReference) {
+		String idTemplateWithIndex = idTemplate + "-Result-" + resultIndex;
 		ObservationToxicologyLabResult resultResource = new ObservationToxicologyLabResult();
-		resultResource.setId(idTemplateWithIndex + "Result");
+		resultResource.setId(idTemplateWithIndex);
 		resultResource.setSubject(subjectReference);
 		resultResource.setCode(new CodeableConcept().setText(toxResult.ANALYSIS));
 		resultResource.setValue(new StringType(toxResult.VALUE)); //TODO: work with range
