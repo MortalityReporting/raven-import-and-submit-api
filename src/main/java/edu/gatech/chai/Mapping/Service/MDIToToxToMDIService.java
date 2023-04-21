@@ -148,6 +148,7 @@ public class MDIToToxToMDIService {
 			if(!specimenFields.allMatch(x -> x == null || x.isEmpty())) {
 				SpecimenToxicologyLab specimenResource = createSpecimen(toxSpecimen,i,idTemplate,patientReference);
 				Reference specimenReference = new Reference("Specimen/"+specimenResource.getId());
+				specimenReference.setDisplay(toxSpecimen.NAME);
 				specimenNameToReference.put(toxSpecimen.NAME, specimenReference);
 				diagnosticReport.addSpecimen(specimenReference);
 				MDIToFhirCMSUtil.addResourceToBundle(returnBundle, specimenResource);
@@ -160,6 +161,7 @@ public class MDIToToxToMDIService {
 			if(!resultFields.allMatch(x -> x == null || x.isEmpty())) {
 				ObservationToxicologyLabResult resultResource = createResult(toxResult,i,idTemplate,specimenNameToReference, patientReference);
 				Reference resultReference = new Reference("Observation/"+resultResource.getId());
+				resultReference.setDisplay(toxResult.ANALYSIS);
 				diagnosticReport.addResult(resultReference);
 				MDIToFhirCMSUtil.addResourceToBundle(returnBundle, resultResource);
 			}
@@ -242,6 +244,7 @@ public class MDIToToxToMDIService {
 		SpecimenToxicologyLab specimenResource = new SpecimenToxicologyLab();
 		specimenResource.setId(idTemplateWithIndex);
 		specimenResource.setSubject(subjectReference);
+		specimenResource.setType(new CodeableConcept().setText(toxSpecimen.NAME));
 		if(toxSpecimen.IDENTIFIER != null && toxSpecimen.IDENTIFIER.isEmpty()){
 			specimenResource.setAccessionIdentifier(new Identifier().setValue(toxSpecimen.IDENTIFIER));
 		}
