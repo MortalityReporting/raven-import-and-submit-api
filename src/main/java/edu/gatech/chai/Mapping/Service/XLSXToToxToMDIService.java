@@ -144,7 +144,8 @@ public class XLSXToToxToMDIService {
             }
             //Create a result per entry
             resultsRow = sheet.getRow(resultsRow.getRowNum() + 1);
-            while(resultsRow.getCell(resultsFieldMap.get("Analyte/Analysis")) != null
+            while(resultsRow != null
+                    && resultsRow.getCell(resultsFieldMap.get("Analyte/Analysis")) != null
                     && !formatter.formatCellValue(resultsRow.getCell(resultsFieldMap.get("Analyte/Analysis"))).isEmpty()
                     && !formatter.formatCellValue(resultsRow.getCell(0)).equalsIgnoreCase(NOTES_HEADER)){
                 ToxResult result = mapResult(resultsRow, resultsFieldMap);
