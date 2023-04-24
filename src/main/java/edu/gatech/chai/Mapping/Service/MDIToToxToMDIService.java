@@ -66,6 +66,7 @@ import edu.gatech.chai.MDI.model.resource.ObservationTobaccoUseContributedToDeat
 import edu.gatech.chai.MDI.model.resource.ObservationToxicologyLabResult;
 import edu.gatech.chai.MDI.model.resource.ProcedureDeathCertification;
 import edu.gatech.chai.MDI.model.resource.SpecimenToxicologyLab;
+import edu.gatech.chai.MDI.model.resource.util.MDICommonUtil;
 import edu.gatech.chai.Mapping.Util.MDIToFhirCMSUtil;
 import edu.gatech.chai.VRDR.model.util.DecedentUtil;
 
@@ -129,10 +130,22 @@ public class MDIToToxToMDIService {
 			toxOrderCodableConcept.setText(inputFields.TOXORDERCODE);
 		}
 		DiagnosticReportToxicologyToMDI diagnosticReport = new DiagnosticReportToxicologyToMDI(DiagnosticReportStatus.FINAL, patientResource, toxOrderCodableConcept, new Date(), MDIToFhirCMSUtil.parseDate(inputFields.REPORTDATE));
+			//Toxicology Identifier
 		if(inputFields.TOXCASENUMBER != null && !inputFields.TOXCASENUMBER.isEmpty()){
 			Identifier identifier = new Identifier();
-			identifier.setSystem("urn:raven:toxicology:"+inputFields.FILEID);
-			diagnosticReport.addTrackingNumberExtension(inputFields.TOXCASENUMBER);
+			identifier.setType(MDICommonUtil.trackingNumberTOXType);
+			identifier.setSystem("urn:raven-import:mdi:"+inputFields.FILEID);
+			identifier.setValue(inputFields.TOXCASENUMBER);
+			diagnosticReport.addTrackingNumberExtension(identifier);
+		}
+			//MDI Identifier
+		Stream<String> mdiIdentifierFields = Stream.of(inputFields.MDICASEID,inputFields.MDICASESYSTEM);
+		if(!mdiIdentifierFields.allMatch(x -> x == null || x.isEmpty())) {
+			Identifier identifier = new Identifier();
+			identifier.setType(MDICommonUtil.trackingNumberMDIType);
+			identifier.setSystem(inputFields.MDICASESYSTEM);
+			identifier.setValue(inputFields.MDICASEID);
+			diagnosticReport.addTrackingNumberExtension(identifier);
 		}
 		diagnosticReport.setId(idTemplate + "-DiagnosticReport-Tox-To-MDI");
 		if(performerReference != null){
