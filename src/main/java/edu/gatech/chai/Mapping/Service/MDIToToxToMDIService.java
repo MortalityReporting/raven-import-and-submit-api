@@ -294,7 +294,7 @@ public class MDIToToxToMDIService {
 		return specimenResource;
 	}
 
-	private ObservationToxicologyLabResult createResult(ToxResult toxResult,int resultIndex, String idTemplate, Map<String,Reference> specimenMap, Reference subjectReference) {
+	private ObservationToxicologyLabResult createResult(ToxResult toxResult,int resultIndex, String idTemplate, Map<String,Reference> specimenMap, Reference subjectReference) throws ParseException {
 		String idTemplateWithIndex = idTemplate + "-Result-" + resultIndex;
 		ObservationToxicologyLabResult resultResource = new ObservationToxicologyLabResult();
 		resultResource.setId(idTemplateWithIndex);
@@ -309,6 +309,14 @@ public class MDIToToxToMDIService {
 			if(specimenReference != null && !specimenReference.isEmpty()){
 				resultResource.setSpecimen(specimenReference);
 			}
+		}
+		Stream<String> receivedFields = Stream.of(toxResult.RECORD_DATE,toxResult.RECORD_TIME);
+		if(!receivedFields.allMatch(x -> x == null || x.isEmpty())) {
+			Date recordedDateTime = MDIToFhirCMSUtil.parseDate(toxResult.RECORD_DATE);
+			if(toxResult.RECORD_TIME != null && !toxResult.RECORD_TIME.isEmpty()){
+				MDIToFhirCMSUtil.addTimeToDate(recordedDateTime,toxResult.RECORD_TIME);
+			}
+			resultResource.setEffective(new DateTimeType(recordedDateTime));
 		}
 		//TODO: Add container information
 		//TODO: Work with notes

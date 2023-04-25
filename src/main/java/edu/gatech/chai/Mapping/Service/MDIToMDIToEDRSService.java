@@ -615,7 +615,6 @@ public class MDIToMDIToEDRSService {
 				MDIToFhirCMSUtil.addTimeToDate(certDate, inputFields.CDEATHTIME);
 			}
 			DateTimeType certValueDT = new DateTimeType(certDate);
-			returnDeathDate.setEffective(new DateTimeType(new Date()));
 			returnDeathDate.setValue(certValueDT);
 		}
 		if(inputFields.PRNDATE != null && !inputFields.PRNDATE.isEmpty()) {

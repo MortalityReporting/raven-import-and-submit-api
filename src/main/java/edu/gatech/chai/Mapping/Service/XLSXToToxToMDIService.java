@@ -149,6 +149,7 @@ public class XLSXToToxToMDIService {
                     && !formatter.formatCellValue(resultsRow.getCell(resultsFieldMap.get("Analyte/Analysis"))).isEmpty()
                     && !formatter.formatCellValue(resultsRow.getCell(0)).equalsIgnoreCase(NOTES_HEADER)){
                 ToxResult result = mapResult(resultsRow, resultsFieldMap);
+                result.RECORD_DATE = modelFields.REPORTDATE;
                 modelFields.RESULTS.add(result);
                 resultsRow = sheet.getRow(resultsRow.getRowNum() + 1);
             }
