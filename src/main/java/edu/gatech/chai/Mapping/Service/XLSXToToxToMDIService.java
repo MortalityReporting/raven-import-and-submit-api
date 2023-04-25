@@ -29,6 +29,7 @@ import edu.gatech.chai.MDI.Model.ToxToMDIModelFields;
 public class XLSXToToxToMDIService {
     private static final Logger logger = LoggerFactory.getLogger(XLSXToToxToMDIService.class);
     private static final DataFormatter formatter = new DataFormatter();
+    private static String FILEID_HEADER = "file Id";
     private static String LABORATORY_HEADER = "Laboratory";
     private static final String[] LABORATORY_FIELDS = {"Toxicology Lab Name", "Lab Address: Street", "Lab Address: Street", "Lab Address: City", "Lab Address: County", "Lab Address: State", "Lab Address: Zip", "Laboratory Case Number", "Performer"};
     private static String DECEDENT_HEADER = "Decedent";
@@ -45,7 +46,13 @@ public class XLSXToToxToMDIService {
         List<ToxToMDIModelFields> returnList = new ArrayList<ToxToMDIModelFields>();
         for(int sheetIndex = 0;sheetIndex < workbook.getNumberOfSheets(); sheetIndex++){
             ToxToMDIModelFields modelFields = new ToxToMDIModelFields();
-            XSSFSheet sheet = workbook.getSheetAt(sheetIndex); 
+            XSSFSheet sheet = workbook.getSheetAt(sheetIndex);
+            //File Id
+            Cell fileId = findCellFromColumn(sheet, HEADER_COLUMN, FILEID_HEADER);
+            Cell fileIdValueCell = sheet.getRow(fileId.getRowIndex() + 1).getCell(HEADER_COLUMN);
+            if(!formatter.formatCellValue(fileIdValueCell).isEmpty()){
+                modelFields.FILEID = formatter.formatCellValue(fileIdValueCell);
+            }
             //Laboratory fields
             Cell laboratoryHeader = findCellFromColumn(sheet, HEADER_COLUMN, LABORATORY_HEADER);
             Map<String,String> laboratoryMap = new HashMap<String,String>();
@@ -137,10 +144,12 @@ public class XLSXToToxToMDIService {
             }
             //Create a result per entry
             resultsRow = sheet.getRow(resultsRow.getRowNum() + 1);
-            while(resultsRow.getCell(resultsFieldMap.get("Analyte/Analysis")) != null
+            while(resultsRow != null
+                    && resultsRow.getCell(resultsFieldMap.get("Analyte/Analysis")) != null
                     && !formatter.formatCellValue(resultsRow.getCell(resultsFieldMap.get("Analyte/Analysis"))).isEmpty()
                     && !formatter.formatCellValue(resultsRow.getCell(0)).equalsIgnoreCase(NOTES_HEADER)){
                 ToxResult result = mapResult(resultsRow, resultsFieldMap);
+                result.RECORD_DATE = modelFields.REPORTDATE;
                 modelFields.RESULTS.add(result);
                 resultsRow = sheet.getRow(resultsRow.getRowNum() + 1);
             }
@@ -160,14 +169,14 @@ public class XLSXToToxToMDIService {
         return returnList;
     }
 
-    public ToxToMDIModelFields mapLaboratoryFields(ToxToMDIModelFields modelFields, Map<String,String> decedentMap){
-        Optional.ofNullable(decedentMap.get("Toxicology Lab Name")).ifPresent(x -> modelFields.TOXORGNAME = x);
-        Optional.ofNullable(decedentMap.get("Lab Address: Street")).ifPresent(x -> modelFields.TOXORGSTREET = x);
-        Optional.ofNullable(decedentMap.get("Lab Address: County")).ifPresent(x -> modelFields.TOXORGCOUNTY = x);
-        Optional.ofNullable(decedentMap.get("Lab Address: State")).ifPresent(x -> modelFields.TOXORGSTATE = x);
-        Optional.ofNullable(decedentMap.get("Lab Address: Zip")).ifPresent(x -> modelFields.TOXORGZIP = x);
-        Optional.ofNullable(decedentMap.get("Lab Case Number")).ifPresent(x -> modelFields.TOXCASENUMBER = x);
-        Optional.ofNullable(decedentMap.get("Performer")).ifPresent(x -> modelFields.TOXPERFORMER = x);
+    public ToxToMDIModelFields mapLaboratoryFields(ToxToMDIModelFields modelFields, Map<String,String> laboratoryMap){
+        Optional.ofNullable(laboratoryMap.get("Toxicology Lab Name")).ifPresent(x -> modelFields.TOXORGNAME = x);
+        Optional.ofNullable(laboratoryMap.get("Lab Address: Street")).ifPresent(x -> modelFields.TOXORGSTREET = x);
+        Optional.ofNullable(laboratoryMap.get("Lab Address: County")).ifPresent(x -> modelFields.TOXORGCOUNTY = x);
+        Optional.ofNullable(laboratoryMap.get("Lab Address: State")).ifPresent(x -> modelFields.TOXORGSTATE = x);
+        Optional.ofNullable(laboratoryMap.get("Lab Address: Zip")).ifPresent(x -> modelFields.TOXORGZIP = x);
+        Optional.ofNullable(laboratoryMap.get("Laboratory Case Number")).ifPresent(x -> modelFields.TOXCASENUMBER = x);
+        Optional.ofNullable(laboratoryMap.get("Performer")).ifPresent(x -> modelFields.TOXPERFORMER = x);
         return modelFields;
     }
 
