@@ -130,7 +130,7 @@ public class MDIToToxToMDIService {
 			toxOrderCodableConcept.setText(inputFields.TOXORDERCODE);
 		}
 		DiagnosticReportToxicologyToMDI diagnosticReport = new DiagnosticReportToxicologyToMDI(DiagnosticReportStatus.FINAL, patientResource, toxOrderCodableConcept, new Date(), MDIToFhirCMSUtil.parseDate(inputFields.REPORTDATE));
-			//Toxicology Identifier
+		//Toxicology Identifier
 		if(inputFields.TOXCASENUMBER != null && !inputFields.TOXCASENUMBER.isEmpty()){
 			Identifier identifier = new Identifier();
 			identifier.setType(MDICommonUtil.trackingNumberTOXType);
