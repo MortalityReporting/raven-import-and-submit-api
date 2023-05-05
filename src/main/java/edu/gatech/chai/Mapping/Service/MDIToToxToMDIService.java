@@ -224,7 +224,7 @@ public class MDIToToxToMDIService {
 			organization.setMeta(new Meta().addProfile("http://hl7.org/fhir/us/core/StructureDefinition/us-core-organization"));
 			organization.setActive(true);
 			organization.setName(inputFields.TOXORGNAME);
-			organization.addAddress(MDIToFhirCMSUtil.createAddress(inputFields.TOXORGNAME, inputFields.TOXORGSTREET, inputFields.TOXORGCITY, inputFields.TOXORGCOUNTY, inputFields.TOXORGSTATE, inputFields.TOXORGZIP));
+			organization.addAddress(MDIToFhirCMSUtil.createAddress(inputFields.TOXORGNAME, inputFields.TOXORGSTREET, inputFields.TOXORGCITY, inputFields.TOXORGCOUNTY, inputFields.TOXORGSTATE, inputFields.TOXORGZIP, inputFields.TOXORGCOUNTRY));
 			organizationReference = new Reference("Organization/"+organization.getId());
 			MDIToFhirCMSUtil.addResourceToBundle(bundle, organization);
 			practitionerRole = new PractitionerRole();

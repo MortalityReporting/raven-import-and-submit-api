@@ -238,7 +238,7 @@ public class MDIToFhirCMSUtil {
 	}
 	
 	public static Address createAddress(String place, String street, String city,
-			String county, String state, String zip) {
+			String county, String state, String zip, String country) {
 		Address returnAddress = new Address();
 		returnAddress.setText(place);
 		returnAddress.addLine(street);
@@ -246,6 +246,7 @@ public class MDIToFhirCMSUtil {
 		returnAddress.setDistrict(county);
 		returnAddress.setState(state);
 		returnAddress.setPostalCode(zip);
+		returnAddress.setCountry(country);
 		return returnAddress;
 	}
 	
