@@ -201,6 +201,7 @@ public class UploadAndExportController {
 				else{
 					fieldObject.put("status", "mapped");
 				}
+				//TODO: Handle Error
 				fieldObject.set("FHIRResource", mapper.createObjectNode());
 				fieldObject.put("value",value);
 				fields.set(keyName, fieldObject);

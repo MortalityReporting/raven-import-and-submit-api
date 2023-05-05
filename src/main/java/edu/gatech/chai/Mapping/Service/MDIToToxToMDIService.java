@@ -130,7 +130,7 @@ public class MDIToToxToMDIService {
 			toxOrderCodableConcept.setText(inputFields.TOXORDERCODE);
 		}
 		DiagnosticReportToxicologyToMDI diagnosticReport = new DiagnosticReportToxicologyToMDI(DiagnosticReportStatus.FINAL, patientResource, toxOrderCodableConcept, new Date(), MDIToFhirCMSUtil.parseDate(inputFields.REPORTDATE));
-			//Toxicology Identifier
+		//Toxicology Identifier
 		if(inputFields.TOXCASENUMBER != null && !inputFields.TOXCASENUMBER.isEmpty()){
 			Identifier identifier = new Identifier();
 			identifier.setType(MDICommonUtil.trackingNumberTOXType);
@@ -224,7 +224,7 @@ public class MDIToToxToMDIService {
 			organization.setMeta(new Meta().addProfile("http://hl7.org/fhir/us/core/StructureDefinition/us-core-organization"));
 			organization.setActive(true);
 			organization.setName(inputFields.TOXORGNAME);
-			organization.addAddress(MDIToFhirCMSUtil.createAddress(inputFields.TOXORGNAME, inputFields.TOXORGSTREET, inputFields.TOXORGCITY, inputFields.TOXORGCOUNTY, inputFields.TOXORGSTATE, inputFields.TOXORGZIP));
+			organization.addAddress(MDIToFhirCMSUtil.createAddress(inputFields.TOXORGNAME, inputFields.TOXORGSTREET, inputFields.TOXORGCITY, inputFields.TOXORGCOUNTY, inputFields.TOXORGSTATE, inputFields.TOXORGZIP, inputFields.TOXORGCOUNTRY));
 			organizationReference = new Reference("Organization/"+organization.getId());
 			MDIToFhirCMSUtil.addResourceToBundle(bundle, organization);
 			practitionerRole = new PractitionerRole();
