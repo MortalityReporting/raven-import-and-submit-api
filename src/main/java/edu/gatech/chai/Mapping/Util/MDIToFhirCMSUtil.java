@@ -33,7 +33,7 @@ public class MDIToFhirCMSUtil {
 	public static List<String> timeFormatStrings = Arrays.asList("hh:mm:ss a", "hh:mm a",
 			"hh:mm:ss", "hh:mm","hhmm","hhmmss");
 	public static String ageRegex = "(\\d+)\\s*(year|month|week|day|hour|minute)";
-	public static List<String> nameFormatStrings = Arrays.asList("(.*),\\s{0,1}(.*)\\s(.*)", "(\\w+)\\s(\\w+)");
+	public static List<String> nameFormatStrings = Arrays.asList("(.*),\\s{0,1}(.*)\\s(.*)", "(\\w+)\\s(\\w)[\\.]\\s(\\w+)", "(\\w+)\\s(\\w+)");
 	public static String convertUnitOfMeasureStringToCode(String uomString) {
 		switch(uomString) {
 			case "minutes":
@@ -254,10 +254,19 @@ public class MDIToFhirCMSUtil {
 			Pattern pattern = Pattern.compile(nameFormat);
 			Matcher matcher = pattern.matcher(name);
 			if(matcher.find()) {
-				HumanName nameResource = new HumanName();
-				nameResource.setFamily(matcher.group(2));
-				nameResource.addGiven(matcher.group(1));
-				return nameResource;
+				if(matcher.groupCount() == 2){
+					HumanName nameResource = new HumanName();
+					nameResource.setFamily(matcher.group(2));
+					nameResource.addGiven(matcher.group(1));
+					return nameResource;
+				}
+				else if(matcher.groupCount() == 3){
+					HumanName nameResource = new HumanName();
+					nameResource.setFamily(matcher.group(3));
+					nameResource.addGiven(matcher.group(1));
+					nameResource.addGiven(matcher.group(2));
+					return nameResource;
+				}
 			}
 		}
 		return null;
