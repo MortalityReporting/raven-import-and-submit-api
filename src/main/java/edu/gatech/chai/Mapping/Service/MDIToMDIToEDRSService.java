@@ -36,6 +36,7 @@ import org.hl7.fhir.r4.model.Procedure.ProcedureStatus;
 import org.hl7.fhir.r4.model.Reference;
 import org.hl7.fhir.r4.model.StringType;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import ca.uhn.fhir.parser.IParser;
@@ -43,6 +44,8 @@ import edu.gatech.chai.MDI.Model.MDIToEDRSModelFields;
 import edu.gatech.chai.MDI.context.MDIFhirContext;
 import edu.gatech.chai.MDI.model.resource.BundleDocumentMDIToEDRS;
 import edu.gatech.chai.MDI.model.resource.CompositionMDIToEDRS;
+import edu.gatech.chai.MDI.model.resource.LocationDeath;
+import edu.gatech.chai.MDI.model.resource.LocationInjury;
 import edu.gatech.chai.MDI.model.resource.ObservationAutopsyPerformedIndicator;
 import edu.gatech.chai.MDI.model.resource.ObservationCauseOfDeathPart1;
 import edu.gatech.chai.MDI.model.resource.ObservationContributingCauseOfDeathPart2;
@@ -58,6 +61,8 @@ import edu.gatech.chai.VRDR.model.util.DecedentUtil;
 @Service
 public class MDIToMDIToEDRSService {
 	
+	@Value("${raven_generated_systemid}")
+	private String raven_generated_systemid;
 	@Autowired
 	private MDIFhirContext mdiFhirContext;
 	
@@ -93,10 +98,10 @@ public class MDIToMDIToEDRSService {
 		mainComposition.setStatus(CompositionStatus.PRELIMINARY);
 		mainComposition.setDate(new Date());
 		if(inputFields.MDICASEID != null && !inputFields.MDICASEID.isEmpty()){
-			mainComposition.addMDICaseIdExtension(inputFields.MDICASEID);
+			mainComposition.addMDICaseIdExtension(raven_generated_systemid, inputFields.MDICASEID);
 		}
 		if(inputFields.EDRSCASEID != null && !inputFields.EDRSCASEID.isEmpty()){
-			mainComposition.addEDRSCaseIdExtension(inputFields.EDRSCASEID);
+			mainComposition.addEDRSCaseIdExtension(raven_generated_systemid, inputFields.EDRSCASEID);
 		}
 		//Since we're creating a batch bundle we need to set the request type on all resources. However this one is handled special from "addResourceToBatchBundle"
 		returnBundle.getEntryFirstRep().setRequest(new BundleEntryRequestComponent().setMethod(HTTPVerb.POST));
@@ -171,7 +176,7 @@ public class MDIToMDIToEDRSService {
 		MDIToFhirCMSUtil.addResourceToBundle(returnBundle, deathCertification);
 		mainComposition.getJurisdictionSection().addEntry(new Reference("Procedure/"+deathCertification.getId()));
 		// Handle Death Location
-		Location deathLocation = null;
+		LocationDeath deathLocation = null;
 		Stream<String> deathLocFields = Stream.of(inputFields.DEATHLOCATION);
 		if(!deathLocFields.allMatch(x -> x == null || x.isEmpty())) {
 			deathLocation = createDeathLocation(inputFields);
@@ -195,7 +200,7 @@ public class MDIToMDIToEDRSService {
 		//Handle Injury Location
 		Stream<String> injuryLocationFields = Stream.of(inputFields.INJURYLOCATION);
 		if(!injuryLocationFields.allMatch(x -> x == null || x.isEmpty())) {
-			Location injuryLocation = createInjuryLocation(inputFields, patientReference);
+			LocationInjury injuryLocation = createInjuryLocation(inputFields, patientReference);
 			mainComposition.getCircumstancesSection().addEntry(new Reference("Location/"+injuryLocation.getId()));
 			MDIToFhirCMSUtil.addResourceToBundle(returnBundle, injuryLocation);
 		}
@@ -203,7 +208,7 @@ public class MDIToMDIToEDRSService {
 		Stream<String> deathDateFields = Stream.of(inputFields.PRNDATE, inputFields.PRNTIME,
 				inputFields.CDEATHDATE, inputFields.CDEATHTIME);
 		if(!deathDateFields.allMatch(x -> x == null || x.isEmpty())) {
-			ObservationDeathDate deathDate = createDeathDate(inputFields, patientReference, pronouncerReference, deathLocation);
+			ObservationDeathDate deathDate = createDeathDate(inputFields, patientReference, pronouncerReference);
 			mainComposition.getJurisdictionSection().addEntry(new Reference("Observation/"+deathDate.getId()));
 			MDIToFhirCMSUtil.addResourceToBundle(returnBundle, deathDate);
 		}
@@ -383,7 +388,7 @@ public class MDIToMDIToEDRSService {
 			returnDecedent.addIdentifier(new Identifier().setSystem("http://hl7.org/fhir/sid/us-ssn").setValue(inputFields.POSSIBLEID));
 		}
 		Address residentAddress = MDIToFhirCMSUtil.createAddress("", inputFields.RESSTREET,
-				inputFields.RESCITY, inputFields.RESCOUNTY, inputFields.RESSTATE, inputFields.RESZIP);
+				inputFields.RESCITY, inputFields.RESCOUNTY, inputFields.RESSTATE, inputFields.RESZIP, inputFields.RESCOUNTRY);
 		residentAddress.setUse(AddressUse.HOME);
 		returnDecedent.addAddress(residentAddress);
 		if(inputFields.LKAWHERE != null && !inputFields.LKAWHERE.isEmpty()) {
@@ -425,7 +430,7 @@ public class MDIToMDIToEDRSService {
 				inputFields.ME_COUNTY, inputFields.ME_STATE, inputFields.ME_ZIP);
 		if(!meAddrFields.allMatch(x -> x == null || x.isEmpty())) {
 			Address meAddr = MDIToFhirCMSUtil.createAddress("", inputFields.ME_STREET, inputFields.ME_CITY,
-					inputFields.ME_COUNTY, inputFields.ME_STATE, inputFields.ME_ZIP);
+					inputFields.ME_COUNTY, inputFields.ME_STATE, inputFields.ME_ZIP, "");
 			returnPractitioner.addAddress(meAddr);
 		}
 		return returnPractitioner;
@@ -478,14 +483,13 @@ public class MDIToMDIToEDRSService {
 		pregnant.setStatus(ObservationStatus.PRELIMINARY);
 		pregnant.setId(inputFields.BASEFHIRID + "Pregnancy");
 		pregnant.setSubject(decedentReference);
-		pregnant.setValue(new StringType(inputFields.PREGNANT));
+		pregnant.setValue(inputFields.PREGNANT);
 		return pregnant;
 	}
 
-	private Location createInjuryLocation(MDIToEDRSModelFields inputFields, Reference decedentReference){
-		Location injuryLocation = new Location();
+	private LocationInjury createInjuryLocation(MDIToEDRSModelFields inputFields, Reference decedentReference){
+		LocationInjury injuryLocation = new LocationInjury();
 		injuryLocation.setId(inputFields.BASEFHIRID + "Injury-Location");
-    	injuryLocation.getMeta().addProfile("http://hl7.org/fhir/us/core/StructureDefinition/us-core-location");
     	injuryLocation.setName(inputFields.INJURYLOCATION);
     	injuryLocation.setAddress(new Address().setText(inputFields.INJURYLOCATION));
 		return injuryLocation;
@@ -576,6 +580,10 @@ public class MDIToMDIToEDRSService {
 			injuryDescription.setEffective(injEffectiveDT);
 		}
 
+		if(inputFields.INJURYLOCATION != null && !inputFields.INJURYLOCATION.isEmpty()) {
+			injuryDescription.addPlaceOfInjury(inputFields.INJURYLOCATION);
+		}
+
 		if(inputFields.ATWORK != null && !inputFields.ATWORK.isEmpty()){
 			injuryDescription.addWorkInjuryIndicator(inputFields.ATWORK);
 		}
@@ -602,7 +610,7 @@ public class MDIToMDIToEDRSService {
 		return foundObs;
 	}
 	
-	private ObservationDeathDate createDeathDate(MDIToEDRSModelFields inputFields, Reference decedentReference, Reference pronouncerReference, Location location) throws ParseException {
+	private ObservationDeathDate createDeathDate(MDIToEDRSModelFields inputFields, Reference decedentReference, Reference pronouncerReference) throws ParseException {
 		ObservationDeathDate returnDeathDate = new ObservationDeathDate();
 		returnDeathDate.setId(inputFields.BASEFHIRID+"DeathDate");
 		returnDeathDate.setSubject(decedentReference);
@@ -634,17 +642,20 @@ public class MDIToMDIToEDRSService {
 		return returnDeathDate;
 	}
 	
-	private Location createDeathLocation(MDIToEDRSModelFields inputFields) {
-		Location returnDeathLocation = new Location();
-		returnDeathLocation.setMeta(new Meta().addProfile("http://hl7.org/fhir/us/core/StructureDefinition/us-core-location"));
-		returnDeathLocation.setId(inputFields.BASEFHIRID+"DeathLocation");
+	private LocationDeath createDeathLocation(MDIToEDRSModelFields inputFields) {
+		LocationDeath returnDeathLocation = new LocationDeath();
+		returnDeathLocation.setId(inputFields.BASEFHIRID+"Death-Location");
 		returnDeathLocation.setName(inputFields.DEATHLOCATION);
 		returnDeathLocation.setAddress(new Address().setText(inputFields.DEATHLOCATION));
 		return returnDeathLocation;
 	}
 
 	private ObservationAutopsyPerformedIndicator createAutopsyPerformedIndicator(MDIToEDRSModelFields inputFields,Reference decedentReference,Reference practitionerReference){
-		ObservationAutopsyPerformedIndicator autopsyPerformedIndicator = new ObservationAutopsyPerformedIndicator(decedentReference, inputFields.AUTOPSYPERFORMED, inputFields.AUTOPSYRESULTSAVAILABLE);
+		String resultsAvailable = inputFields.AUTOPSYRESULTSAVAILABLE; //We always provide a resultsAvailable component; and say "no" when not provided by default.
+		if(resultsAvailable == null || resultsAvailable.isEmpty()){
+			resultsAvailable = "No";
+		}
+		ObservationAutopsyPerformedIndicator autopsyPerformedIndicator = new ObservationAutopsyPerformedIndicator(decedentReference, inputFields.AUTOPSYPERFORMED, resultsAvailable);
 		autopsyPerformedIndicator.setId(inputFields.BASEFHIRID+"Autopsy");
 		autopsyPerformedIndicator.addPerformer(practitionerReference);
 		return autopsyPerformedIndicator;
