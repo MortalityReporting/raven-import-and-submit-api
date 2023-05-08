@@ -419,7 +419,7 @@ public class MDIToMDIToEDRSService {
 		}
 		if(inputFields.MELICENSE != null && !inputFields.MELICENSE.isEmpty()) {
 			Identifier melicenseIdentifier = new Identifier();
-			melicenseIdentifier.setSystem("unknown");
+			melicenseIdentifier.setSystem(raven_generated_systemid);
 			melicenseIdentifier.setValue(inputFields.MELICENSE);
 			returnPractitioner.addIdentifier(melicenseIdentifier);
 		}
