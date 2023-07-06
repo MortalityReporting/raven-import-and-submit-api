@@ -566,6 +566,7 @@ public class MDIToMDIToEDRSService {
 	private ObservationHowDeathInjuryOccurred createHowDeathInjuryOccurred(MDIToEDRSModelFields inputFields, Patient patientResource, Practitioner practitionerResource) throws ParseException {
 		ObservationHowDeathInjuryOccurred injuryDescription = new ObservationHowDeathInjuryOccurred(patientResource, practitionerResource, inputFields.CHOWNINJURY);
 		injuryDescription.setId(inputFields.BASEFHIRID+"InjuryDescription");
+		injuryDescription.setStatus(ObservationStatus.FINAL);
 
 		if(inputFields.CINJDATE != null && !inputFields.CINJDATE.isEmpty()) {
 			Date injDate = MDIToFhirCMSUtil.parseDate(inputFields.CINJDATE);
