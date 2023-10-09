@@ -94,82 +94,86 @@ public class XLSXToMDIToEDRSService {
         returnModel.setBASEFHIRID(file_id+ "-" + (currentColumn - 2) + "-");
         handleAge(returnModel, currentColumn, sheet, fieldMap);
         handleName(returnModel, currentColumn, sheet, fieldMap);
-        returnModel.setAUTOPSYPERFORMED(getStringForColumnAndName(sheet, fieldMap, currentColumn, "Autopsy Performed?"));
-        returnModel.setAUTOPSYRESULTSAVAILABLE(getStringForColumnAndName(sheet, fieldMap, currentColumn, "Autopsy Results Available?"));
-        returnModel.setATWORK(getStringForColumnAndName(sheet,fieldMap,currentColumn,"Did Injury Occur at Work?"));
-        returnModel.setBIRTHDATE(getStringForColumnAndName(sheet,fieldMap,currentColumn,"Decedent DOB"));
-        returnModel.setCASENOTES(getStringForColumnAndName(sheet,fieldMap,currentColumn,"Case History"));
-        returnModel.setCAUSEA(getStringForColumnAndName(sheet,fieldMap,currentColumn,"Cause of Death Part I Line a"));
-        returnModel.setCAUSEB(getStringForColumnAndName(sheet,fieldMap,currentColumn,"Cause of Death Part I Line b"));
-        returnModel.setCAUSEC(getStringForColumnAndName(sheet,fieldMap,currentColumn,"Cause of Death Part I Line c"));
-        returnModel.setCAUSED(getStringForColumnAndName(sheet,fieldMap,currentColumn,"Cause of Death Part I Line d"));
-        returnModel.setCERTIFIER_NAME(getStringForColumnAndName(sheet,fieldMap,currentColumn,"Certifier Name"));
-        returnModel.setCERTIFIER_TYPE(getStringForColumnAndName(sheet,fieldMap,currentColumn,"Certifier Type"));
-        returnModel.setCHOWNINJURY(getStringForColumnAndName(sheet,fieldMap,currentColumn,"How injury occurred"));
-        returnModel.setCINJDATE(getStringForColumnAndName(sheet,fieldMap,currentColumn,"Date of Injury"));
-        returnModel.setCINJTIME(getStringForColumnAndName(sheet,fieldMap,currentColumn,"Time of Injury"));
+        returnModel.setAUTOPSYPERFORMED(getStringForColumnAndName(sheet, returnModel,  fieldMap, currentColumn, "Autopsy Performed?"));
+        returnModel.setAUTOPSYRESULTSAVAILABLE(getStringForColumnAndName(sheet, returnModel,  fieldMap, currentColumn, "Autopsy Results Available?"));
+        returnModel.setATWORK(getStringForColumnAndName(sheet, returnModel, fieldMap,currentColumn,"Did Injury Occur at Work?"));
+        returnModel.setBIRTHDATE(getStringForColumnAndName(sheet, returnModel, fieldMap,currentColumn,"Decedent DOB"));
+        returnModel.setCASENOTES(getStringForColumnAndName(sheet, returnModel, fieldMap,currentColumn,"Case History"));
+        returnModel.setCAUSEA(getStringForColumnAndName(sheet, returnModel, fieldMap,currentColumn,"Cause of Death Part I Line a"));
+        returnModel.setCAUSEB(getStringForColumnAndName(sheet, returnModel, fieldMap,currentColumn,"Cause of Death Part I Line b"));
+        returnModel.setCAUSEC(getStringForColumnAndName(sheet, returnModel, fieldMap,currentColumn,"Cause of Death Part I Line c"));
+        returnModel.setCAUSED(getStringForColumnAndName(sheet, returnModel, fieldMap,currentColumn,"Cause of Death Part I Line d"));
+        returnModel.setCERTIFIER_NAME(getStringForColumnAndName(sheet, returnModel, fieldMap,currentColumn,"Certifier Name"));
+        returnModel.setCERTIFIER_TYPE(getStringForColumnAndName(sheet, returnModel, fieldMap,currentColumn,"Certifier Type"));
+        returnModel.setCHOWNINJURY(getStringForColumnAndName(sheet, returnModel, fieldMap,currentColumn,"How injury occurred"));
+        returnModel.setCINJDATE(getStringForColumnAndName(sheet, returnModel, fieldMap,currentColumn,"Date of Injury"));
+        returnModel.setCINJTIME(getStringForColumnAndName(sheet, returnModel, fieldMap,currentColumn,"Time of Injury"));
         //New Fields
-        returnModel.setDEATHLOCATION(getStringForColumnAndName(sheet,fieldMap,currentColumn,"Location of Death"));
-        returnModel.setDEATHLOCATIONTYPE(getStringForColumnAndName(sheet,fieldMap,currentColumn,"Place of death"));
-        returnModel.setINJURYLOCATION(getStringForColumnAndName(sheet,fieldMap,currentColumn,"Location of Injury"));
+        returnModel.setDEATHLOCATION(getStringForColumnAndName(sheet, returnModel, fieldMap,currentColumn,"Location of Death"));
+        returnModel.setDEATHLOCATIONTYPE(getStringForColumnAndName(sheet, returnModel, fieldMap,currentColumn,"Place of death"));
+        returnModel.setINJURYLOCATION(getStringForColumnAndName(sheet, returnModel, fieldMap,currentColumn,"Location of Injury"));
 
-        returnModel.setCDEATHDATE(getStringForColumnAndName(sheet,fieldMap,currentColumn,"Decedent Date of death"));
-        returnModel.setCDEATHTIME(getStringForColumnAndName(sheet,fieldMap,currentColumn,"Decedent Time of death"));
-        returnModel.setCDEATHESTABLISHEMENTMETHOD(getStringForColumnAndName(sheet,fieldMap,currentColumn,"Date establishment method"));
-        returnModel.setETHNICITY(getStringForColumnAndName(sheet,fieldMap,currentColumn,"Decedent Ethnicity"));
-        returnModel.setEDRSCASEID(getStringForColumnAndName(sheet,fieldMap,currentColumn,"Tracking Number: EDRS File Number"));
-        returnModel.setDURATIONA(getStringForColumnAndName(sheet,fieldMap,currentColumn,"Cause of Death Part I Interval, Line a"));
-        returnModel.setDURATIONB(getStringForColumnAndName(sheet,fieldMap,currentColumn,"Cause of Death Part I Interval, Line b"));
-        returnModel.setDURATIONC(getStringForColumnAndName(sheet,fieldMap,currentColumn,"Cause of Death Part I Interval, Line c"));
-        returnModel.setDURATIOND(getStringForColumnAndName(sheet,fieldMap,currentColumn,"Cause of Death Part I Interval, Line d"));
-        returnModel.setGENDER(getStringForColumnAndName(sheet,fieldMap,currentColumn,"Decedent SexAtDeath"));
-        returnModel.setMANNER(getStringForColumnAndName(sheet,fieldMap,currentColumn,"Manner of Death"));
-        returnModel.setMELICENSE(getStringForColumnAndName(sheet,fieldMap,currentColumn,"Medical Examiner License Number"));
-        returnModel.setMENAME(getStringForColumnAndName(sheet,fieldMap,currentColumn,"Medical Examiner Name"));
-        returnModel.setMEPHONE(getStringForColumnAndName(sheet,fieldMap,currentColumn,"Medical Examiner Phone Number"));
-        returnModel.setME_STREET(getStringForColumnAndName(sheet,fieldMap,currentColumn,"Medical Examiner Office: Street"));
-        returnModel.setME_CITY(getStringForColumnAndName(sheet,fieldMap,currentColumn,"Medical Examiner Office: City"));
-        returnModel.setME_COUNTY(getStringForColumnAndName(sheet,fieldMap,currentColumn,"Medical Examiner Office: County"));
-        returnModel.setME_STATE(getStringForColumnAndName(sheet,fieldMap,currentColumn,"Medical Examiner Office: State, U.S. Territory or Canadian Province"));
-        returnModel.setME_ZIP(getStringForColumnAndName(sheet,fieldMap,currentColumn,"Medical Examiner Office: Postal Code"));
-        returnModel.setMDICASEID(getStringForColumnAndName(sheet,fieldMap,currentColumn,"Tracking Number: Mdi Case Number"));
-        returnModel.setMARITAL(getStringForColumnAndName(sheet,fieldMap,currentColumn,"Decedent Marital status"));
-        returnModel.setMRNNUMBER(getStringForColumnAndName(sheet,fieldMap,currentColumn,"Decedent SSN"));
-        returnModel.setOSCOND(getStringForColumnAndName(sheet,fieldMap,currentColumn,"Cause of Death Part II"));
-        returnModel.setPRNDATE(getStringForColumnAndName(sheet,fieldMap,currentColumn,"Date pronounced dead"));
-        returnModel.setPRNTIME(getStringForColumnAndName(sheet,fieldMap,currentColumn,"Time pronounced dead"));
-        returnModel.setPRONOUNCERNAME(getStringForColumnAndName(sheet,fieldMap,currentColumn,"Pronouncer of death"));
-        returnModel.setRACE(getStringForColumnAndName(sheet,fieldMap,currentColumn,"Decedent Race"));
-        returnModel.setRESSTREET(getStringForColumnAndName(sheet,fieldMap,currentColumn,"Decedent Residence: Street"));
-        returnModel.setRESCITY(getStringForColumnAndName(sheet,fieldMap,currentColumn,"Decedent Residence: city"));
-        returnModel.setRESCOUNTY(getStringForColumnAndName(sheet,fieldMap,currentColumn,"Decedent Residence: county"));
-        returnModel.setRESSTATE(getStringForColumnAndName(sheet,fieldMap,currentColumn,"Decedent Residence: State, U.S. Territory or Canadian Province"));
-        returnModel.setRESZIP(getStringForColumnAndName(sheet,fieldMap,currentColumn,"Decedent Residence: Postal Code"));
-        returnModel.setRESCOUNTRY(getStringForColumnAndName(sheet,fieldMap,currentColumn,"Decedent Residence: Country"));
-        returnModel.setPREGNANT(getStringForColumnAndName(sheet,fieldMap,currentColumn,"Pregnancy status"));        
-        returnModel.setTOBACCO(getStringForColumnAndName(sheet,fieldMap,currentColumn,"Did Tobacco Use Contribute to Death?"));
-        returnModel.setTRANSPORTATION(getStringForColumnAndName(sheet,fieldMap,currentColumn,"Decedent's Transportation Role During Injury"));
+        returnModel.setCDEATHDATE(getStringForColumnAndName(sheet, returnModel, fieldMap,currentColumn,"Decedent Date of death"));
+        returnModel.setCDEATHTIME(getStringForColumnAndName(sheet, returnModel, fieldMap,currentColumn,"Decedent Time of death"));
+        returnModel.setCDEATHESTABLISHEMENTMETHOD(getStringForColumnAndName(sheet, returnModel, fieldMap,currentColumn,"Date establishment method"));
+        returnModel.setETHNICITY(getStringForColumnAndName(sheet, returnModel, fieldMap,currentColumn,"Decedent Ethnicity"));
+        returnModel.setEDRSCASEID(getStringForColumnAndName(sheet, returnModel, fieldMap,currentColumn,"Tracking Number: EDRS File Number"));
+        returnModel.setDURATIONA(getStringForColumnAndName(sheet, returnModel, fieldMap,currentColumn,"Cause of Death Part I Interval, Line a"));
+        returnModel.setDURATIONB(getStringForColumnAndName(sheet, returnModel, fieldMap,currentColumn,"Cause of Death Part I Interval, Line b"));
+        returnModel.setDURATIONC(getStringForColumnAndName(sheet, returnModel, fieldMap,currentColumn,"Cause of Death Part I Interval, Line c"));
+        returnModel.setDURATIOND(getStringForColumnAndName(sheet, returnModel, fieldMap,currentColumn,"Cause of Death Part I Interval, Line d"));
+        returnModel.setGENDER(getStringForColumnAndName(sheet, returnModel, fieldMap,currentColumn,"Decedent SexAtDeath"));
+        returnModel.setMANNER(getStringForColumnAndName(sheet, returnModel, fieldMap,currentColumn,"Manner of Death"));
+        returnModel.setMELICENSE(getStringForColumnAndName(sheet, returnModel, fieldMap,currentColumn,"Medical Examiner License Number"));
+        returnModel.setMENAME(getStringForColumnAndName(sheet, returnModel, fieldMap,currentColumn,"Medical Examiner Name"));
+        returnModel.setMEPHONE(getStringForColumnAndName(sheet, returnModel, fieldMap,currentColumn,"Medical Examiner Phone Number"));
+        returnModel.setME_STREET(getStringForColumnAndName(sheet, returnModel, fieldMap,currentColumn,"Medical Examiner Office: Street"));
+        returnModel.setME_CITY(getStringForColumnAndName(sheet, returnModel, fieldMap,currentColumn,"Medical Examiner Office: City"));
+        returnModel.setME_COUNTY(getStringForColumnAndName(sheet, returnModel, fieldMap,currentColumn,"Medical Examiner Office: County"));
+        returnModel.setME_STATE(getStringForColumnAndName(sheet, returnModel, fieldMap,currentColumn,"Medical Examiner Office: State, U.S. Territory or Canadian Province"));
+        returnModel.setME_ZIP(getStringForColumnAndName(sheet, returnModel, fieldMap,currentColumn,"Medical Examiner Office: Postal Code"));
+        returnModel.setMDICASEID(getStringForColumnAndName(sheet, returnModel, fieldMap,currentColumn,"Tracking Number: Mdi Case Number"));
+        returnModel.setMARITAL(getStringForColumnAndName(sheet, returnModel, fieldMap,currentColumn,"Decedent Marital status"));
+        returnModel.setMRNNUMBER(getStringForColumnAndName(sheet, returnModel, fieldMap,currentColumn,"Decedent SSN"));
+        returnModel.setOSCOND(getStringForColumnAndName(sheet, returnModel, fieldMap,currentColumn,"Cause of Death Part II"));
+        returnModel.setPRNDATE(getStringForColumnAndName(sheet, returnModel, fieldMap,currentColumn,"Date pronounced dead"));
+        returnModel.setPRNTIME(getStringForColumnAndName(sheet, returnModel, fieldMap,currentColumn,"Time pronounced dead"));
+        returnModel.setPRONOUNCERNAME(getStringForColumnAndName(sheet, returnModel, fieldMap,currentColumn,"Pronouncer of death"));
+        returnModel.setRACE(getStringForColumnAndName(sheet, returnModel, fieldMap,currentColumn,"Decedent Race"));
+        returnModel.setRESSTREET(getStringForColumnAndName(sheet, returnModel, fieldMap,currentColumn,"Decedent Residence: Street"));
+        returnModel.setRESCITY(getStringForColumnAndName(sheet, returnModel, fieldMap,currentColumn,"Decedent Residence: city"));
+        returnModel.setRESCOUNTY(getStringForColumnAndName(sheet, returnModel, fieldMap,currentColumn,"Decedent Residence: county"));
+        returnModel.setRESSTATE(getStringForColumnAndName(sheet, returnModel, fieldMap,currentColumn,"Decedent Residence: State, U.S. Territory or Canadian Province"));
+        returnModel.setRESZIP(getStringForColumnAndName(sheet, returnModel, fieldMap,currentColumn,"Decedent Residence: Postal Code"));
+        returnModel.setRESCOUNTRY(getStringForColumnAndName(sheet, returnModel, fieldMap,currentColumn,"Decedent Residence: Country"));
+        returnModel.setPREGNANT(getStringForColumnAndName(sheet, returnModel, fieldMap,currentColumn,"Pregnancy status"));        
+        returnModel.setTOBACCO(getStringForColumnAndName(sheet, returnModel, fieldMap,currentColumn,"Did Tobacco Use Contribute to Death?"));
+        returnModel.setTRANSPORTATION(getStringForColumnAndName(sheet, returnModel, fieldMap,currentColumn,"Decedent's Transportation Role During Injury"));
         return returnModel;
     }
 
     protected MDIToEDRSModelFields handleAge(MDIToEDRSModelFields returnModel, int currentColumn, XSSFSheet sheet, Map<String, Integer> fieldMap){
-        String ageValue = getStringForColumnAndName(sheet,fieldMap,currentColumn,"Decedent Age");
+        String ageValue = getStringForColumnAndName(sheet, returnModel, fieldMap,currentColumn,"Decedent Age");
         ageValue.trim();
         String[] numberAndUnit = ageValue.split("\\s+"); //Looking for number + unit
         if(numberAndUnit[0] != null){
             returnModel.setAGE(numberAndUnit[0]);
+        }
+        else{
+            returnModel.getErrorListForName("AGE").add("Could not determine age from value '"+ageValue+"'.");
         }
         if(numberAndUnit.length > 1 && numberAndUnit[1] != null){
             returnModel.setAGEUNIT(numberAndUnit[1]);
         }
         else{
             returnModel.setAGEUNIT("years");
+            returnModel.getErrorListForName("AGEUNIT").add("Could not determine age unit from value '"+ageValue+"' assuming a default unit of 'years'.");
         }
         return returnModel;
     }
 
-    protected MDIToEDRSModelFields handleName(MDIToEDRSModelFields returnModel, int currentColumn, XSSFSheet sheet, Map<String, Integer> fieldMap) throws Exception{
-        String fullName = getStringForColumnAndName(sheet,fieldMap,currentColumn,"Decedent Name");
+    protected MDIToEDRSModelFields handleName(MDIToEDRSModelFields returnModel, int currentColumn, XSSFSheet sheet, Map<String, Integer> fieldMap){
+        String fullName = getStringForColumnAndName(sheet, returnModel, fieldMap,currentColumn,"Decedent Name");
         Pattern suffixPattern = Pattern.compile("(?<Suffix>Jr\\.|Sr\\.|IV|III|II|)");
         Matcher suffixMatcher = suffixPattern.matcher(fullName);
         if(suffixMatcher.matches()){
@@ -192,7 +196,9 @@ public class XLSXToMDIToEDRSService {
             }
         }
         else{
-            throw new Exception("Unable to capture the name components of name '"+fullName+"'.");
+            returnModel.getErrorListForName("FIRSTNAME").add("Error parsing Name '"+fullName+"' into a first name component.");
+            returnModel.getErrorListForName("LASTNAME").add("Error parsing Name '"+fullName+"' into a last name component.");
+            returnModel.getErrorListForName("MIDNAME").add("Error parsing Name '"+fullName+"' into a middle name component.");
         }
         return returnModel;
     }
@@ -237,8 +243,9 @@ public class XLSXToMDIToEDRSService {
 
     }
 
-    private String getStringForColumnAndName(XSSFSheet sheet, Map<String, Integer> fieldMap, int columnIndex,String name){
+    private String getStringForColumnAndName(XSSFSheet sheet, MDIToEDRSModelFields model, Map<String, Integer> fieldMap, int columnIndex,String name){
         if(fieldMap.get(name) == null){
+            model.getErrorListForName(name).add("No value found for key '"+name+"'.");
             return "";
         }
         DataFormatter formatter = new DataFormatter();

@@ -2,7 +2,7 @@ package edu.gatech.chai.MDI.Model;
 
 import com.opencsv.bean.CsvBindByName;
 
-public class MDIToEDRSModelFields {
+public class MDIToEDRSModelFields extends BaseModelFields{
 	@CsvBindByName
 	public String BASEFHIRID = "";
 	@CsvBindByName
@@ -52,7 +52,7 @@ public class MDIToEDRSModelFields {
 	@CsvBindByName
 	public String CAUSED = "";
 	@CsvBindByName
-	public String OSCOND = ""; //Expecting a semicolon deliniated list
+	public String OSCOND = ""; // Expecting a semicolon deliniated list
 	@CsvBindByName
 	public String MANNER = "";
 	@CsvBindByName
@@ -239,955 +239,1074 @@ public class MDIToEDRSModelFields {
 	public String ME_ZIP = "";
 	@CsvBindByName
 	public String PRONOUNCERNAME = "";
-	
+
 	public MDIToEDRSModelFields() {
-		
+		super();
 	}
 
+	// Getters
 	public String getBASEFHIRID() {
 		return BASEFHIRID;
-	}
-
-	public void setBASEFHIRID(String bASEFHIRID) {
-		BASEFHIRID = bASEFHIRID;
 	}
 
 	public String getSYSTEMID() {
 		return SYSTEMID;
 	}
 
-	public void setSYSTEMID(String sYSTEMID) {
-		SYSTEMID = sYSTEMID;
-	}
-
 	public String getMDICASEID() {
 		return MDICASEID;
-	}
-
-	public void setMDICASEID(String mDICASEID) {
-		MDICASEID = mDICASEID;
 	}
 
 	public String getEDRSCASEID() {
 		return EDRSCASEID;
 	}
 
-	public void setEDRSCASEID(String eDRSCASEID) {
-		EDRSCASEID = eDRSCASEID;
-	}
-	
 	public String getFIRSTNAME() {
 		return FIRSTNAME;
-	}
-
-	public void setFIRSTNAME(String fIRSTNAME) {
-		FIRSTNAME = fIRSTNAME;
 	}
 
 	public String getMIDNAME() {
 		return MIDNAME;
 	}
 
-	public void setMIDNAME(String mIDNAME) {
-		MIDNAME = mIDNAME;
-	}
-
 	public String getLASTNAME() {
 		return LASTNAME;
-	}
-
-	public void setLASTNAME(String lASTNAME) {
-		LASTNAME = lASTNAME;
 	}
 
 	public String getSUFFIXNAME() {
 		return SUFFIXNAME;
 	}
 
-	public void setSUFFIXNAME(String sUFFIXNAME) {
-		SUFFIXNAME = sUFFIXNAME;
-	}
-
 	public String getAGE() {
 		return AGE;
-	}
-
-	public void setAGE(String aGE) {
-		AGE = aGE;
 	}
 
 	public String getAGEUNIT() {
 		return AGEUNIT;
 	}
 
-	public void setAGEUNIT(String aGEUNIT) {
-		AGEUNIT = aGEUNIT;
-	}
-
 	public String getRACE() {
 		return RACE;
-	}
-
-	public void setRACE(String rACE) {
-		RACE = rACE;
 	}
 
 	public String getGENDER() {
 		return GENDER;
 	}
 
-	public void setGENDER(String gENDER) {
-		GENDER = gENDER;
-	}
-
 	public String getETHNICITY() {
 		return ETHNICITY;
-	}
-
-	public void setETHNICITY(String eTHNICITY) {
-		ETHNICITY = eTHNICITY;
 	}
 
 	public String getBIRTHDATE() {
 		return BIRTHDATE;
 	}
 
-	public void setBIRTHDATE(String bIRTHDATE) {
-		BIRTHDATE = bIRTHDATE;
-	}
-
 	public String getMRNNUMBER() {
 		return MRNNUMBER;
-	}
-
-	public void setMRNNUMBER(String mRNNUMBER) {
-		MRNNUMBER = mRNNUMBER;
 	}
 
 	public String getJOBTITLE() {
 		return JOBTITLE;
 	}
 
-	public void setJOBTITLE(String jOBTITLE) {
-		JOBTITLE = jOBTITLE;
-	}
-
-	public String getMARITAL() {
-		return MARITAL;
-	}
-
-	public void setMARITAL(String mARITAL) {
-		MARITAL = mARITAL;
-	}
-
-	public String getPOSSIBLEID() {
-		return POSSIBLEID;
-	}
-
-	public void setPOSSIBLEID(String pOSSIBLEID) {
-		POSSIBLEID = pOSSIBLEID;
-	}
-
-	public String getCAUSEA() {
-		return CAUSEA;
-	}
-
-	public void setCAUSEA(String cAUSEA) {
-		CAUSEA = cAUSEA;
-	}
-
-	public String getCAUSEB() {
-		return CAUSEB;
-	}
-
-	public void setCAUSEB(String cAUSEB) {
-		CAUSEB = cAUSEB;
-	}
-
-	public String getCAUSEC() {
-		return CAUSEC;
-	}
-
-	public void setCAUSEC(String cAUSEC) {
-		CAUSEC = cAUSEC;
-	}
-
-	public String getCAUSED() {
-		return CAUSED;
-	}
-
-	public void setCAUSED(String cAUSED) {
-		CAUSED = cAUSED;
-	}
-
-	public String getOSCOND() {
-		return OSCOND;
-	}
-
-	public void setOSCOND(String oSCOND) {
-		OSCOND = oSCOND;
-	}
-
-	public String getMANNER() {
-		return MANNER;
-	}
-
-	public void setMANNER(String mANNER) {
-		MANNER = mANNER;
-	}
-
-	public String getCHOWNINJURY() {
-		return CHOWNINJURY;
-	}
-
-	public void setCHOWNINJURY(String cHOWNINJURY) {
-		CHOWNINJURY = cHOWNINJURY;
-	}
-
-	public String getDURATIONA() {
-		return DURATIONA;
-	}
-
-	public void setDURATIONA(String dURATIONA) {
-		DURATIONA = dURATIONA;
-	}
-
-	public String getDURATIONB() {
-		return DURATIONB;
-	}
-
-	public void setDURATIONB(String dURATIONB) {
-		DURATIONB = dURATIONB;
-	}
-
-	public String getDURATIONC() {
-		return DURATIONC;
-	}
-
-	public void setDURATIONC(String dURATIONC) {
-		DURATIONC = dURATIONC;
-	}
-
-	public String getDURATIOND() {
-		return DURATIOND;
-	}
-
-	public void setDURATIOND(String dURATIOND) {
-		DURATIOND = dURATIOND;
-	}
-
-	public String getCASENOTES() {
-		return CASENOTES;
-	}
-
-	public void setCASENOTES(String cASENOTES) {
-		CASENOTES = cASENOTES;
-	}
-
-	public String getATWORK() {
-		return ATWORK;
-	}
-
-	public void setATWORK(String aTWORK) {
-		ATWORK = aTWORK;
-	}
-
-	public String getJOBRELATED() {
-		return JOBRELATED;
-	}
-
-	public void setJOBRELATED(String jOBRELATED) {
-		JOBRELATED = jOBRELATED;
-	}
-
-	public String getREPORTDATE() {
-		return REPORTDATE;
-	}
-
-	public void setREPORTDATE(String rEPORTDATE) {
-		REPORTDATE = rEPORTDATE;
-	}
-
-	public String getREPORTTIME() {
-		return REPORTTIME;
-	}
-
-	public void setREPORTTIME(String rEPORTTIME) {
-		REPORTTIME = rEPORTTIME;
-	}
-
-	public String getFOUNDDATE() {
-		return FOUNDDATE;
-	}
-
-	public void setFOUNDDATE(String fOUNDDATE) {
-		FOUNDDATE = fOUNDDATE;
-	}
-
-	public String getFOUNDTIME() {
-		return FOUNDTIME;
-	}
-
-	public void setFOUNDTIME(String fOUNDTIME) {
-		FOUNDTIME = fOUNDTIME;
-	}
-
-	public String getEVENTDATE() {
-		return EVENTDATE;
-	}
-
-	public void setEVENTDATE(String eVENTDATE) {
-		EVENTDATE = eVENTDATE;
-	}
-
-	public String getEVENTTIME() {
-		return EVENTTIME;
-	}
-
-	public void setEVENTTIME(String eVENTTIME) {
-		EVENTTIME = eVENTTIME;
-	}
-
-	public String getPRNDATE() {
-		return PRNDATE;
-	}
-
-	public void setPRNDATE(String pRNDATE) {
-		PRNDATE = pRNDATE;
-	}
-
-	public String getPRNTIME() {
-		return PRNTIME;
-	}
-
-	public void setPRNTIME(String pRNTIME) {
-		PRNTIME = pRNTIME;
-	}
-
-	public String getEXAMDATE() {
-		return EXAMDATE;
-	}
-
-	public void setEXAMDATE(String eXAMDATE) {
-		EXAMDATE = eXAMDATE;
-	}
-
-	public String getCINJDATE() {
-		return CINJDATE;
-	}
-
-	public void setCINJDATE(String cINJDATE) {
-		CINJDATE = cINJDATE;
-	}
-
-	public String getCINJTIME() {
-		return CINJTIME;
-	}
-
-	public void setCINJTIME(String cINJTIME) {
-		CINJTIME = cINJTIME;
-	}
-
-	public String getCINJDATEEARLY() {
-		return CINJDATEEARLY;
-	}
-
-	public void setCINJDATEEARLY(String cINJDATEEARLY) {
-		CINJDATEEARLY = cINJDATEEARLY;
-	}
-
-	public String getCINJDATELATE() {
-		return CINJDATELATE;
-	}
-
-	public void setCINJDATELATE(String cINJDATELATE) {
-		CINJDATELATE = cINJDATELATE;
-	}
-
-	public String getCIDATEFLAG() {
-		return CIDATEFLAG;
-	}
-
-	public void setCIDATEFLAG(String cIDATEFLAG) {
-		CIDATEFLAG = cIDATEFLAG;
-	}
-
-	public String getCDEATHESTABLISHEMENTMETHOD() {
-		return CDEATHESTABLISHEMENTMETHOD;
-	}
-
-	public void setCDEATHESTABLISHEMENTMETHOD(String cDEATHESTABLISHEMENTMETHOD) {
-		CDEATHESTABLISHEMENTMETHOD = cDEATHESTABLISHEMENTMETHOD;
-	}
-
-	public String getCDEATHTIME() {
-		return CDEATHTIME;
-	}
-
-	public void setCDEATHTIME(String cDEATHTIME) {
-		CDEATHTIME = cDEATHTIME;
-	}
-
-	public String getLKADATE() {
-		return LKADATE;
-	}
-
-	public void setLKADATE(String lKADATE) {
-		LKADATE = lKADATE;
-	}
-
-	public String getLKATIME() {
-		return LKATIME;
-	}
-
-	public void setLKATIME(String lKATIME) {
-		LKATIME = lKATIME;
-	}
-
-	public String getCASEYEAR() {
-		return CASEYEAR;
-	}
-
-	public void setCASEYEAR(String cASEYEAR) {
-		CASEYEAR = cASEYEAR;
-	}
-
-	public String getATHOSPDATE() {
-		return ATHOSPDATE;
-	}
-
-	public void setATHOSPDATE(String aTHOSPDATE) {
-		ATHOSPDATE = aTHOSPDATE;
-	}
-
-	public String getATHOSPTIME() {
-		return ATHOSPTIME;
-	}
-
-	public void setATHOSPTIME(String aTHOSPTIME) {
-		ATHOSPTIME = aTHOSPTIME;
-	}
-
-	public String getRESSTREET() {
-		return RESSTREET;
-	}
-
-	public void setRESSTREET(String rESSTREET) {
-		RESSTREET = rESSTREET;
-	}
-
-	public String getRESCITY() {
-		return RESCITY;
-	}
-
-	public void setRESCITY(String rESCITY) {
-		RESCITY = rESCITY;
-	}
-
-	public String getRESCOUNTY() {
-		return RESCOUNTY;
-	}
-
-	public void setRESCOUNTY(String rESCOUNTY) {
-		RESCOUNTY = rESCOUNTY;
-	}
-
-	public String getRESSTATE() {
-		return RESSTATE;
-	}
-
-	public void setRESSTATE(String rESSTATE) {
-		RESSTATE = rESSTATE;
-	}
-
-	public String getRESZIP() {
-		return RESZIP;
-	}
-
-	public void setRESZIP(String rESZIP) {
-		RESZIP = rESZIP;
-	}
-
-	public String getRESCOUNTRY() {
-		return RESCOUNTRY;
-	}
-
-	public void setRESCOUNTRY(String rESCOUNTRY) {
-		RESCOUNTRY = rESCOUNTRY;
-	}
-
-	public String getDEATHLOCATION() {
-		return DEATHLOCATION;
-	}
-
-	public void setDEATHLOCATION(String dEATHLOCATION) {
-		DEATHLOCATION = dEATHLOCATION;
-	}
-
-	public String getDEATHLOCATIONTYPE() {
-		return DEATHLOCATIONTYPE;
-	}
-
-	public void setDEATHLOCATIONTYPE(String dEATHLOCATIONTYPE) {
-		DEATHLOCATIONTYPE = dEATHLOCATIONTYPE;
-	}
-
-	public String getINJURYLOCATION() {
-		return INJURYLOCATION;
-	}
-
-	public void setINJURYLOCATION(String iNJURYLOCATION) {
-		INJURYLOCATION = iNJURYLOCATION;
-	}
-
-	public String getEVENTPLACE() {
-		return EVENTPLACE;
-	}
-
-	public void setEVENTPLACE(String eVENTPLACE) {
-		EVENTPLACE = eVENTPLACE;
-	}
-
-	public String getFOUNDADDR_STREET() {
-		return FOUNDADDR_STREET;
-	}
-
-	public void setFOUNDADDR_STREET(String fOUNDADDR_STREET) {
-		FOUNDADDR_STREET = fOUNDADDR_STREET;
-	}
-
-	public String getFOUNDADDR_CITY() {
-		return FOUNDADDR_CITY;
-	}
-
-	public void setFOUNDADDR_CITY(String fOUNDADDR_CITY) {
-		FOUNDADDR_CITY = fOUNDADDR_CITY;
-	}
-
-	public String getFOUNDADDR_COUNTY() {
-		return FOUNDADDR_COUNTY;
-	}
-
-	public void setFOUNDADDR_COUNTY(String fOUNDADDR_COUNTY) {
-		FOUNDADDR_COUNTY = fOUNDADDR_COUNTY;
-	}
-
-	public String getFOUNDADDR_STATE() {
-		return FOUNDADDR_STATE;
-	}
-
-	public void setFOUNDADDR_STATE(String fOUNDADDR_STATE) {
-		FOUNDADDR_STATE = fOUNDADDR_STATE;
-	}
-
-	public String getFOUNDADDR_ZIP() {
-		return FOUNDADDR_ZIP;
-	}
-
-	public void setFOUNDADDR_ZIP(String fOUNDADDR_ZIP) {
-		FOUNDADDR_ZIP = fOUNDADDR_ZIP;
-	}
-
-	public String getEVENTADDR_STREET() {
-		return EVENTADDR_STREET;
-	}
-
-	public void setEVENTADDR_STREET(String eVENTADDR_STREET) {
-		EVENTADDR_STREET = eVENTADDR_STREET;
-	}
-
-	public String getEVENTADDR_CITY() {
-		return EVENTADDR_CITY;
-	}
-
-	public void setEVENTADDR_CITY(String eVENTADDR_CITY) {
-		EVENTADDR_CITY = eVENTADDR_CITY;
-	}
-
-	public String getEVENTADDR_COUNTY() {
-		return EVENTADDR_COUNTY;
-	}
-
-	public void setEVENTADDR_COUNTY(String eVENTADDR_COUNTY) {
-		EVENTADDR_COUNTY = eVENTADDR_COUNTY;
-	}
-
-	public String getEVENTADDR_STATE() {
-		return EVENTADDR_STATE;
-	}
-
-	public void setEVENTADDR_STATE(String eVENTADDR_STATE) {
-		EVENTADDR_STATE = eVENTADDR_STATE;
-	}
-
-	public String getEVENTADDR_ZIP() {
-		return EVENTADDR_ZIP;
-	}
-
-	public void setEVENTADDR_ZIP(String eVENTADDR_ZIP) {
-		EVENTADDR_ZIP = eVENTADDR_ZIP;
-	}
-
-	public String getPRNPLACE() {
-		return PRNPLACE;
-	}
-
-	public void setPRNPLACE(String pRNPLACE) {
-		PRNPLACE = pRNPLACE;
-	}
-
-	public String getPRNSTREET() {
-		return PRNSTREET;
-	}
-
-	public void setPRNSTREET(String pRNSTREET) {
-		PRNSTREET = pRNSTREET;
-	}
-
-	public String getPRNCITY() {
-		return PRNCITY;
-	}
-
-	public void setPRNCITY(String pRNCITY) {
-		PRNCITY = pRNCITY;
-	}
-
-	public String getPRNCOUNTY() {
-		return PRNCOUNTY;
-	}
-
-	public void setPRNCOUNTY(String pRNCOUNTY) {
-		PRNCOUNTY = pRNCOUNTY;
-	}
-
-	public String getPRNSTATE() {
-		return PRNSTATE;
-	}
-
-	public void setPRNSTATE(String pRNSTATE) {
-		PRNSTATE = pRNSTATE;
-	}
-
-	public String getPRNZIP() {
-		return PRNZIP;
-	}
-
-	public void setPRNZIP(String pRNZIP) {
-		PRNZIP = pRNZIP;
-	}
-
-	public String getCDEATHDATE() {
-		return CDEATHDATE;
-	}
-
-	public void setCDEATHDATE(String cDEATHDATE) {
-		CDEATHDATE = cDEATHDATE;
-	}
-
-	public String getRESNAME() {
-		return RESNAME;
-	}
-
-	public void setRESNAME(String rESNAME) {
-		RESNAME = rESNAME;
-	}
-
-	public String getLKAWHERE() {
-		return LKAWHERE;
-	}
-
-	public void setLKAWHERE(String lKAWHERE) {
-		LKAWHERE = lKAWHERE;
-	}
-
-	public String getHOSPNAME() {
-		return HOSPNAME;
-	}
-
-	public void setHOSPNAME(String hOSPNAME) {
-		HOSPNAME = hOSPNAME;
-	}
-
-	public String getSCENEADDR_STREET() {
-		return SCENEADDR_STREET;
-	}
-
-	public void setSCENEADDR_STREET(String sCENEADDR_STREET) {
-		SCENEADDR_STREET = sCENEADDR_STREET;
-	}
-
-	public String getSCENEADDR_CITY() {
-		return SCENEADDR_CITY;
-	}
-
-	public void setSCENEADDR_CITY(String sCENEADDR_CITY) {
-		SCENEADDR_CITY = sCENEADDR_CITY;
-	}
-
-	public String getSCENEADDR_COUNTY() {
-		return SCENEADDR_COUNTY;
-	}
-
-	public void setSCENEADDR_COUNTY(String sCENEADDR_COUNTY) {
-		SCENEADDR_COUNTY = sCENEADDR_COUNTY;
-	}
-
-	public String getSCENEADDR_STATE() {
-		return SCENEADDR_STATE;
-	}
-
-	public void setSCENEADDR_STATE(String sCENEADDR_STATE) {
-		SCENEADDR_STATE = sCENEADDR_STATE;
-	}
-
-	public String getSCENEADDR_ZIP() {
-		return SCENEADDR_ZIP;
-	}
-
-	public void setSCENEADDR_ZIP(String sCENEADDR_ZIP) {
-		SCENEADDR_ZIP = sCENEADDR_ZIP;
-	}
-
-	public String getSURGERY() {
-		return SURGERY;
-	}
-
-	public void setSURGERY(String sURGERY) {
-		SURGERY = sURGERY;
-	}
-
-	public String getSURGDATE() {
-		return SURGDATE;
-	}
-
-	public void setSURGDATE(String sURGDATE) {
-		SURGDATE = sURGDATE;
-	}
-	
-	public String getSURGREASON() {
-		return SURGREASON;
-	}
-
-	public void setSURGREASON(String sURGREASON) {
-		SURGREASON = sURGREASON;
-	}
-
-	public String getHCPROVIDER() {
-		return HCPROVIDER;
-	}
-
-	public void setHCPROVIDER(String hCPROVIDER) {
-		HCPROVIDER = hCPROVIDER;
-	}
-
-	public String getAUTOPSYPERFORMED() {
-		return AUTOPSYPERFORMED;
-	}
-
-	public void setAUTOPSYPERFORMED(String aUTOPSYPERFORMED) {
-		AUTOPSYPERFORMED = aUTOPSYPERFORMED;
-	}
-
-	public String getAUTOPSYRESULTSAVAILABLE() {
-		return AUTOPSYRESULTSAVAILABLE;
-	}
-
-	public void setAUTOPSYRESULTSAVAILABLE(String aUTOPSYRESULTSAVAILABLE) {
-		AUTOPSYRESULTSAVAILABLE = aUTOPSYRESULTSAVAILABLE;
-	}
-
-	public String getCUSTODY() {
-		return CUSTODY;
-	}
-
-	public void setCUSTODY(String cUSTODY) {
-		CUSTODY = cUSTODY;
-	}
-
 	public String getINDUSTRY() {
 		return INDUSTRY;
-	}
-
-	public void setINDUSTRY(String iNDUSTRY) {
-		INDUSTRY = iNDUSTRY;
 	}
 
 	public String getLANGUAGE() {
 		return LANGUAGE;
 	}
 
-	public void setLANGUAGE(String lANGUAGE) {
-		LANGUAGE = lANGUAGE;
+	public String getMARITAL() {
+		return MARITAL;
+	}
+
+	public String getPOSSIBLEID() {
+		return POSSIBLEID;
+	}
+
+	public String getCAUSEA() {
+		return CAUSEA;
+	}
+
+	public String getCAUSEB() {
+		return CAUSEB;
+	}
+
+	public String getCAUSEC() {
+		return CAUSEC;
+	}
+
+	public String getCAUSED() {
+		return CAUSED;
+	}
+
+	public String getOSCOND() {
+		return OSCOND;
+	}
+
+	public String getMANNER() {
+		return MANNER;
 	}
 
 	public String getDISPMETHOD() {
 		return DISPMETHOD;
 	}
 
-	public void setDISPMETHOD(String dISPMETHOD) {
-		DISPMETHOD = dISPMETHOD;
+	public String getCHOWNINJURY() {
+		return CHOWNINJURY;
 	}
 
-	
+	public String getDURATIONA() {
+		return DURATIONA;
+	}
+
+	public String getDURATIONB() {
+		return DURATIONB;
+	}
+
+	public String getDURATIONC() {
+		return DURATIONC;
+	}
+
+	public String getDURATIOND() {
+		return DURATIOND;
+	}
+
+	public String getCASENOTES() {
+		return CASENOTES;
+	}
+
+	public String getATWORK() {
+		return ATWORK;
+	}
+
+	public String getJOBRELATED() {
+		return JOBRELATED;
+	}
+
+	public String getREPORTDATE() {
+		return REPORTDATE;
+	}
+
+	public String getREPORTTIME() {
+		return REPORTTIME;
+	}
+
+	public String getFOUNDDATE() {
+		return FOUNDDATE;
+	}
+
+	public String getFOUNDTIME() {
+		return FOUNDTIME;
+	}
+
+	public String getCDEATHDATE() {
+		return CDEATHDATE;
+	}
+
+	public String getCDEATHTIME() {
+		return CDEATHTIME;
+	}
+
+	public String getEVENTDATE() {
+		return EVENTDATE;
+	}
+
+	public String getEVENTTIME() {
+		return EVENTTIME;
+	}
+
+	public String getPRNDATE() {
+		return PRNDATE;
+	}
+
+	public String getPRNTIME() {
+		return PRNTIME;
+	}
+
+	public String getEXAMDATE() {
+		return EXAMDATE;
+	}
+
+	public String getCINJDATE() {
+		return CINJDATE;
+	}
+
+	public String getCINJTIME() {
+		return CINJTIME;
+	}
+
+	public String getCINJDATEEARLY() {
+		return CINJDATEEARLY;
+	}
+
+	public String getCINJDATELATE() {
+		return CINJDATELATE;
+	}
+
+	public String getCIDATEFLAG() {
+		return CIDATEFLAG;
+	}
+
+	public String getCDEATHESTABLISHEMENTMETHOD() {
+		return CDEATHESTABLISHEMENTMETHOD;
+	}
+
+	public String getLKADATE() {
+		return LKADATE;
+	}
+
+	public String getLKATIME() {
+		return LKATIME;
+	}
+
+	public String getCASEYEAR() {
+		return CASEYEAR;
+	}
+
+	public String getATHOSPDATE() {
+		return ATHOSPDATE;
+	}
+
+	public String getATHOSPTIME() {
+		return ATHOSPTIME;
+	}
+
+	public String getRESSTREET() {
+		return RESSTREET;
+	}
+
+	public String getRESCITY() {
+		return RESCITY;
+	}
+
+	public String getRESCOUNTY() {
+		return RESCOUNTY;
+	}
+
+	public String getRESSTATE() {
+		return RESSTATE;
+	}
+
+	public String getRESZIP() {
+		return RESZIP;
+	}
+
+	public String getRESCOUNTRY() {
+		return RESCOUNTRY;
+	}
+
+	public String getDEATHLOCATION() {
+		return DEATHLOCATION;
+	}
+
+	public String getDEATHLOCATIONTYPE() {
+		return DEATHLOCATIONTYPE;
+	}
+
+	public String getINJURYLOCATION() {
+		return INJURYLOCATION;
+	}
+
+	public String getFOUNDADDR_STREET() {
+		return FOUNDADDR_STREET;
+	}
+
+	public String getFOUNDADDR_CITY() {
+		return FOUNDADDR_CITY;
+	}
+
+	public String getFOUNDADDR_COUNTY() {
+		return FOUNDADDR_COUNTY;
+	}
+
+	public String getFOUNDADDR_STATE() {
+		return FOUNDADDR_STATE;
+	}
+
+	public String getFOUNDADDR_ZIP() {
+		return FOUNDADDR_ZIP;
+	}
+
+	public String getEVENTPLACE() {
+		return EVENTPLACE;
+	}
+
+	public String getEVENTADDR_STREET() {
+		return EVENTADDR_STREET;
+	}
+
+	public String getEVENTADDR_CITY() {
+		return EVENTADDR_CITY;
+	}
+
+	public String getEVENTADDR_COUNTY() {
+		return EVENTADDR_COUNTY;
+	}
+
+	public String getEVENTADDR_STATE() {
+		return EVENTADDR_STATE;
+	}
+
+	public String getEVENTADDR_ZIP() {
+		return EVENTADDR_ZIP;
+	}
+
+	public String getPRNPLACE() {
+		return PRNPLACE;
+	}
+
+	public String getPRNSTREET() {
+		return PRNSTREET;
+	}
+
+	public String getPRNCITY() {
+		return PRNCITY;
+	}
+
+	public String getPRNCOUNTY() {
+		return PRNCOUNTY;
+	}
+
+	public String getPRNSTATE() {
+		return PRNSTATE;
+	}
+
+	public String getPRNZIP() {
+		return PRNZIP;
+	}
 
 	public String getDISP_PLACE() {
 		return DISP_PLACE;
-	}
-
-	public void setDISP_PLACE(String dISP_PLACE) {
-		DISP_PLACE = dISP_PLACE;
 	}
 
 	public String getDISP_STREET() {
 		return DISP_STREET;
 	}
 
-	public void setDISP_STREET(String dISP_STREET) {
-		DISP_STREET = dISP_STREET;
-	}
-
 	public String getDISP_CITY() {
 		return DISP_CITY;
-	}
-
-	public void setDISP_CITY(String dISP_CITY) {
-		DISP_CITY = dISP_CITY;
 	}
 
 	public String getDISP_COUNTY() {
 		return DISP_COUNTY;
 	}
 
-	public void setDISP_COUNTY(String dISP_COUNTY) {
-		DISP_COUNTY = dISP_COUNTY;
-	}
-
 	public String getDISP_STATE() {
 		return DISP_STATE;
-	}
-
-	public void setDISP_STATE(String dISP_STATE) {
-		DISP_STATE = dISP_STATE;
 	}
 
 	public String getDISP_ZIP() {
 		return DISP_ZIP;
 	}
 
-	public void setDISP_ZIP(String dISP_ZIP) {
-		DISP_ZIP = dISP_ZIP;
+	public String getRESNAME() {
+		return RESNAME;
+	}
+
+	public String getLKAWHERE() {
+		return LKAWHERE;
+	}
+
+	public String getHOSPNAME() {
+		return HOSPNAME;
+	}
+
+	public String getSCENEADDR_STREET() {
+		return SCENEADDR_STREET;
+	}
+
+	public String getSCENEADDR_CITY() {
+		return SCENEADDR_CITY;
+	}
+
+	public String getSCENEADDR_COUNTY() {
+		return SCENEADDR_COUNTY;
+	}
+
+	public String getSCENEADDR_STATE() {
+		return SCENEADDR_STATE;
+	}
+
+	public String getSCENEADDR_ZIP() {
+		return SCENEADDR_ZIP;
 	}
 
 	public String getCERTIFIER_NAME() {
 		return CERTIFIER_NAME;
 	}
 
-	public void setCERTIFIER_NAME(String cERTIFIER_NAME) {
-		CERTIFIER_NAME = cERTIFIER_NAME;
-	}
-
 	public String getCERTIFIER_TYPE() {
 		return CERTIFIER_TYPE;
 	}
 
-	public void setCERTIFIER_TYPE(String cERTIFIER_TYPE) {
-		CERTIFIER_TYPE = cERTIFIER_TYPE;
+	public String getSURGERY() {
+		return SURGERY;
+	}
+
+	public String getSURGDATE() {
+		return SURGDATE;
+	}
+
+	public String getSURGREASON() {
+		return SURGREASON;
+	}
+
+	public String getHCPROVIDER() {
+		return HCPROVIDER;
+	}
+
+	public String getAUTOPSYPERFORMED() {
+		return AUTOPSYPERFORMED;
+	}
+
+	public String getAUTOPSYRESULTSAVAILABLE() {
+		return AUTOPSYRESULTSAVAILABLE;
+	}
+
+	public String getCUSTODY() {
+		return CUSTODY;
 	}
 
 	public String getPREGNANT() {
 		return PREGNANT;
 	}
 
-	public void setPREGNANT(String pREGNANT) {
-		PREGNANT = pREGNANT;
-	}
-
 	public String getTOBACCO() {
 		return TOBACCO;
-	}
-
-	public void setTOBACCO(String tOBACCO) {
-		TOBACCO = tOBACCO;
 	}
 
 	public String getTRANSPORTATION() {
 		return TRANSPORTATION;
 	}
 
-	public void setTRANSPORTATION(String tRANSPORTATION) {
-		TRANSPORTATION = tRANSPORTATION;
-	}
-
 	public String getMENAME() {
-		return this.MENAME;
-	}
-
-	public void setMENAME(String MENAME) {
-		this.MENAME = MENAME;
+		return MENAME;
 	}
 
 	public String getMEPHONE() {
-		return this.MEPHONE;
-	}
-
-	public void setMEPHONE(String MEPHONE) {
-		this.MEPHONE = MEPHONE;
+		return MEPHONE;
 	}
 
 	public String getMELICENSE() {
-		return this.MELICENSE;
-	}
-
-	public void setMELICENSE(String MELICENSE) {
-		this.MELICENSE = MELICENSE;
+		return MELICENSE;
 	}
 
 	public String getME_STREET() {
-		return this.ME_STREET;
-	}
-
-	public void setME_STREET(String ME_STREET) {
-		this.ME_STREET = ME_STREET;
+		return ME_STREET;
 	}
 
 	public String getME_CITY() {
-		return this.ME_CITY;
-	}
-
-	public void setME_CITY(String ME_CITY) {
-		this.ME_CITY = ME_CITY;
+		return ME_CITY;
 	}
 
 	public String getME_COUNTY() {
-		return this.ME_COUNTY;
-	}
-
-	public void setME_COUNTY(String ME_COUNTY) {
-		this.ME_COUNTY = ME_COUNTY;
+		return ME_COUNTY;
 	}
 
 	public String getME_STATE() {
-		return this.ME_STATE;
-	}
-
-	public void setME_STATE(String ME_STATE) {
-		this.ME_STATE = ME_STATE;
+		return ME_STATE;
 	}
 
 	public String getME_ZIP() {
-		return this.ME_ZIP;
+		return ME_ZIP;
+	}
+
+	public String getPRONOUNCERNAME() {
+		return PRONOUNCERNAME;
+	}
+
+	// Setters
+	public void setBASEFHIRID(String BASEFHIRID) {
+		this.checkNullSetter(this.BASEFHIRID.getClass(), BASEFHIRID);
+		this.BASEFHIRID = BASEFHIRID;
+	}
+
+	public void setSYSTEMID(String SYSTEMID) {
+		this.checkNullSetter(this.SYSTEMID.getClass(), SYSTEMID);
+		this.SYSTEMID = SYSTEMID;
+	}
+
+	public void setMDICASEID(String MDICASEID) {
+		this.checkNullSetter(this.MDICASEID.getClass(), MDICASEID);
+		this.MDICASEID = MDICASEID;
+	}
+
+	public void setEDRSCASEID(String EDRSCASEID) {
+		this.checkNullSetter(this.EDRSCASEID.getClass(), EDRSCASEID);
+		this.EDRSCASEID = EDRSCASEID;
+	}
+
+	public void setFIRSTNAME(String FIRSTNAME) {
+		this.checkNullSetter(this.FIRSTNAME.getClass(), FIRSTNAME);
+		this.FIRSTNAME = FIRSTNAME;
+	}
+
+	public void setMIDNAME(String MIDNAME) {
+		this.checkNullSetter(this.MIDNAME.getClass(), MIDNAME);
+		this.MIDNAME = MIDNAME;
+	}
+
+	public void setLASTNAME(String LASTNAME) {
+		this.checkNullSetter(this.LASTNAME.getClass(), LASTNAME);
+		this.LASTNAME = LASTNAME;
+	}
+
+	public void setSUFFIXNAME(String SUFFIXNAME) {
+		this.checkNullSetter(this.SUFFIXNAME.getClass(), SUFFIXNAME);
+		this.SUFFIXNAME = SUFFIXNAME;
+	}
+
+	public void setAGE(String AGE) {
+		this.AGE = AGE;
+	}
+
+	public void setAGEUNIT(String AGEUNIT) {
+		this.checkNullSetter(this.AGEUNIT.getClass(), AGEUNIT);
+		this.AGEUNIT = AGEUNIT;
+	}
+
+	public void setRACE(String RACE) {
+		this.checkNullSetter(this.RACE.getClass(), RACE);
+		this.RACE = RACE;
+	}
+
+	public void setGENDER(String GENDER) {
+		this.checkNullSetter(this.GENDER.getClass(), GENDER);
+		this.GENDER = GENDER;
+	}
+
+	public void setETHNICITY(String ETHNICITY) {
+		this.checkNullSetter(this.ETHNICITY.getClass(), ETHNICITY);
+		this.ETHNICITY = ETHNICITY;
+	}
+
+	public void setBIRTHDATE(String BIRTHDATE) {
+		this.checkNullSetter(this.BIRTHDATE.getClass(), BIRTHDATE);
+		this.BIRTHDATE = BIRTHDATE;
+	}
+
+	public void setMRNNUMBER(String MRNNUMBER) {
+		this.checkNullSetter(this.MRNNUMBER.getClass(), MRNNUMBER);
+		this.MRNNUMBER = MRNNUMBER;
+	}
+
+	public void setJOBTITLE(String JOBTITLE) {
+		this.checkNullSetter(this.JOBTITLE.getClass(), JOBTITLE);
+		this.JOBTITLE = JOBTITLE;
+	}
+
+	public void setINDUSTRY(String INDUSTRY) {
+		this.checkNullSetter(this.INDUSTRY.getClass(), INDUSTRY);
+		this.INDUSTRY = INDUSTRY;
+	}
+
+	public void setLANGUAGE(String LANGUAGE) {
+		this.checkNullSetter(this.LANGUAGE.getClass(), LANGUAGE);
+		this.LANGUAGE = LANGUAGE;
+	}
+
+	public void setMARITAL(String MARITAL) {
+		this.checkNullSetter(this.MARITAL.getClass(), MARITAL);
+		this.MARITAL = MARITAL;
+	}
+
+	public void setPOSSIBLEID(String POSSIBLEID) {
+		this.checkNullSetter(this.POSSIBLEID.getClass(), POSSIBLEID);
+		this.POSSIBLEID = POSSIBLEID;
+	}
+
+	public void setCAUSEA(String CAUSEA) {
+		this.checkNullSetter(this.CAUSEA.getClass(), CAUSEA);
+		this.CAUSEA = CAUSEA;
+	}
+
+	public void setCAUSEB(String CAUSEB) {
+		this.checkNullSetter(this.CAUSEB.getClass(), CAUSEB);
+		this.CAUSEB = CAUSEB;
+	}
+
+	public void setCAUSEC(String CAUSEC) {
+		this.checkNullSetter(this.CAUSEC.getClass(), CAUSEC);
+		this.CAUSEC = CAUSEC;
+	}
+
+	public void setCAUSED(String CAUSED) {
+		this.checkNullSetter(this.CAUSED.getClass(), CAUSED);
+		this.CAUSED = CAUSED;
+	}
+
+	public void setOSCOND(String OSCOND) {
+		this.checkNullSetter(this.OSCOND.getClass(), OSCOND);
+		this.OSCOND = OSCOND;
+	}
+
+	public void setMANNER(String MANNER) {
+		this.checkNullSetter(this.MANNER.getClass(), MANNER);
+		this.MANNER = MANNER;
+	}
+
+	public void setDISPMETHOD(String DISPMETHOD) {
+		this.checkNullSetter(this.DISPMETHOD.getClass(), DISPMETHOD);
+		this.DISPMETHOD = DISPMETHOD;
+	}
+
+	public void setCHOWNINJURY(String CHOWNINJURY) {
+		this.checkNullSetter(this.CHOWNINJURY.getClass(), CHOWNINJURY);
+		this.CHOWNINJURY = CHOWNINJURY;
+	}
+
+	public void setDURATIONA(String DURATIONA) {
+		this.checkNullSetter(this.DURATIONA.getClass(), DURATIONA);
+		this.DURATIONA = DURATIONA;
+	}
+
+	public void setDURATIONB(String DURATIONB) {
+		this.checkNullSetter(this.DURATIONB.getClass(), DURATIONB);
+		this.DURATIONB = DURATIONB;
+	}
+
+	public void setDURATIONC(String DURATIONC) {
+		this.checkNullSetter(this.DURATIONC.getClass(), DURATIONC);
+		this.DURATIONC = DURATIONC;
+	}
+
+	public void setDURATIOND(String DURATIOND) {
+		this.checkNullSetter(this.DURATIOND.getClass(), DURATIOND);
+		this.DURATIOND = DURATIOND;
+	}
+
+	public void setCASENOTES(String CASENOTES) {
+		this.checkNullSetter(this.CASENOTES.getClass(), CASENOTES);
+		this.CASENOTES = CASENOTES;
+	}
+
+	public void setATWORK(String ATWORK) {
+		this.checkNullSetter(this.ATWORK.getClass(), ATWORK);
+		this.ATWORK = ATWORK;
+	}
+
+	public void setJOBRELATED(String JOBRELATED) {
+		this.checkNullSetter(this.JOBRELATED.getClass(), JOBRELATED);
+		this.JOBRELATED = JOBRELATED;
+	}
+
+	public void setREPORTDATE(String REPORTDATE) {
+		this.checkNullSetter(this.REPORTDATE.getClass(), REPORTDATE);
+		this.REPORTDATE = REPORTDATE;
+	}
+
+	public void setREPORTTIME(String REPORTTIME) {
+		this.checkNullSetter(this.REPORTTIME.getClass(), REPORTTIME);
+		this.REPORTTIME = REPORTTIME;
+	}
+
+	public void setFOUNDDATE(String FOUNDDATE) {
+		this.checkNullSetter(this.FOUNDDATE.getClass(), FOUNDDATE);
+		this.FOUNDDATE = FOUNDDATE;
+	}
+
+	public void setFOUNDTIME(String FOUNDTIME) {
+		this.checkNullSetter(this.FOUNDTIME.getClass(), FOUNDTIME);
+		this.FOUNDTIME = FOUNDTIME;
+	}
+
+	public void setCDEATHDATE(String CDEATHDATE) {
+		this.checkNullSetter(this.CDEATHDATE.getClass(), CDEATHDATE);
+		this.CDEATHDATE = CDEATHDATE;
+	}
+
+	public void setCDEATHTIME(String CDEATHTIME) {
+		this.checkNullSetter(this.CDEATHTIME.getClass(), CDEATHTIME);
+		this.CDEATHTIME = CDEATHTIME;
+	}
+
+	public void setEVENTDATE(String EVENTDATE) {
+		this.checkNullSetter(this.EVENTDATE.getClass(), EVENTDATE);
+		this.EVENTDATE = EVENTDATE;
+	}
+
+	public void setEVENTTIME(String EVENTTIME) {
+		this.checkNullSetter(this.EVENTTIME.getClass(), EVENTTIME);
+		this.EVENTTIME = EVENTTIME;
+	}
+
+	public void setPRNDATE(String PRNDATE) {
+		this.checkNullSetter(this.PRNDATE.getClass(), PRNDATE);
+		this.PRNDATE = PRNDATE;
+	}
+
+	public void setPRNTIME(String PRNTIME) {
+		this.checkNullSetter(this.PRNTIME.getClass(), PRNTIME);
+		this.PRNTIME = PRNTIME;
+	}
+
+	public void setEXAMDATE(String EXAMDATE) {
+		this.checkNullSetter(this.EXAMDATE.getClass(), EXAMDATE);
+		this.EXAMDATE = EXAMDATE;
+	}
+
+	public void setCINJDATE(String CINJDATE) {
+		this.checkNullSetter(this.CINJDATE.getClass(), CINJDATE);
+		this.CINJDATE = CINJDATE;
+	}
+
+	public void setCINJTIME(String CINJTIME) {
+		this.checkNullSetter(this.CINJTIME.getClass(), CINJTIME);
+		this.CINJTIME = CINJTIME;
+	}
+
+	public void setCINJDATEEARLY(String CINJDATEEARLY) {
+		this.checkNullSetter(this.CINJDATEEARLY.getClass(), CINJDATEEARLY);
+		this.CINJDATEEARLY = CINJDATEEARLY;
+	}
+
+	public void setCINJDATELATE(String CINJDATELATE) {
+		this.checkNullSetter(this.CINJDATELATE.getClass(), CINJDATELATE);
+		this.CINJDATELATE = CINJDATELATE;
+	}
+
+	public void setCIDATEFLAG(String CIDATEFLAG) {
+		this.checkNullSetter(this.CIDATEFLAG.getClass(), CIDATEFLAG);
+		this.CIDATEFLAG = CIDATEFLAG;
+	}
+
+	public void setCDEATHESTABLISHEMENTMETHOD(String CDEATHESTABLISHEMENTMETHOD) {
+		this.checkNullSetter(this.CDEATHESTABLISHEMENTMETHOD.getClass(), CDEATHESTABLISHEMENTMETHOD);
+		this.CDEATHESTABLISHEMENTMETHOD = CDEATHESTABLISHEMENTMETHOD;
+	}
+
+	public void setLKADATE(String LKADATE) {
+		this.checkNullSetter(this.LKADATE.getClass(), LKADATE);
+		this.LKADATE = LKADATE;
+	}
+
+	public void setLKATIME(String LKATIME) {
+		this.checkNullSetter(this.LKATIME.getClass(), LKATIME);
+		this.LKATIME = LKATIME;
+	}
+
+	public void setCASEYEAR(String CASEYEAR) {
+		this.checkNullSetter(this.CASEYEAR.getClass(), CASEYEAR);
+		this.CASEYEAR = CASEYEAR;
+	}
+
+	public void setATHOSPDATE(String ATHOSPDATE) {
+		this.checkNullSetter(this.ATHOSPDATE.getClass(), ATHOSPDATE);
+		this.ATHOSPDATE = ATHOSPDATE;
+	}
+
+	public void setATHOSPTIME(String ATHOSPTIME) {
+		this.checkNullSetter(this.ATHOSPTIME.getClass(), ATHOSPTIME);
+		this.ATHOSPTIME = ATHOSPTIME;
+	}
+
+	public void setRESSTREET(String RESSTREET) {
+		this.checkNullSetter(this.RESSTREET.getClass(), RESSTREET);
+		this.RESSTREET = RESSTREET;
+	}
+
+	public void setRESCITY(String RESCITY) {
+		this.checkNullSetter(this.RESCITY.getClass(), RESCITY);
+		this.RESCITY = RESCITY;
+	}
+
+	public void setRESCOUNTY(String RESCOUNTY) {
+		this.checkNullSetter(this.RESCOUNTY.getClass(), RESCOUNTY);
+		this.RESCOUNTY = RESCOUNTY;
+	}
+
+	public void setRESSTATE(String RESSTATE) {
+		this.checkNullSetter(this.RESSTATE.getClass(), RESSTATE);
+		this.RESSTATE = RESSTATE;
+	}
+
+	public void setRESZIP(String RESZIP) {
+		this.checkNullSetter(this.RESZIP.getClass(), RESZIP);
+		this.RESZIP = RESZIP;
+	}
+
+	public void setRESCOUNTRY(String RESCOUNTRY) {
+		this.checkNullSetter(this.RESCOUNTRY.getClass(), RESCOUNTRY);
+		this.RESCOUNTRY = RESCOUNTRY;
+	}
+
+	public void setDEATHLOCATION(String DEATHLOCATION) {
+		this.checkNullSetter(this.DEATHLOCATION.getClass(), DEATHLOCATION);
+		this.DEATHLOCATION = DEATHLOCATION;
+	}
+
+	public void setDEATHLOCATIONTYPE(String DEATHLOCATIONTYPE) {
+		this.checkNullSetter(this.DEATHLOCATIONTYPE.getClass(), DEATHLOCATIONTYPE);
+		this.DEATHLOCATIONTYPE = DEATHLOCATIONTYPE;
+	}
+
+	public void setINJURYLOCATION(String INJURYLOCATION) {
+		this.checkNullSetter(this.INJURYLOCATION.getClass(), INJURYLOCATION);
+		this.INJURYLOCATION = INJURYLOCATION;
+	}
+
+	public void setFOUNDADDR_STREET(String FOUNDADDR_STREET) {
+		this.checkNullSetter(this.FOUNDADDR_STREET.getClass(), FOUNDADDR_STREET);
+		this.FOUNDADDR_STREET = FOUNDADDR_STREET;
+	}
+
+	public void setFOUNDADDR_CITY(String FOUNDADDR_CITY) {
+		this.checkNullSetter(this.FOUNDADDR_CITY.getClass(), FOUNDADDR_CITY);
+		this.FOUNDADDR_CITY = FOUNDADDR_CITY;
+	}
+
+	public void setFOUNDADDR_COUNTY(String FOUNDADDR_COUNTY) {
+		this.checkNullSetter(this.FOUNDADDR_COUNTY.getClass(), FOUNDADDR_COUNTY);
+		this.FOUNDADDR_COUNTY = FOUNDADDR_COUNTY;
+	}
+
+	public void setFOUNDADDR_STATE(String FOUNDADDR_STATE) {
+		this.checkNullSetter(this.FOUNDADDR_STATE.getClass(), FOUNDADDR_STATE);
+		this.FOUNDADDR_STATE = FOUNDADDR_STATE;
+	}
+
+	public void setFOUNDADDR_ZIP(String FOUNDADDR_ZIP) {
+		this.checkNullSetter(this.FOUNDADDR_ZIP.getClass(), FOUNDADDR_ZIP);
+		this.FOUNDADDR_ZIP = FOUNDADDR_ZIP;
+	}
+
+	public void setEVENTPLACE(String EVENTPLACE) {
+		this.checkNullSetter(this.EVENTPLACE.getClass(), EVENTPLACE);
+		this.EVENTPLACE = EVENTPLACE;
+	}
+
+	public void setEVENTADDR_STREET(String EVENTADDR_STREET) {
+		this.checkNullSetter(this.EVENTADDR_STREET.getClass(), EVENTADDR_STREET);
+		this.EVENTADDR_STREET = EVENTADDR_STREET;
+	}
+
+	public void setEVENTADDR_CITY(String EVENTADDR_CITY) {
+		this.checkNullSetter(this.EVENTADDR_CITY.getClass(), EVENTADDR_CITY);
+		this.EVENTADDR_CITY = EVENTADDR_CITY;
+	}
+
+	public void setEVENTADDR_COUNTY(String EVENTADDR_COUNTY) {
+		this.checkNullSetter(this.EVENTADDR_COUNTY.getClass(), EVENTADDR_COUNTY);
+		this.EVENTADDR_COUNTY = EVENTADDR_COUNTY;
+	}
+
+	public void setEVENTADDR_STATE(String EVENTADDR_STATE) {
+		this.checkNullSetter(this.EVENTADDR_STATE.getClass(), EVENTADDR_STATE);
+		this.EVENTADDR_STATE = EVENTADDR_STATE;
+	}
+
+	public void setEVENTADDR_ZIP(String EVENTADDR_ZIP) {
+		this.checkNullSetter(this.EVENTADDR_ZIP.getClass(), EVENTADDR_ZIP);
+		this.EVENTADDR_ZIP = EVENTADDR_ZIP;
+	}
+
+	public void setPRNPLACE(String PRNPLACE) {
+		this.checkNullSetter(this.PRNPLACE.getClass(), PRNPLACE);
+		this.PRNPLACE = PRNPLACE;
+	}
+
+	public void setPRNSTREET(String PRNSTREET) {
+		this.checkNullSetter(this.PRNSTREET.getClass(), PRNSTREET);
+		this.PRNSTREET = PRNSTREET;
+	}
+
+	public void setPRNCITY(String PRNCITY) {
+		this.checkNullSetter(this.PRNCITY.getClass(), PRNCITY);
+		this.PRNCITY = PRNCITY;
+	}
+
+	public void setPRNCOUNTY(String PRNCOUNTY) {
+		this.checkNullSetter(this.PRNCOUNTY.getClass(), PRNCOUNTY);
+		this.PRNCOUNTY = PRNCOUNTY;
+	}
+
+	public void setPRNSTATE(String PRNSTATE) {
+		this.checkNullSetter(this.PRNSTATE.getClass(), PRNSTATE);
+		this.PRNSTATE = PRNSTATE;
+	}
+
+	public void setPRNZIP(String PRNZIP) {
+		this.checkNullSetter(this.PRNZIP.getClass(), PRNZIP);
+		this.PRNZIP = PRNZIP;
+	}
+
+	public void setDISP_PLACE(String DISP_PLACE) {
+		this.checkNullSetter(this.DISP_PLACE.getClass(), DISP_PLACE);
+		this.DISP_PLACE = DISP_PLACE;
+	}
+
+	public void setDISP_STREET(String DISP_STREET) {
+		this.checkNullSetter(this.DISP_STREET.getClass(), DISP_STREET);
+		this.DISP_STREET = DISP_STREET;
+	}
+
+	public void setDISP_CITY(String DISP_CITY) {
+		this.checkNullSetter(this.DISP_CITY.getClass(), DISP_CITY);
+		this.DISP_CITY = DISP_CITY;
+	}
+
+	public void setDISP_COUNTY(String DISP_COUNTY) {
+		this.checkNullSetter(this.DISP_COUNTY.getClass(), DISP_COUNTY);
+		this.DISP_COUNTY = DISP_COUNTY;
+	}
+
+	public void setDISP_STATE(String DISP_STATE) {
+		this.checkNullSetter(this.DISP_STATE.getClass(), DISP_STATE);
+		this.DISP_STATE = DISP_STATE;
+	}
+
+	public void setDISP_ZIP(String DISP_ZIP) {
+		this.checkNullSetter(this.DISP_ZIP.getClass(), DISP_ZIP);
+		this.DISP_ZIP = DISP_ZIP;
+	}
+
+	public void setRESNAME(String RESNAME) {
+		this.checkNullSetter(this.RESNAME.getClass(), RESNAME);
+		this.RESNAME = RESNAME;
+	}
+
+	public void setLKAWHERE(String LKAWHERE) {
+		this.checkNullSetter(this.LKAWHERE.getClass(), LKAWHERE);
+		this.LKAWHERE = LKAWHERE;
+	}
+
+	public void setHOSPNAME(String HOSPNAME) {
+		this.checkNullSetter(this.HOSPNAME.getClass(), HOSPNAME);
+		this.HOSPNAME = HOSPNAME;
+	}
+
+	public void setSCENEADDR_STREET(String SCENEADDR_STREET) {
+		this.checkNullSetter(this.SCENEADDR_STREET.getClass(), SCENEADDR_STREET);
+		this.SCENEADDR_STREET = SCENEADDR_STREET;
+	}
+
+	public void setSCENEADDR_CITY(String SCENEADDR_CITY) {
+		this.checkNullSetter(this.SCENEADDR_CITY.getClass(), SCENEADDR_CITY);
+		this.SCENEADDR_CITY = SCENEADDR_CITY;
+	}
+
+	public void setSCENEADDR_COUNTY(String SCENEADDR_COUNTY) {
+		this.checkNullSetter(this.SCENEADDR_COUNTY.getClass(), SCENEADDR_COUNTY);
+		this.SCENEADDR_COUNTY = SCENEADDR_COUNTY;
+	}
+
+	public void setSCENEADDR_STATE(String SCENEADDR_STATE) {
+		this.checkNullSetter(this.SCENEADDR_STATE.getClass(), SCENEADDR_STATE);
+		this.SCENEADDR_STATE = SCENEADDR_STATE;
+	}
+
+	public void setSCENEADDR_ZIP(String SCENEADDR_ZIP) {
+		this.checkNullSetter(this.SCENEADDR_ZIP.getClass(), SCENEADDR_ZIP);
+		this.SCENEADDR_ZIP = SCENEADDR_ZIP;
+	}
+
+	public void setCERTIFIER_NAME(String CERTIFIER_NAME) {
+		this.checkNullSetter(this.CERTIFIER_NAME.getClass(), CERTIFIER_NAME);
+		this.CERTIFIER_NAME = CERTIFIER_NAME;
+	}
+
+	public void setCERTIFIER_TYPE(String CERTIFIER_TYPE) {
+		this.checkNullSetter(this.CERTIFIER_TYPE.getClass(), CERTIFIER_TYPE);
+		this.CERTIFIER_TYPE = CERTIFIER_TYPE;
+	}
+
+	public void setSURGERY(String SURGERY) {
+		this.checkNullSetter(this.SURGERY.getClass(), SURGERY);
+		this.SURGERY = SURGERY;
+	}
+
+	public void setSURGDATE(String SURGDATE) {
+		this.checkNullSetter(this.SURGDATE.getClass(), SURGDATE);
+		this.SURGDATE = SURGDATE;
+	}
+
+	public void setSURGREASON(String SURGREASON) {
+		this.checkNullSetter(this.SURGREASON.getClass(), SURGREASON);
+		this.SURGREASON = SURGREASON;
+	}
+
+	public void setHCPROVIDER(String HCPROVIDER) {
+		this.checkNullSetter(this.HCPROVIDER.getClass(), HCPROVIDER);
+		this.HCPROVIDER = HCPROVIDER;
+	}
+
+	public void setAUTOPSYPERFORMED(String AUTOPSYPERFORMED) {
+		this.checkNullSetter(this.AUTOPSYPERFORMED.getClass(), AUTOPSYPERFORMED);
+		this.AUTOPSYPERFORMED = AUTOPSYPERFORMED;
+	}
+
+	public void setAUTOPSYRESULTSAVAILABLE(String AUTOPSYRESULTSAVAILABLE) {
+		this.checkNullSetter(this.AUTOPSYRESULTSAVAILABLE.getClass(), AUTOPSYRESULTSAVAILABLE);
+		this.AUTOPSYRESULTSAVAILABLE = AUTOPSYRESULTSAVAILABLE;
+	}
+
+	public void setCUSTODY(String CUSTODY) {
+		this.checkNullSetter(this.CUSTODY.getClass(), CUSTODY);
+		this.CUSTODY = CUSTODY;
+	}
+
+	public void setPREGNANT(String PREGNANT) {
+		this.checkNullSetter(this.PREGNANT.getClass(), PREGNANT);
+		this.PREGNANT = PREGNANT;
+	}
+
+	public void setTOBACCO(String TOBACCO) {
+		this.checkNullSetter(this.TOBACCO.getClass(), TOBACCO);
+		this.TOBACCO = TOBACCO;
+	}
+
+	public void setTRANSPORTATION(String TRANSPORTATION) {
+		this.checkNullSetter(this.TRANSPORTATION.getClass(), TRANSPORTATION);
+		this.TRANSPORTATION = TRANSPORTATION;
+	}
+
+	public void setMENAME(String MENAME) {
+		this.checkNullSetter(this.MENAME.getClass(), MENAME);
+		this.MENAME = MENAME;
+	}
+
+	public void setMEPHONE(String MEPHONE) {
+		this.checkNullSetter(this.MEPHONE.getClass(), MEPHONE);
+		this.MEPHONE = MEPHONE;
+	}
+
+	public void setMELICENSE(String MELICENSE) {
+		this.checkNullSetter(this.MELICENSE.getClass(), MELICENSE);
+		this.MELICENSE = MELICENSE;
+	}
+
+	public void setME_STREET(String ME_STREET) {
+		this.checkNullSetter(this.ME_STREET.getClass(), ME_STREET);
+		this.ME_STREET = ME_STREET;
+	}
+
+	public void setME_CITY(String ME_CITY) {
+		this.checkNullSetter(this.ME_CITY.getClass(), ME_CITY);
+		this.ME_CITY = ME_CITY;
+	}
+
+	public void setME_COUNTY(String ME_COUNTY) {
+		this.checkNullSetter(this.ME_COUNTY.getClass(), ME_COUNTY);
+		this.ME_COUNTY = ME_COUNTY;
+	}
+
+	public void setME_STATE(String ME_STATE) {
+		this.checkNullSetter(this.ME_STATE.getClass(), ME_STATE);
+		this.ME_STATE = ME_STATE;
 	}
 
 	public void setME_ZIP(String ME_ZIP) {
+		this.checkNullSetter(this.ME_ZIP.getClass(), ME_ZIP);
 		this.ME_ZIP = ME_ZIP;
-	}
-	
-	public String getPRONOUNCERNAME() {
-		return this.PRONOUNCERNAME;
 	}
 
 	public void setPRONOUNCERNAME(String PRONOUNCERNAME) {
+		this.checkNullSetter(this.PRONOUNCERNAME.getClass(), PRONOUNCERNAME);
 		this.PRONOUNCERNAME = PRONOUNCERNAME;
 	}
+
+	// Other methods and implementation details go here...
 
 }

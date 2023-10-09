@@ -4,7 +4,7 @@ import java.util.Objects;
 
 import com.opencsv.bean.CsvBindByName;
 
-public class ToxResult {
+public class ToxResult extends BaseModelFields{
 	@CsvBindByName
 	public String ANALYSIS = "";
 	@CsvBindByName
@@ -26,9 +26,11 @@ public class ToxResult {
 	
 
 	public ToxResult() {
+		super();
 	}
 
 	public ToxResult(String ANALYSIS, String SPECIMEN, String METHOD, String VALUE, String CONTAINER, String COLLECTED_DATE, String COLLECTED_TIME, String RECORD_DATE, String RECORD_TIME) {
+		super();
 		this.ANALYSIS = ANALYSIS;
 		this.SPECIMEN = SPECIMEN;
 		this.METHOD = METHOD;
@@ -45,6 +47,7 @@ public class ToxResult {
 	}
 
 	public void setANALYSIS(String ANALYSIS) {
+		this.checkNullSetter(this.ANALYSIS.getClass(), ANALYSIS);
 		this.ANALYSIS = ANALYSIS;
 	}
 
@@ -53,6 +56,7 @@ public class ToxResult {
 	}
 
 	public void setSPECIMEN(String SPECIMEN) {
+		this.checkNullSetter(this.SPECIMEN.getClass(), SPECIMEN);
 		this.SPECIMEN = SPECIMEN;
 	}
 
@@ -61,6 +65,7 @@ public class ToxResult {
 	}
 
 	public void setMETHOD(String METHOD) {
+		this.checkNullSetter(this.METHOD.getClass(), METHOD);
 		this.METHOD = METHOD;
 	}
 
@@ -69,6 +74,7 @@ public class ToxResult {
 	}
 
 	public void setVALUE(String VALUE) {
+		this.checkNullSetter(this.VALUE.getClass(), VALUE);
 		this.VALUE = VALUE;
 	}
 
@@ -77,6 +83,7 @@ public class ToxResult {
 	}
 
 	public void setCONTAINER(String CONTAINER) {
+		this.checkNullSetter(this.CONTAINER.getClass(), CONTAINER);
 		this.CONTAINER = CONTAINER;
 	}
 
@@ -85,6 +92,7 @@ public class ToxResult {
 	}
 
 	public void setCOLLECTED_DATE(String COLLECTED_DATE) {
+		this.checkNullSetter(this.COLLECTED_DATE.getClass(), COLLECTED_DATE);
 		this.COLLECTED_DATE = COLLECTED_DATE;
 	}
 
@@ -93,6 +101,7 @@ public class ToxResult {
 	}
 
 	public void setCOLLECTED_TIME(String COLLECTED_TIME) {
+		this.checkNullSetter(this.COLLECTED_TIME.getClass(), COLLECTED_TIME);
 		this.COLLECTED_TIME = COLLECTED_TIME;
 	}
 
@@ -101,6 +110,7 @@ public class ToxResult {
 	}
 
 	public void setRECORD_DATE(String RECORD_DATE) {
+		this.checkNullSetter(this.RECORD_DATE.getClass(), RECORD_DATE);
 		this.RECORD_DATE = RECORD_DATE;
 	}
 
@@ -109,6 +119,7 @@ public class ToxResult {
 	}
 
 	public void setRECORD_TIME(String RECORD_TIME) {
+		this.checkNullSetter(this.RECORD_TIME.getClass(), RECORD_TIME);
 		this.RECORD_TIME = RECORD_TIME;
 	}
 

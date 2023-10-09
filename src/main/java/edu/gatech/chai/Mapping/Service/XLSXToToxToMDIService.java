@@ -186,7 +186,6 @@ public class XLSXToToxToMDIService {
             try {
                 handleName(modelFields, fullName);
             } catch (Exception e) {
-                // TODO Auto-generated catch block
                 e.printStackTrace();
             }
         });
@@ -225,7 +224,7 @@ public class XLSXToToxToMDIService {
         return result;
     }
 
-    protected ToxToMDIModelFields handleName(ToxToMDIModelFields returnModel, String fullName) throws Exception{
+    protected ToxToMDIModelFields handleName(ToxToMDIModelFields returnModel, String fullName){
         Pattern suffixPattern = Pattern.compile("(?<Suffix>Jr\\.|Sr\\.|IV|III|II|)");
         Matcher suffixMatcher = suffixPattern.matcher(fullName);
         if(suffixMatcher.matches()){
@@ -248,7 +247,9 @@ public class XLSXToToxToMDIService {
             }
         }
         else{
-            throw new Exception("Unable to capture the name components of name '"+fullName+"'.");
+            returnModel.getErrorListForName("FIRSTNAME").add("Error parsing Name '"+fullName+"' into a first name component.");
+            returnModel.getErrorListForName("LASTNAME").add("Error parsing Name '"+fullName+"' into a last name component.");
+            returnModel.getErrorListForName("MIDNAME").add("Error parsing Name '"+fullName+"' into a middle name component.");
         }
         return returnModel;
     }

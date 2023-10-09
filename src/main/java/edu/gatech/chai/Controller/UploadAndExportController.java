@@ -69,55 +69,63 @@ public class UploadAndExportController {
 	private XLSXToToxToMDIService xLSXToToxToMDIService;
 	@Value("${fhircms.submit}")
 	boolean submitFlag;
-	
+
 	private static final Logger logger = LoggerFactory.getLogger(UploadAndExportController.class);
+
 	public UploadAndExportController() {
 	}
-	
-    @GetMapping("/")
-    public String index() {
-        return "index";
-    }
-    
-    @PostMapping(value = "upload-csv-file-dataonly")
-    public ResponseEntity<JsonNode> uploadCSVFileDataOnly(@RequestParam(name = "file", required = true) MultipartFile file, @RequestParam(name = "mappingType", required = false) String mappingType) throws JsonProcessingException {
-    	try {
-    		Map<String, Object> object = readCSVFileAndSubmitToFhirBase(file,mappingType);
-    		ArrayNode VRDRBundles = (ArrayNode)object.get("bundleArray");
-    		HttpHeaders responseHeaders = new HttpHeaders();
-    	    responseHeaders.set("Content-Type", "application/json");
-    		ResponseEntity<JsonNode> returnResponse = new ResponseEntity<JsonNode>(VRDRBundles, HttpStatus.CREATED);
-    		return returnResponse;
-    	} catch (IOException ex){
-    		throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "Error reading CSV file in param 'file'");
-    	} catch (ParseException e) {
-    		throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "Error parsing received VRDR Json from fhir server");
-		}
-    }
 
-    @PostMapping(value = "upload-csv-file")
-    public String uploadCSVFile(@RequestParam(name = "file", required = true) MultipartFile file, @RequestParam(name = "mappingType", required = false) String mappingType, Model model) throws JsonProcessingException {
+	@GetMapping("/")
+	public String index() {
+		return "index";
+	}
+
+	@PostMapping(value = "upload-csv-file-dataonly")
+	public ResponseEntity<JsonNode> uploadCSVFileDataOnly(
+			@RequestParam(name = "file", required = true) MultipartFile file,
+			@RequestParam(name = "mappingType", required = false) String mappingType) throws JsonProcessingException {
 		try {
 			Map<String, Object> object = readCSVFileAndSubmitToFhirBase(file, mappingType);
-			List<MDIToEDRSModelFields> inputFields = (List<MDIToEDRSModelFields>)object.get("viewmodel");
+			ArrayNode VRDRBundles = (ArrayNode) object.get("bundleArray");
+			HttpHeaders responseHeaders = new HttpHeaders();
+			responseHeaders.set("Content-Type", "application/json");
+			ResponseEntity<JsonNode> returnResponse = new ResponseEntity<JsonNode>(VRDRBundles, HttpStatus.CREATED);
+			return returnResponse;
+		} catch (IOException ex) {
+			throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR,
+					"Error reading CSV file in param 'file'");
+		} catch (ParseException e) {
+			throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR,
+					"Error parsing received VRDR Json from fhir server");
+		}
+	}
+
+	@PostMapping(value = "upload-csv-file")
+	public String uploadCSVFile(@RequestParam(name = "file", required = true) MultipartFile file,
+			@RequestParam(name = "mappingType", required = false) String mappingType, Model model)
+			throws JsonProcessingException {
+		try {
+			Map<String, Object> object = readCSVFileAndSubmitToFhirBase(file, mappingType);
+			List<MDIToEDRSModelFields> inputFields = (List<MDIToEDRSModelFields>) object.get("viewmodel");
 			String prettyFhirOutput = (String) object.get("prettyFhirOutput");
 			model.addAttribute("inputFields", inputFields);
 			model.addAttribute("status", true);
 			model.addAttribute("fhirOutput", prettyFhirOutput);
-		} catch (Exception ex){
+		} catch (Exception ex) {
 			ex.printStackTrace(System.out);
 			model.addAttribute("message", "An error occurred while processing the CSV file.");
 			model.addAttribute("status", false);
 		}
-    	return "file-upload-status";
-    }
+		return "file-upload-status";
+	}
 
-	@PostMapping(value = {"upload-xlsx-file"})
-	public ResponseEntity<JsonNode> uploadXLSXFile(@RequestParam(name = "file", required = true) MultipartFile file, @RequestParam(name = "type", defaultValue = "mdi-to-edrs", required = false) String type) throws JsonProcessingException {
-		if(type.equalsIgnoreCase("mdi-to-edrs")){
+	@PostMapping(value = { "upload-xlsx-file" })
+	public ResponseEntity<JsonNode> uploadXLSXFile(@RequestParam(name = "file", required = true) MultipartFile file,
+			@RequestParam(name = "type", defaultValue = "mdi-to-edrs", required = false) String type)
+			throws JsonProcessingException {
+		if (type.equalsIgnoreCase("mdi-to-edrs")) {
 			return uploadXLSXFileForMDIToEDRS(file);
-		}
-		else{
+		} else {
 			return uploadXLSXFileForToxToMDI(file);
 		}
 	}
@@ -175,116 +183,13 @@ public class UploadAndExportController {
 				continue;
 			}
 			//Collect mapping of objects here.
-			ObjectNode fields = mapper.createObjectNode();
-			for(Field f:modelFields.getClass().getDeclaredFields()){
-				String keyName = f.getName();
-				ObjectNode fieldObject = mapper.createObjectNode();
-				String value = "";
-				if(f.getType().equals(String.class)){
-					try{
-						value = ((String)f.get(modelFields));
-					}
-					catch(IllegalArgumentException | IllegalAccessException e){
-						continue;
-					}
-				}
-				else if(f.getType().equals(Boolean.class)){
-					try {
-						value = Boolean.toString(((Boolean)f.get(modelFields)));
-					} catch (IllegalArgumentException | IllegalAccessException e) {
-						continue;
-					}
-				}
-				if(value.isEmpty()){
-					fieldObject.put("status", "not mapped");
-				}
-				else{
-					fieldObject.put("status", "mapped");
-				}
-				//TODO: Handle Error
-				fieldObject.set("FHIRResource", mapper.createObjectNode());
-				fieldObject.put("value",value);
-				fields.set(keyName, fieldObject);
-			}
-			//Handle Specimen
-			if(modelFields.SPECIMENS != null && !modelFields.SPECIMENS.isEmpty()){
-				ArrayNode specimenArrayNode = mapper.createArrayNode();
-				for(ToxSpecimen toxSpecimen: modelFields.SPECIMENS){
-					ObjectNode specimenFields = mapper.createObjectNode();
-					for(Field f:toxSpecimen.getClass().getDeclaredFields()){
-						String keyName = f.getName();
-						ObjectNode fieldObject = mapper.createObjectNode();
-						String value = "";
-						if(f.getType().equals(String.class)){
-							try{
-								value = ((String)f.get(toxSpecimen));
-							}
-							catch(IllegalArgumentException | IllegalAccessException e){
-								continue;
-							}
-						}
-						if(value.isEmpty()){
-							fieldObject.put("status", "not mapped");
-						}
-						else{
-							fieldObject.put("status", "mapped");
-						}
-						fieldObject.set("FHIRResource", mapper.createObjectNode());
-						fieldObject.put("value",value);
-						specimenFields.set(keyName, fieldObject);
-					}
-					specimenArrayNode.add(specimenFields);
-				}
-				fields.set("SPECIMENS",specimenArrayNode);
-			}
-			//Handle Results
-			if(modelFields.RESULTS != null && !modelFields.RESULTS.isEmpty()){
-				ArrayNode resultsArrayNode = mapper.createArrayNode();
-				for(ToxResult toxResults: modelFields.RESULTS){
-					ObjectNode resultFields = mapper.createObjectNode();
-					for(Field f:toxResults.getClass().getDeclaredFields()){
-						String keyName = f.getName();
-						ObjectNode fieldObject = mapper.createObjectNode();
-						String value = "";
-						if(f.getType().equals(String.class)){
-							try{
-								value = ((String)f.get(toxResults));
-							}
-							catch(IllegalArgumentException | IllegalAccessException e){
-								continue;
-							}
-						}
-						if(value.isEmpty()){
-							fieldObject.put("status", "not mapped");
-						}
-						else{
-							fieldObject.put("status", "mapped");
-						}
-						fieldObject.set("FHIRResource", mapper.createObjectNode());
-						fieldObject.put("value",value);
-						resultFields.set(keyName, fieldObject);
-					}
-					resultsArrayNode.add(resultFields);
-				}
-				fields.set("RESULTS",resultsArrayNode);
-			}
-			//Handle Notes
-			if(modelFields.NOTES != null && !modelFields.NOTES.isEmpty()){
-				ArrayNode notesArrayNode = mapper.createArrayNode();
-				for(String note: modelFields.NOTES){
-					ObjectNode fieldObject = mapper.createObjectNode();
-					fieldObject.put("status", "mapped");
-					fieldObject.put("value", note);
-					fieldObject.set("FHIRResource", mapper.createObjectNode());
-				}
-				fields.set("NOTES",notesArrayNode);
-			}
+			ObjectNode fields = createTOXToMDIFieldsNode(modelFields);
 			responseObject.set("fields", fields);
 			//Actually submit to the fhir server here!
 			if(submitFlag){
-				logger.info("XLSX MDI-To-Tox Upload: Uploading Tox-To-MDI To FhirBase");
-				JsonNode patientInfo = submitToFhirBase(bundleString, modelFields, mapper);
-				responseObject.set("fhirResponse", patientInfo);
+				logger.info("XLSX TOX-To-MDI Upload: Uploading Tox-To-EDRS To FhirBase");
+				JsonNode responseInfo = submitToFhirBase(bundleString, modelFields, mapper);
+				responseObject.set("fhirResponse", responseInfo);
 				responseObject.put("Narrative", "");
 			}
 			responseJson.add(responseObject);
@@ -345,41 +250,13 @@ public class UploadAndExportController {
 				continue;
 			}
 			//Collect mapping of objects here.
-			ObjectNode fields = mapper.createObjectNode();
-			for(Field f:modelFields.getClass().getDeclaredFields()){
-				String keyName = f.getName();
-				ObjectNode fieldObject = mapper.createObjectNode();
-				String value = "";
-				if(f.getType().equals(String.class)){
-					try{
-						value = ((String)f.get(modelFields));
-					}
-					catch(IllegalArgumentException | IllegalAccessException e){
-						continue;
-					}
-				}
-				else if(f.getType().equals(Boolean.class)){
-					try {
-						value = Boolean.toString(((Boolean)f.get(modelFields)));
-					} catch (IllegalArgumentException | IllegalAccessException e) {
-						continue;
-					}
-				}
-				if(value.isEmpty()){
-					fieldObject.put("status", "not mapped");
-				}
-				else{
-					fieldObject.put("status", "mapped");
-				}
-				fieldObject.set("FHIRResource", mapper.createObjectNode());
-				fieldObject.put("value",value);
-				fields.set(keyName, fieldObject);
-			}
+			ObjectNode fields = createMDIToEDRSFieldsNode(modelFields);
 			responseObject.set("fields", fields);
 			//Actually submit to the fhir server here!
 			if(submitFlag){
-				JsonNode patientInfo = submitToFhirBase(bundleString, modelFields, mapper);
-				responseObject.set("fhirResponse", patientInfo);
+				logger.info("XLSX TOX-To-MDI Upload: Uploading Tox-To-EDRS To FhirBase");
+				JsonNode responseInfo = submitToFhirBase(bundleString, modelFields, mapper);
+				responseObject.set("fhirResponse", responseInfo);
 				responseObject.put("Narrative", "");
 			}
 			responseJson.add(responseObject);
@@ -392,7 +269,7 @@ public class UploadAndExportController {
 		return new ResponseEntity<JsonNode>(responseJson, returnStatus);
     }
 
-	private JsonNode submitToFhirBase(String fhirBundleString, MDIToEDRSModelFields modelFields, ObjectMapper mapper){
+	private JsonNode submitToFhirBase(String fhirBundleString, MDIToEDRSModelFields modelFields, ObjectMapper mapper) {
 		ObjectNode patientInfo = mapper.createObjectNode();
 		patientInfo.put("name", modelFields.FIRSTNAME + " " + modelFields.MIDNAME + " " + modelFields.LASTNAME);
 		patientInfo.put("status", "Not Submitted");
@@ -403,18 +280,17 @@ public class UploadAndExportController {
 			System.out.println("Client response body:" + response.getBody());
 			patientInfo.put("statusCode", response.getStatusCode().value());
 			// save users list on model
-			if(response.getStatusCode() == HttpStatus.OK ) {
+			if (response.getStatusCode() == HttpStatus.OK) {
 				patientInfo.put("status", "Success");
 			}
-		}
-		catch (HttpStatusCodeException e) {
+		} catch (HttpStatusCodeException e) {
 			patientInfo.put("status", "Error");
 			patientInfo.put("statusCode", e.getRawStatusCode());
 		}
 		return patientInfo;
 	}
 
-	private JsonNode submitToFhirBase(String fhirBundleString, ToxToMDIModelFields modelFields, ObjectMapper mapper){
+	private JsonNode submitToFhirBase(String fhirBundleString, ToxToMDIModelFields modelFields, ObjectMapper mapper) {
 		ObjectNode patientInfo = mapper.createObjectNode();
 		patientInfo.put("name", modelFields.FIRSTNAME + " " + modelFields.MIDNAME + " " + modelFields.LASTNAME);
 		patientInfo.put("status", "Not Submitted");
@@ -425,86 +301,201 @@ public class UploadAndExportController {
 			System.out.println("Client response body:" + response.getBody());
 			patientInfo.put("statusCode", response.getStatusCode().value());
 			// save users list on model
-			if(response.getStatusCode() == HttpStatus.OK ) {
+			if (response.getStatusCode() == HttpStatus.OK) {
 				patientInfo.put("status", "Success");
 			}
-		}
-		catch (HttpStatusCodeException e) {
+		} catch (HttpStatusCodeException e) {
 			patientInfo.put("status", "Error");
 			patientInfo.put("statusCode", e.getRawStatusCode());
 		}
 		return patientInfo;
 	}
-    
-    private Map<String, Object> readCSVFileAndSubmitToFhirBase(MultipartFile file, String mappingType) throws IOException, ParseException{
-    	if(mappingType == null) {
-    		mappingType = "MDI";
-    	}
-    	ObjectMapper mapper = new ObjectMapper();
-    	ArrayNode VRDRBundles = JsonNodeFactory.instance.arrayNode();
-    	// parse CSV file to create a list of `InputField` objects
-        Reader reader = new BufferedReader(new InputStreamReader(file.getInputStream()));
-        // create csv bean reader
-        CsvToBean<MDIToEDRSModelFields> csvToBean = new CsvToBeanBuilder(reader)
-                .withType(MDIToEDRSModelFields.class)
-                .withIgnoreLeadingWhiteSpace(true)
-                .build();
 
-        // convert `CsvToBean` object to list of users
-        List<MDIToEDRSModelFields> inputFields = csvToBean.parse();
-        String prettyFhirOutput = "";
-        for(MDIToEDRSModelFields inputField: inputFields) {
-        	String jsonBundle = "";
-        	if(mappingType.equalsIgnoreCase("MDI")) {
-        		jsonBundle = mDIToMDIToEDRSService.convertToMDIString(inputField);
-        	}
-        	System.out.println("JSON BUNDLE:");
-        	System.out.println(jsonBundle);
-        	JsonNode submitBundleNode = mapper.readTree(jsonBundle);
-            if(prettyFhirOutput.isEmpty()) {
-            	prettyFhirOutput = mapper.writerWithDefaultPrettyPrinter().writeValueAsString(submitBundleNode);
-            }
-            // Submit to fhir server
-            System.out.println(jsonBundle);
-            if(submitFlag) {
-                try {
-	                ResponseEntity<String> response = submitBundleService.submitBundle(jsonBundle);
-	                System.out.println("Client response body:" + response.getBody());
-	                // save users list on model
-                }
-                catch (HttpStatusCodeException e) {
-                	continue;
-                }
-				//Until we resolve what the right request from the FHIR server is, we need to not use this.
-                /*try {
-            		JsonNode internalVRDRNode = fhirCMSToVRDRService.pullDCDFromBaseFhirServerAsJson(inputField.SYSTEMID, inputField.CASEID);
-            		VRDRBundles.add(internalVRDRNode);
-            	}
-            	catch (ResourceNotFoundException e) {
-            		System.out.println("Error:"  + e.getLocalizedMessage() + "for patient id" + inputField.CASEID);
-            		System.out.println("Could not complete the document request from the FHIR server, appending the original batch request instead");
-            		VRDRBundles.add(submitBundleNode);
-            	}*/
-            }else {
-            	VRDRBundles.add(submitBundleNode);
-            }
-        }
-        Map<String, Object> returnMap = new HashMap<String, Object>();
-        returnMap.put("viewmodel", inputFields);
-        returnMap.put("bundleArray", VRDRBundles);
-        returnMap.put("prettyFhirOutput", prettyFhirOutput);
-        return returnMap;
-    }
-    
-    @GetMapping("submitstatus")
-    public ResponseEntity<JsonNode> submissionStatus(@RequestParam(required = true) String systemIdentifier,@RequestParam(required = true) String codeIdentifier){
-    	ObjectMapper mapper = new ObjectMapper();
-    	List<PatientSubmit> patientSubmitList = patientSubmitRepository.findByPatientIdentifierSystemAndPatientIdentifierCode(systemIdentifier, codeIdentifier);
-    	JsonNode jsonOutput = mapper.valueToTree(patientSubmitList);
-		HttpHeaders responseHeaders = new HttpHeaders();
-	    responseHeaders.set("Content-Type", "application/json");
-		ResponseEntity<JsonNode> returnResponse = new ResponseEntity<JsonNode>(jsonOutput, HttpStatus.OK);
-		return returnResponse;
-    }
-    
+	/**
+	 * Converts an internal representation of the Tox-to-MDI CSV/ModelFields into a
+	 * "fields response object"
+	 * Details whether the value was mapped or not mapped, what value was captured;
+	 * and if there was an issue during mapping
+	 * 
+	 * @param modelFields
+	 * @return
+	 */
+	public ObjectNode createTOXToMDIFieldsNode(ToxToMDIModelFields modelFields) {
+		ObjectMapper mapper = new ObjectMapper();
+		ObjectNode fields = mapper.createObjectNode();
+		// Handle Specimen
+		if (modelFields.SPECIMENS != null && !modelFields.SPECIMENS.isEmpty()) {
+			ArrayNode specimenArrayNode = mapper.createArrayNode();
+			for (ToxSpecimen toxSpecimen : modelFields.SPECIMENS) {
+				ObjectNode specimenFields = mapper.createObjectNode();
+				for (Field f : toxSpecimen.getClass().getDeclaredFields()) {
+					String keyName = f.getName();
+					ObjectNode fieldObject = mapper.createObjectNode();
+					String value = "";
+					if (f.getType().equals(String.class)) {
+						try {
+							value = ((String) f.get(toxSpecimen));
+						} catch (IllegalArgumentException | IllegalAccessException e) {
+							continue;
+						}
+					}
+					if (value.isEmpty()) {
+						fieldObject.put("status", "not mapped");
+					} else {
+						fieldObject.put("status", "mapped");
+					}
+					fieldObject.set("FHIRResource", mapper.createObjectNode());
+					fieldObject.put("value", value);
+					List<String> errorList = toxSpecimen.getErrorListForName(f.getName());
+					if (!errorList.isEmpty()) {
+						fieldObject.set("errors", mapper.valueToTree(errorList));
+					}
+					specimenFields.set(keyName, fieldObject);
+				}
+				specimenArrayNode.add(specimenFields);
+			}
+			fields.set("SPECIMENS", specimenArrayNode);
+		}
+		// Handle Results
+		if (modelFields.RESULTS != null && !modelFields.RESULTS.isEmpty()) {
+			ArrayNode resultsArrayNode = mapper.createArrayNode();
+			for (ToxResult toxResult : modelFields.RESULTS) {
+				ObjectNode resultFields = mapper.createObjectNode();
+				for (Field f : toxResult.getClass().getDeclaredFields()) {
+					String keyName = f.getName();
+					ObjectNode fieldObject = mapper.createObjectNode();
+					String value = "";
+					if (f.getType().equals(String.class)) {
+						try {
+							value = ((String) f.get(toxResult));
+						} catch (IllegalArgumentException | IllegalAccessException e) {
+							continue;
+						}
+					}
+					if (value.isEmpty()) {
+						fieldObject.put("status", "not mapped");
+					} else {
+						fieldObject.put("status", "mapped");
+					}
+					fieldObject.set("FHIRResource", mapper.createObjectNode());
+					fieldObject.put("value", value);
+					List<String> errorList = toxResult.getErrorListForName(f.getName());
+					if (!errorList.isEmpty()) {
+						fieldObject.set("errors", mapper.valueToTree(errorList));
+					}
+					resultFields.set(keyName, fieldObject);
+				}
+				resultsArrayNode.add(resultFields);
+			}
+			fields.set("RESULTS", resultsArrayNode);
+		}
+		// Handle Notes
+		if (modelFields.NOTES != null && !modelFields.NOTES.isEmpty()) {
+			ArrayNode notesArrayNode = mapper.createArrayNode();
+			for (String note : modelFields.NOTES) {
+				ObjectNode fieldObject = mapper.createObjectNode();
+				fieldObject.put("status", "mapped");
+				fieldObject.put("value", note);
+				fieldObject.set("FHIRResource", mapper.createObjectNode());
+			}
+			fields.set("NOTES", notesArrayNode);
+		}
+		return fields;
+	}
+
+	/**
+	 * Converts an internal representation of the MDI-To-EDRS CSV/ModelFields into a
+	 * "fields response object"
+	 * Details whether the value was mapped or not mapped, what value was captured;
+	 * and if there was an issue during mapping
+	 * 
+	 * @param modelFields
+	 * @return
+	 */
+	public ObjectNode createMDIToEDRSFieldsNode(MDIToEDRSModelFields modelFields) {
+		ObjectMapper mapper = new ObjectMapper();
+		ObjectNode fields = mapper.createObjectNode();
+		for (Field f : modelFields.getClass().getDeclaredFields()) {
+			String keyName = f.getName();
+			ObjectNode fieldObject = mapper.createObjectNode();
+			String value = "";
+			if (f.getType().equals(String.class)) {
+				try {
+					value = ((String) f.get(modelFields));
+				} catch (IllegalArgumentException | IllegalAccessException e) {
+					continue;
+				}
+			} else if (f.getType().equals(Boolean.class)) {
+				try {
+					value = Boolean.toString(((Boolean) f.get(modelFields)));
+				} catch (IllegalArgumentException | IllegalAccessException e) {
+					continue;
+				}
+			}
+			if (value.isEmpty()) {
+				fieldObject.put("status", "not mapped");
+			} else {
+				fieldObject.put("status", "mapped");
+			}
+			fieldObject.set("FHIRResource", mapper.createObjectNode());
+			fieldObject.put("value", value);
+			List<String> errorList = modelFields.getErrorListForName(f.getName());
+			if (!errorList.isEmpty()) {
+				fieldObject.set("errors", mapper.valueToTree(errorList));
+			}
+			fields.set(keyName, fieldObject);
+		}
+		return fields;
+	}
+
+	private Map<String, Object> readCSVFileAndSubmitToFhirBase(MultipartFile file, String mappingType)
+			throws IOException, ParseException {
+		if (mappingType == null) {
+			mappingType = "MDI";
+		}
+		ObjectMapper mapper = new ObjectMapper();
+		ArrayNode VRDRBundles = JsonNodeFactory.instance.arrayNode();
+		// parse CSV file to create a list of `InputField` objects
+		Reader reader = new BufferedReader(new InputStreamReader(file.getInputStream()));
+		// create csv bean reader
+		CsvToBean<MDIToEDRSModelFields> csvToBean = new CsvToBeanBuilder(reader)
+				.withType(MDIToEDRSModelFields.class)
+				.withIgnoreLeadingWhiteSpace(true)
+				.build();
+
+		// convert `CsvToBean` object to list of users
+		List<MDIToEDRSModelFields> inputFields = csvToBean.parse();
+		String prettyFhirOutput = "";
+		for (MDIToEDRSModelFields inputField : inputFields) {
+			String jsonBundle = "";
+			if (mappingType.equalsIgnoreCase("MDI")) {
+				jsonBundle = mDIToMDIToEDRSService.convertToMDIString(inputField);
+			}
+			System.out.println("JSON BUNDLE:");
+			System.out.println(jsonBundle);
+			JsonNode submitBundleNode = mapper.readTree(jsonBundle);
+			if (prettyFhirOutput.isEmpty()) {
+				prettyFhirOutput = mapper.writerWithDefaultPrettyPrinter().writeValueAsString(submitBundleNode);
+			}
+			// Submit to fhir server
+			System.out.println(jsonBundle);
+			if (submitFlag) {
+				try {
+					ResponseEntity<String> response = submitBundleService.submitBundle(jsonBundle);
+					System.out.println("Client response body:" + response.getBody());
+					// save users list on model
+				} catch (HttpStatusCodeException e) {
+					continue;
+				}
+			} else {
+				VRDRBundles.add(submitBundleNode);
+			}
+		}
+		Map<String, Object> returnMap = new HashMap<String, Object>();
+		returnMap.put("viewmodel", inputFields);
+		returnMap.put("bundleArray", VRDRBundles);
+		returnMap.put("prettyFhirOutput", prettyFhirOutput);
+		return returnMap;
+	}
+
 }
