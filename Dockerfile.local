@@ -12,5 +12,5 @@ ENV FHIRCMS_BASIC_PASSWORD=secret
 ENV CANARY_URL=nightingale.hdap.gatech.edu:8080/
 ENV SERVER_PORT=8081
 
-COPY --from=builder /usr/src/raven_import_and_submit_api/target/raven-import-and-submit-api-1.1.0-SNAPSHOT.war /usr/local/tomcat/webapps/raven-import-and-submit-api.war
+COPY --from=builder /usr/src/raven_import_and_submit_api/target/raven-import-and-submit-api-1.1.1-SNAPSHOT.war /usr/local/tomcat/webapps/raven-import-and-submit-api.war
 COPY --from=builder /usr/src/raven_import_and_submit_api/src/main/resources/* /usr/local/tomcat/src/main/resources/
