@@ -30,6 +30,16 @@
     	<version>1.1.0-STU-1.1-US</version>
     </dependency>
     <dependency>
+    	<groupId>edu.gatech.chai</groupId>
+    	<artifactId>MDI</artifactId>
+    	<version>1.1.0-STU-1.1-US</version>
+    </dependency>
+    <dependency>
+    	<groupId>edu.gatech</groupId>
+    	<artifactId>VRDR</artifactId>
+    	<version>v1.4.0-STU2</version>
+    </dependency>
+    <dependency>
       <groupId>junit</groupId>
       <artifactId>junit</artifactId>
       <version>3.8.1</version>

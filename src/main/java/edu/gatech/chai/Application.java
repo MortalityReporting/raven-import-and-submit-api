@@ -5,7 +5,6 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.web.servlet.support.SpringBootServletInitializer;
 import org.springframework.context.annotation.Bean;
 
-import edu.gatech.chai.VRDR.context.VRDRFhirContext;
 import edu.gatech.chai.MDI.context.MDIFhirContext;
 
 @SpringBootApplication
@@ -15,10 +14,6 @@ public class Application extends SpringBootServletInitializer{
         SpringApplication.run(Application.class, args);
     }
     
-    @Bean
-    public VRDRFhirContext vrdrFhirContext() {
-    	return new VRDRFhirContext();
-    }
     
     @Bean
     public MDIFhirContext mdiFhirContext() {

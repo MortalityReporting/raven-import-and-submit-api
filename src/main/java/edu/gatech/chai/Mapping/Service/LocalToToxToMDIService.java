@@ -41,7 +41,7 @@ import edu.gatech.chai.MDI.model.resource.DiagnosticReportToxicologyToMDI;
 import edu.gatech.chai.MDI.model.resource.MessageHeaderToxicologyToMDI;
 import edu.gatech.chai.MDI.model.resource.ObservationToxicologyLabResult;
 import edu.gatech.chai.MDI.model.resource.SpecimenToxicologyLab;
-import edu.gatech.chai.MDI.model.resource.util.MDICommonUtil;
+import edu.gatech.chai.MDI.model.resource.util.CompositionMDIAndEDRSUtil;
 import edu.gatech.chai.Mapping.Util.LocalModelToFhirCMSUtil;
 import edu.gatech.chai.VRDR.model.util.DecedentUtil;
 
@@ -112,7 +112,7 @@ public class LocalToToxToMDIService {
 		// Toxicology Identifier
 		if (inputFields.TOXCASENUMBER != null && !inputFields.TOXCASENUMBER.isEmpty()) {
 			Identifier identifier = new Identifier();
-			identifier.setType(MDICommonUtil.trackingNumberTOXType);
+			identifier.setType(CompositionMDIAndEDRSUtil.trackingNumberTOXType);
 			identifier.setSystem("urn:raven-import:mdi:" + inputFields.FILEID);
 			identifier.setValue(inputFields.TOXCASENUMBER);
 			diagnosticReport.addTrackingNumberExtension(identifier);
@@ -121,7 +121,7 @@ public class LocalToToxToMDIService {
 		Stream<String> mdiIdentifierFields = Stream.of(inputFields.MDICASEID, inputFields.MDICASESYSTEM);
 		if (!mdiIdentifierFields.allMatch(x -> x == null || x.isEmpty())) {
 			Identifier identifier = new Identifier();
-			identifier.setType(MDICommonUtil.trackingNumberMDIType);
+			identifier.setType(CompositionMDIAndEDRSUtil.trackingNumberMDIType);
 			identifier.setSystem(inputFields.MDICASESYSTEM);
 			identifier.setValue(inputFields.MDICASEID);
 			diagnosticReport.addTrackingNumberExtension(identifier);
