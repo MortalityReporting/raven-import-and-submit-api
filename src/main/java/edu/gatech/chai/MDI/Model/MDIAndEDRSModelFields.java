@@ -2,7 +2,7 @@ package edu.gatech.chai.MDI.Model;
 
 import com.opencsv.bean.CsvBindByName;
 
-public class MDIToEDRSModelFields extends BaseModelFields{
+public class MDIAndEDRSModelFields extends BaseModelFields{
 	@CsvBindByName
 	public String BASEFHIRID = "";
 	@CsvBindByName
@@ -240,7 +240,7 @@ public class MDIToEDRSModelFields extends BaseModelFields{
 	@CsvBindByName
 	public String PRONOUNCERNAME = "";
 
-	public MDIToEDRSModelFields() {
+	public MDIAndEDRSModelFields() {
 		super();
 	}
 

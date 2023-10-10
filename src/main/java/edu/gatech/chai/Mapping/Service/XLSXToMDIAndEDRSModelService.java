@@ -18,11 +18,11 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
-import edu.gatech.chai.MDI.Model.MDIToEDRSModelFields;
+import edu.gatech.chai.MDI.Model.MDIAndEDRSModelFields;
 
 @Service
-public class XLSXToMDIToEDRSService {
-    private static final Logger logger = LoggerFactory.getLogger(XLSXToToxToMDIService.class);
+public class XLSXToMDIAndEDRSModelService {
+    private static final Logger logger = LoggerFactory.getLogger(XLSXToToxToMDIModelService.class);
     private static final int FIRST_ROW = 1;
     private static String file_id = "";
     // private static final String SECTION_HEADER = "Highlighted yellow items have been changed"; //Note this will ofc change to a reasonable "section name" in the future
@@ -46,8 +46,8 @@ public class XLSXToMDIToEDRSService {
         ,"Certifier Name", "Certifier Type", "Case History"};
     private static final String endCapColumnHeader = "End of Cases"; //Cell text we expect at the end of the row.
 
-    public List<MDIToEDRSModelFields> convertToMDIModelFields(XSSFWorkbook workbook) throws Exception{
-        List<MDIToEDRSModelFields> returnList = new ArrayList<MDIToEDRSModelFields>();
+    public List<MDIAndEDRSModelFields> convertToMDIModelFields(XSSFWorkbook workbook) throws Exception{
+        List<MDIAndEDRSModelFields> returnList = new ArrayList<MDIAndEDRSModelFields>();
         XSSFSheet sheet = workbook.getSheetAt(0); //Assuming first sheet for now
         XSSFRow headerRow = sheet.getRow(0); //Header should be first row
         Cell headerElementCell = findCellFromRow(headerRow, ELEMENT_HEADER);
@@ -64,7 +64,7 @@ public class XLSXToMDIToEDRSService {
         Cell nameCell = sheet.getRow(fieldMap.get("Decedent Name")).getCell(currentColumn);
         while(!headerCell.getStringCellValue().equals(endCapColumnHeader) && !headerCell.getStringCellValue().isEmpty()){ //Check if we're at the end of the sheet
             if(nameCell != null && !nameCell.getStringCellValue().isEmpty() && headerCell.getStringCellValue().contains("Case")){ //A decedent name must be provided
-                MDIToEDRSModelFields mdiFields = convertColumnToModelFields(currentColumn, sheet, fieldMap);
+                MDIAndEDRSModelFields mdiFields = convertColumnToModelFields(currentColumn, sheet, fieldMap);
                 returnList.add(mdiFields);
             }
             currentColumn++;
@@ -88,8 +88,8 @@ public class XLSXToMDIToEDRSService {
         return returnMap;
     }
 
-    public MDIToEDRSModelFields convertColumnToModelFields(int currentColumn, XSSFSheet sheet, Map<String, Integer> fieldMap) throws Exception{
-        MDIToEDRSModelFields returnModel = new MDIToEDRSModelFields(); //This is going to be replaced SOON with new sheet column definitions!
+    public MDIAndEDRSModelFields convertColumnToModelFields(int currentColumn, XSSFSheet sheet, Map<String, Integer> fieldMap) throws Exception{
+        MDIAndEDRSModelFields returnModel = new MDIAndEDRSModelFields(); //This is going to be replaced SOON with new sheet column definitions!
         //Every model is going to have a similar base fhir id
         returnModel.setBASEFHIRID(file_id+ "-" + (currentColumn - 2) + "-");
         handleAge(returnModel, currentColumn, sheet, fieldMap);
@@ -152,7 +152,7 @@ public class XLSXToMDIToEDRSService {
         return returnModel;
     }
 
-    protected MDIToEDRSModelFields handleAge(MDIToEDRSModelFields returnModel, int currentColumn, XSSFSheet sheet, Map<String, Integer> fieldMap){
+    protected MDIAndEDRSModelFields handleAge(MDIAndEDRSModelFields returnModel, int currentColumn, XSSFSheet sheet, Map<String, Integer> fieldMap){
         String ageValue = getStringForColumnAndName(sheet, returnModel, fieldMap,currentColumn,"Decedent Age");
         ageValue.trim();
         String[] numberAndUnit = ageValue.split("\\s+"); //Looking for number + unit
@@ -172,7 +172,7 @@ public class XLSXToMDIToEDRSService {
         return returnModel;
     }
 
-    protected MDIToEDRSModelFields handleName(MDIToEDRSModelFields returnModel, int currentColumn, XSSFSheet sheet, Map<String, Integer> fieldMap){
+    protected MDIAndEDRSModelFields handleName(MDIAndEDRSModelFields returnModel, int currentColumn, XSSFSheet sheet, Map<String, Integer> fieldMap){
         String fullName = getStringForColumnAndName(sheet, returnModel, fieldMap,currentColumn,"Decedent Name");
         Pattern suffixPattern = Pattern.compile("(?<Suffix>Jr\\.|Sr\\.|IV|III|II|)");
         Matcher suffixMatcher = suffixPattern.matcher(fullName);
@@ -243,7 +243,7 @@ public class XLSXToMDIToEDRSService {
 
     }
 
-    private String getStringForColumnAndName(XSSFSheet sheet, MDIToEDRSModelFields model, Map<String, Integer> fieldMap, int columnIndex,String name){
+    private String getStringForColumnAndName(XSSFSheet sheet, MDIAndEDRSModelFields model, Map<String, Integer> fieldMap, int columnIndex,String name){
         if(fieldMap.get(name) == null){
             model.getErrorListForName(name).add("No value found for key '"+name+"'.");
             return "";

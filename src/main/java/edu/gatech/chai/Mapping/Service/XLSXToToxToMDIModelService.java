@@ -20,14 +20,14 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
-import edu.gatech.chai.MDI.Model.MDIToEDRSModelFields;
+import edu.gatech.chai.MDI.Model.MDIAndEDRSModelFields;
 import edu.gatech.chai.MDI.Model.ToxResult;
 import edu.gatech.chai.MDI.Model.ToxSpecimen;
 import edu.gatech.chai.MDI.Model.ToxToMDIModelFields;
 
 @Service
-public class XLSXToToxToMDIService {
-    private static final Logger logger = LoggerFactory.getLogger(XLSXToToxToMDIService.class);
+public class XLSXToToxToMDIModelService {
+    private static final Logger logger = LoggerFactory.getLogger(XLSXToToxToMDIModelService.class);
     private static final DataFormatter formatter = new DataFormatter();
     private static String FILEID_HEADER = "file Id";
     private static String LABORATORY_HEADER = "Laboratory";

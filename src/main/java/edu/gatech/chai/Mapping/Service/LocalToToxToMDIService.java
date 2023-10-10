@@ -42,11 +42,11 @@ import edu.gatech.chai.MDI.model.resource.MessageHeaderToxicologyToMDI;
 import edu.gatech.chai.MDI.model.resource.ObservationToxicologyLabResult;
 import edu.gatech.chai.MDI.model.resource.SpecimenToxicologyLab;
 import edu.gatech.chai.MDI.model.resource.util.MDICommonUtil;
-import edu.gatech.chai.Mapping.Util.MDIToFhirCMSUtil;
+import edu.gatech.chai.Mapping.Util.LocalModelToFhirCMSUtil;
 import edu.gatech.chai.VRDR.model.util.DecedentUtil;
 
 @Service
-public class MDIToToxToMDIService {
+public class LocalToToxToMDIService {
 
 	@Autowired
 	private MDIFhirContext mdiFhirContext;
@@ -78,7 +78,7 @@ public class MDIToToxToMDIService {
 		MessageSourceComponent msc = new MessageSourceComponent();
 		msc.setName("Raven Generated Import");
 		messageHeader.setSource(msc);
-		MDIToFhirCMSUtil.addResourceToBundle(returnBundle, messageHeader);
+		LocalModelToFhirCMSUtil.addResourceToBundle(returnBundle, messageHeader);
 		// Handle Performer
 		Resource performerResource = null; // Performer can be a US-Core-Practitioner or a PractitionerRole
 		Reference performerReference = null;
@@ -89,7 +89,7 @@ public class MDIToToxToMDIService {
 			performerResource = createPerformer(inputFields, idTemplate, returnBundle);
 			performerReference = new Reference(
 					performerResource.getResourceType().toString() + "/" + performerResource.getId());
-			MDIToFhirCMSUtil.addResourceToBundle(returnBundle, performerResource);
+			LocalModelToFhirCMSUtil.addResourceToBundle(returnBundle, performerResource);
 		}
 		// Create Patient
 		Patient patientResource = null;
@@ -99,7 +99,7 @@ public class MDIToToxToMDIService {
 		if (!decedentFields.allMatch(x -> x == null || x.isEmpty())) {
 			patientResource = createPatient(inputFields, idTemplate);
 			patientReference = new Reference("Patient/" + patientResource.getId());
-			MDIToFhirCMSUtil.addResourceToBundle(returnBundle, patientResource);
+			LocalModelToFhirCMSUtil.addResourceToBundle(returnBundle, patientResource);
 		}
 		// Create Diagnostic Report
 		CodeableConcept toxOrderCodableConcept = new CodeableConcept();
@@ -108,7 +108,7 @@ public class MDIToToxToMDIService {
 		}
 		DiagnosticReportToxicologyToMDI diagnosticReport = new DiagnosticReportToxicologyToMDI(
 				DiagnosticReportStatus.FINAL, patientResource, toxOrderCodableConcept, new Date(),
-				MDIToFhirCMSUtil.parseDate(inputFields.REPORTDATE));
+				LocalModelToFhirCMSUtil.parseDate(inputFields.REPORTDATE));
 		// Toxicology Identifier
 		if (inputFields.TOXCASENUMBER != null && !inputFields.TOXCASENUMBER.isEmpty()) {
 			Identifier identifier = new Identifier();
@@ -130,7 +130,7 @@ public class MDIToToxToMDIService {
 		if (performerReference != null) {
 			diagnosticReport.addPerformer(performerReference);
 		}
-		MDIToFhirCMSUtil.addResourceToBundle(returnBundle, diagnosticReport);
+		LocalModelToFhirCMSUtil.addResourceToBundle(returnBundle, diagnosticReport);
 		messageHeader.addFocus(new Reference("DiagnosticReport/" + diagnosticReport.getId()));
 		// Create Specimen
 		Map<String, Reference> specimenNameToReference = new HashMap<String, Reference>(); // Local map to get a
@@ -146,7 +146,7 @@ public class MDIToToxToMDIService {
 				specimenReference.setDisplay(toxSpecimen.NAME);
 				specimenNameToReference.put(toxSpecimen.NAME, specimenReference);
 				diagnosticReport.addSpecimen(specimenReference);
-				MDIToFhirCMSUtil.addResourceToBundle(returnBundle, specimenResource);
+				LocalModelToFhirCMSUtil.addResourceToBundle(returnBundle, specimenResource);
 			}
 		}
 		// Create Result
@@ -159,7 +159,7 @@ public class MDIToToxToMDIService {
 				Reference resultReference = new Reference("Observation/" + resultResource.getId());
 				resultReference.setDisplay(toxResult.ANALYSIS);
 				diagnosticReport.addResult(resultReference);
-				MDIToFhirCMSUtil.addResourceToBundle(returnBundle, resultResource);
+				LocalModelToFhirCMSUtil.addResourceToBundle(returnBundle, resultResource);
 			}
 		}
 		return returnBundle;
@@ -184,7 +184,7 @@ public class MDIToToxToMDIService {
 			returnDecedent.addName(name);
 		}
 		if (inputFields.BIRTHDATE != null && !inputFields.BIRTHDATE.isEmpty()) {
-			Date birthDate = MDIToFhirCMSUtil.parseDate(inputFields.BIRTHDATE);
+			Date birthDate = LocalModelToFhirCMSUtil.parseDate(inputFields.BIRTHDATE);
 			returnDecedent.setBirthDate(birthDate);
 		}
 		return returnDecedent;
@@ -212,17 +212,17 @@ public class MDIToToxToMDIService {
 					new Meta().addProfile("http://hl7.org/fhir/us/core/StructureDefinition/us-core-organization"));
 			organization.setActive(true);
 			organization.setName(inputFields.TOXORGNAME);
-			organization.addAddress(MDIToFhirCMSUtil.createAddress(inputFields.TOXORGNAME, inputFields.TOXORGSTREET,
+			organization.addAddress(LocalModelToFhirCMSUtil.createAddress(inputFields.TOXORGNAME, inputFields.TOXORGSTREET,
 					inputFields.TOXORGCITY, inputFields.TOXORGCOUNTY, inputFields.TOXORGSTATE, inputFields.TOXORGZIP,
 					inputFields.TOXORGCOUNTRY));
 			organizationReference = new Reference("Organization/" + organization.getId());
-			MDIToFhirCMSUtil.addResourceToBundle(bundle, organization);
+			LocalModelToFhirCMSUtil.addResourceToBundle(bundle, organization);
 			practitionerRole = new PractitionerRole();
 			practitionerRole.setId(idTemplate + "-PractitionerRole");
 			practitionerRole.setMeta(
 					new Meta().addProfile("http://hl7.org/fhir/us/core/StructureDefinition/us-core-practitionerrole"));
 			practitionerRole.setOrganization(organizationReference);
-			MDIToFhirCMSUtil.addResourceToBundle(bundle, practitionerRole);
+			LocalModelToFhirCMSUtil.addResourceToBundle(bundle, practitionerRole);
 			returnPerformer = practitionerRole;
 		}
 		Stream<String> practitionerFields = Stream.of(inputFields.TOXPERFORMER);
@@ -232,8 +232,8 @@ public class MDIToToxToMDIService {
 			practitioner.setMeta(
 					new Meta().addProfile("http://hl7.org/fhir/us/core/StructureDefinition/us-core-practitioner"));
 			practitionerReference = new Reference("Practitioner/" + practitioner.getId());
-			practitioner.addName(MDIToFhirCMSUtil.parseHumanName(inputFields.TOXPERFORMER));
-			MDIToFhirCMSUtil.addResourceToBundle(bundle, practitioner);
+			practitioner.addName(LocalModelToFhirCMSUtil.parseHumanName(inputFields.TOXPERFORMER));
+			LocalModelToFhirCMSUtil.addResourceToBundle(bundle, practitioner);
 			if (practitionerRoleSet) {
 				practitionerRole.setPractitioner(practitionerReference);
 			} else {
@@ -258,7 +258,7 @@ public class MDIToToxToMDIService {
 		Stream<String> collectionFields = Stream.of(toxSpecimen.COLLECTED_DATETIME, toxSpecimen.AMOUNT);
 		if (!collectionFields.allMatch(x -> x == null || x.isEmpty())) {
 			sccUsed = true;
-			Date collectedDate = MDIToFhirCMSUtil.parseDateAndTime(toxSpecimen.COLLECTED_DATETIME);
+			Date collectedDate = LocalModelToFhirCMSUtil.parseDateAndTime(toxSpecimen.COLLECTED_DATETIME);
 			scc.setCollected(new DateTimeType(collectedDate));
 			Quantity quantity = new Quantity(); // TODO: Handle quantity better than just this manner
 			quantity.setCode(toxSpecimen.AMOUNT);
@@ -279,8 +279,8 @@ public class MDIToToxToMDIService {
 		}
 		Stream<String> receivedFields = Stream.of(toxSpecimen.RECEIPT_DATETIME);
 		if (!receivedFields.allMatch(x -> x == null || x.isEmpty())) {
-			Date receivedDateTime = MDIToFhirCMSUtil.parseDate(toxSpecimen.RECEIPT_DATETIME);
-			MDIToFhirCMSUtil.addTimeToDate(receivedDateTime, toxSpecimen.RECEIPT_DATETIME);
+			Date receivedDateTime = LocalModelToFhirCMSUtil.parseDate(toxSpecimen.RECEIPT_DATETIME);
+			LocalModelToFhirCMSUtil.addTimeToDate(receivedDateTime, toxSpecimen.RECEIPT_DATETIME);
 			specimenResource.setReceivedTime(receivedDateTime);
 		}
 		return specimenResource;
@@ -305,9 +305,9 @@ public class MDIToToxToMDIService {
 		}
 		Stream<String> receivedFields = Stream.of(toxResult.RECORD_DATE, toxResult.RECORD_TIME);
 		if (!receivedFields.allMatch(x -> x == null || x.isEmpty())) {
-			Date recordedDateTime = MDIToFhirCMSUtil.parseDate(toxResult.RECORD_DATE);
+			Date recordedDateTime = LocalModelToFhirCMSUtil.parseDate(toxResult.RECORD_DATE);
 			if (toxResult.RECORD_TIME != null && !toxResult.RECORD_TIME.isEmpty()) {
-				MDIToFhirCMSUtil.addTimeToDate(recordedDateTime, toxResult.RECORD_TIME);
+				LocalModelToFhirCMSUtil.addTimeToDate(recordedDateTime, toxResult.RECORD_TIME);
 			}
 			resultResource.setEffective(new DateTimeType(recordedDateTime));
 		}
