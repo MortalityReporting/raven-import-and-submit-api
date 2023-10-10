@@ -5,3 +5,4 @@
 [submodule "MDI_javalib"]
 	path = MDI_javalib
 	url = https://github.com/MortalityReporting/MDI_javalib
+	ignore = dirty
