@@ -19,5 +19,4 @@ public class Application extends SpringBootServletInitializer{
     public MDIFhirContext mdiFhirContext() {
     	return new MDIFhirContext();
     }
-    
 }

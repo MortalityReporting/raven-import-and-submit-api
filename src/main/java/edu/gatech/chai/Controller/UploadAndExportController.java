@@ -75,21 +75,13 @@ public class UploadAndExportController {
 	public UploadAndExportController() {
 	}
 
-	@GetMapping("/")
-	public String index() {
-		return "index";
-	}
-
-	@PostMapping(value = "upload-csv-file-dataonly")
+	@PostMapping(value = "upload-csv-file")
 	public ResponseEntity<JsonNode> uploadCSVFileDataOnly(
 			@RequestParam(name = "file", required = true) MultipartFile file,
 			@RequestParam(name = "mappingType", required = false) String mappingType) throws JsonProcessingException {
 		try {
-			Map<String, Object> object = readCSVFileAndSubmitToFhirBase(file, mappingType);
-			ArrayNode VRDRBundles = (ArrayNode) object.get("bundleArray");
-			HttpHeaders responseHeaders = new HttpHeaders();
-			responseHeaders.set("Content-Type", "application/json");
-			ResponseEntity<JsonNode> returnResponse = new ResponseEntity<JsonNode>(VRDRBundles, HttpStatus.CREATED);
+			logger.info("Running upload-csv-file-dataonly");
+			ResponseEntity<JsonNode> returnResponse = readCSVFileAndSubmitToFhirBase(file, mappingType);
 			return returnResponse;
 		} catch (IOException ex) {
 			throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR,
@@ -98,25 +90,6 @@ public class UploadAndExportController {
 			throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR,
 					"Error parsing received VRDR Json from fhir server");
 		}
-	}
-
-	@PostMapping(value = "upload-csv-file")
-	public String uploadCSVFile(@RequestParam(name = "file", required = true) MultipartFile file,
-			@RequestParam(name = "mappingType", required = false) String mappingType, Model model)
-			throws JsonProcessingException {
-		try {
-			Map<String, Object> object = readCSVFileAndSubmitToFhirBase(file, mappingType);
-			List<MDIAndEDRSModelFields> inputFields = (List<MDIAndEDRSModelFields>) object.get("viewmodel");
-			String prettyFhirOutput = (String) object.get("prettyFhirOutput");
-			model.addAttribute("inputFields", inputFields);
-			model.addAttribute("status", true);
-			model.addAttribute("fhirOutput", prettyFhirOutput);
-		} catch (Exception ex) {
-			ex.printStackTrace(System.out);
-			model.addAttribute("message", "An error occurred while processing the CSV file.");
-			model.addAttribute("status", false);
-		}
-		return "file-upload-status";
 	}
 
 	@PostMapping(value = { "upload-xlsx-file" })
@@ -448,12 +421,11 @@ public class UploadAndExportController {
 		return fields;
 	}
 
-	private Map<String, Object> readCSVFileAndSubmitToFhirBase(MultipartFile file, String mappingType)
+	private ResponseEntity<JsonNode> readCSVFileAndSubmitToFhirBase(MultipartFile file, String mappingType)
 			throws IOException, ParseException {
 		if (mappingType == null) {
 			mappingType = "MDI";
 		}
-		ObjectMapper mapper = new ObjectMapper();
 		ArrayNode VRDRBundles = JsonNodeFactory.instance.arrayNode();
 		// parse CSV file to create a list of `InputField` objects
 		Reader reader = new BufferedReader(new InputStreamReader(file.getInputStream()));
@@ -465,37 +437,46 @@ public class UploadAndExportController {
 
 		// convert `CsvToBean` object to list of users
 		List<MDIAndEDRSModelFields> inputFields = csvToBean.parse();
-		String prettyFhirOutput = "";
-		for (MDIAndEDRSModelFields inputField : inputFields) {
-			String jsonBundle = "";
-			if (mappingType.equalsIgnoreCase("MDI")) {
-				jsonBundle = mDIAndMDIToEDRSService.convertToMDIString(inputField);
+		//Setup mapper
+		ObjectMapper mapper = new ObjectMapper();
+		mapper.setVisibility(PropertyAccessor.ALL, Visibility.NONE);
+		mapper.setVisibility(PropertyAccessor.FIELD, Visibility.ANY);
+		ArrayNode responseJson = mapper.createArrayNode();
+		//For each mapped field
+		for(MDIAndEDRSModelFields modelFields:inputFields){
+			//Convert 
+			String bundleString = "";
+			try {
+				bundleString = mDIAndMDIToEDRSService.convertToMDIString(modelFields);
+			} catch (ParseException e1) {
+				e1.printStackTrace();
+				continue;
 			}
-			System.out.println("JSON BUNDLE:");
-			System.out.println(jsonBundle);
-			JsonNode submitBundleNode = mapper.readTree(jsonBundle);
-			if (prettyFhirOutput.isEmpty()) {
-				prettyFhirOutput = mapper.writerWithDefaultPrettyPrinter().writeValueAsString(submitBundleNode);
+			ObjectNode responseObject = mapper.createObjectNode();
+			try {
+				responseObject.set("fhirBundle", mapper.readTree(bundleString));
+			} catch (IOException e1) {
+				e1.printStackTrace();
+				continue;
 			}
-			// Submit to fhir server
-			System.out.println(jsonBundle);
-			if (submitFlag) {
-				try {
-					ResponseEntity<String> response = submitBundleService.submitBundle(jsonBundle);
-					System.out.println("Client response body:" + response.getBody());
-					// save users list on model
-				} catch (HttpStatusCodeException e) {
-					continue;
-				}
-			} else {
-				VRDRBundles.add(submitBundleNode);
+			//Collect mapping of objects here.
+			ObjectNode fields = createMDIAndEDRSFieldsNode(modelFields);
+			responseObject.set("fields", fields);
+			//Actually submit to the fhir server here!
+			if(submitFlag){
+				logger.info("XLSX TOX-To-MDI Upload: Uploading Tox-To-EDRS To FhirBase");
+				JsonNode responseInfo = submitToFhirBase(bundleString, modelFields, mapper);
+				responseObject.set("fhirResponse", responseInfo);
+				responseObject.put("Narrative", "");
 			}
+			responseJson.add(responseObject);
 		}
-		Map<String, Object> returnMap = new HashMap<String, Object>();
-		returnMap.put("viewmodel", inputFields);
-		returnMap.put("bundleArray", VRDRBundles);
-		returnMap.put("prettyFhirOutput", prettyFhirOutput);
-		return returnMap;
+		//JsonNode responseJson = mapper.valueToTree(mappedXLSXData);
+		HttpStatus returnStatus = HttpStatus.CREATED;
+		if(inputFields.size() == 0){
+			returnStatus = HttpStatus.NO_CONTENT;
+		}
+		return new ResponseEntity<JsonNode>(responseJson, returnStatus);
 	}
 
 }
