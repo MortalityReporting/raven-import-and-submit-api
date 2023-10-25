@@ -39,8 +39,8 @@ public class XLSXToMDIAndEDRSModelService {
         ,"Date of Injury", "Time of Injury", "Estimated Date of Injury Interval: Earliest", "Estimated Date of Injury Interval: Latest", "Did Injury Occur at Work?", "Decedent's Transportation Role During Injury"
         ,"Location of Death","Location of Injury","Place of death","Pregnancy status","Did Tobacco Use Contribute to Death?"
         ,"Decedent Date of death","Decedent Time of death","Date establishment method","Estimated Date of Death Interval: Earliest", "Estimated Date of Death Interval: Latest","Date pronounced dead","Time pronounced dead","Pronouncer of death","Place of death"
-        ,"Autopsy Performed?", "Autopsy Results Available?", "Autopsy Performed Location: Street", "Autopsy Performed Location: City", "Autopsy Performed Location: County"
-        ,"State, U.S. Territory or Canadian Province", "Autopsy Performed Location: Postal Code"
+        ,"Autopsy Performed?", "Autopsy Results Available?", "Autopsy Performed Office Name", "Autopsy Performed Location: Street", "Autopsy Performed Location: City"
+        ,"Autopsy Performed Location: County","Autopsy Performed Location: State, U.S. Territory or Canadian Province", "Autopsy Performed Location: Postal Code"
         ,"Did Injury Occur at Work?", "How injury occurred"
         ,"Medical Examiner Name","Medical Examiner Phone Number", "Medical Examiner License Number"
         ,"Medical Examiner Office: Street", "Medical Examiner Office: City", "Medical Examiner Office: County", "Medical Examiner Office: State, U.S. Territory or Canadian Province", "Medical Examiner Office: Postal Code"
@@ -99,6 +99,7 @@ public class XLSXToMDIAndEDRSModelService {
         returnModel.setAUTOPSYPERFORMED(getStringForColumnAndName(sheet, returnModel,  fieldMap, currentColumn, "Autopsy Performed?"));
         returnModel.setAUTOPSYRESULTSAVAILABLE(getStringForColumnAndName(sheet, returnModel,  fieldMap, currentColumn, "Autopsy Results Available?"));
         //New fields
+        returnModel.setAUTOPSY_OFFICENAME(getStringForColumnAndName(sheet, returnModel,  fieldMap, currentColumn, "Autopsy Performed Office Name"));
         returnModel.setAUTOPSY_STREET(getStringForColumnAndName(sheet, returnModel,  fieldMap, currentColumn, "Autopsy Performed Location: Street"));
         returnModel.setAUTOPSY_CITY(getStringForColumnAndName(sheet, returnModel,  fieldMap, currentColumn, "Autopsy Performed Location: City"));
         returnModel.setAUTOPSY_COUNTY(getStringForColumnAndName(sheet, returnModel,  fieldMap, currentColumn, "Autopsy Performed Location: County"));

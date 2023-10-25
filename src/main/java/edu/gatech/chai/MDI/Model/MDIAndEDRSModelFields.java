@@ -214,6 +214,8 @@ public class MDIAndEDRSModelFields extends BaseModelFields{
 	@CsvBindByName
 	public String AUTOPSYRESULTSAVAILABLE = "";
 	@CsvBindByName
+	public String AUTOPSY_OFFICENAME = "";
+	@CsvBindByName
 	public String AUTOPSY_STREET = "";
 	@CsvBindByName
 	public String AUTOPSY_CITY = "";
@@ -673,6 +675,10 @@ public class MDIAndEDRSModelFields extends BaseModelFields{
 
 	public String getAUTOPSYRESULTSAVAILABLE() {
 		return AUTOPSYRESULTSAVAILABLE;
+	}
+
+	public String getAUTOPSY_OFFICENAME() {
+		return AUTOPSY_OFFICENAME;
 	}
 
 	public String getAUTOPSY_STREET() {
@@ -1270,6 +1276,11 @@ public class MDIAndEDRSModelFields extends BaseModelFields{
 	public void setAUTOPSYRESULTSAVAILABLE(String AUTOPSYRESULTSAVAILABLE) {
 		this.checkNullSetter(this.AUTOPSYRESULTSAVAILABLE.getClass(), AUTOPSYRESULTSAVAILABLE);
 		this.AUTOPSYRESULTSAVAILABLE = AUTOPSYRESULTSAVAILABLE;
+	}
+
+	public void setAUTOPSY_OFFICENAME(String AUTOPSY_OFFICENAME) {
+		this.checkNullSetter(this.AUTOPSY_OFFICENAME.getClass(), AUTOPSY_OFFICENAME);
+		this.AUTOPSY_OFFICENAME = AUTOPSY_OFFICENAME;
 	}
 
 	public void setAUTOPSY_STREET(String AUTOPSY_STREET) {

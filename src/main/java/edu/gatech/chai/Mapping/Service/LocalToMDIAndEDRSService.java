@@ -252,7 +252,7 @@ public class LocalToMDIAndEDRSService {
 			LocalModelToFhirCMSUtil.addResourceToBundle(returnBundle, autopsyPerformedIndicator);
 		}
 		//Hand Autopsy Location
-		Stream<String> autopsyLocationFields = Stream.of(inputFields.AUTOPSY_STREET, inputFields.AUTOPSY_CITY, inputFields.AUTOPSY_COUNTY, inputFields.AUTOPSY_STATE, inputFields.AUTOPSY_ZIP);
+		Stream<String> autopsyLocationFields = Stream.of(inputFields.AUTOPSY_OFFICENAME, inputFields.AUTOPSY_STREET, inputFields.AUTOPSY_CITY, inputFields.AUTOPSY_COUNTY, inputFields.AUTOPSY_STATE, inputFields.AUTOPSY_ZIP);
 		if(!autopsyLocationFields.allMatch(x -> x == null || x.isEmpty())) {
 			Location autopsyPerformedLocation = createAutopsyLocation(inputFields);
 			examAutopsySection.addEntry(new Reference("Location/"+autopsyPerformedLocation.getId()));
@@ -665,6 +665,7 @@ public class LocalToMDIAndEDRSService {
 		Location returnAutopsyLocation = new Location();
 		returnAutopsyLocation.setId(inputFields.BASEFHIRID+"Autopsy-Location");
 		returnAutopsyLocation.getMeta().addProfile("http://hl7.org/fhir/us/core/StructureDefinition/us-core-location"); //Using this until we have a proper US-Core Location profile in MDI
+		returnAutopsyLocation.setName(inputFields.AUTOPSY_OFFICENAME);
 		returnAutopsyLocation.setStatus(LocationStatus.ACTIVE);
 		Address autopsyAddress = LocalModelToFhirCMSUtil.createAddress("", inputFields.AUTOPSY_STREET,
 				inputFields.AUTOPSY_CITY, inputFields.AUTOPSY_COUNTY, inputFields.AUTOPSY_STATE, inputFields.AUTOPSY_ZIP, "");

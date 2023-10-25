@@ -249,7 +249,7 @@ public class LocalModelToFhirCMSUtil {
 		returnAddress.setCountry(country);
 		return returnAddress;
 	}
-	
+
 	public static HumanName parseHumanName(String name) {
 		for(String nameFormat: nameFormatStrings) {
 			Pattern pattern = Pattern.compile(nameFormat);
