@@ -25,7 +25,9 @@ import org.hl7.fhir.r4.model.Enumerations.AdministrativeGender;
 import org.hl7.fhir.r4.model.Extension;
 import org.hl7.fhir.r4.model.HumanName;
 import org.hl7.fhir.r4.model.HumanName.NameUse;
+import org.hl7.fhir.r4.model.Location.LocationStatus;
 import org.hl7.fhir.r4.model.Identifier;
+import org.hl7.fhir.r4.model.Location;
 import org.hl7.fhir.r4.model.Meta;
 import org.hl7.fhir.r4.model.Observation;
 import org.hl7.fhir.r4.model.Observation.ObservationStatus;
@@ -240,13 +242,21 @@ public class LocalToMDIAndEDRSService {
 		}
 		SectionComponent medicationHistorySection = mainComposition.getMedicalHistorySection();
 		medicationHistorySection.setEmptyReason(new CodeableConcept().addCoding(new Coding("http://terminology.hl7.org/CodeSystem/list-empty-reason","unavailable","Unavailable")));
-
+		//Handle Autopsy
 		SectionComponent examAutopsySection = mainComposition.getExamAutopsySection();
-		Stream<String> autopsyFields = Stream.of(inputFields.AUTOPSYPERFORMED, inputFields.AUTOPSYRESULTSAVAILABLE);
-		if(!autopsyFields.allMatch(x -> x == null || x.isEmpty())) {
+		//Handle Autopsy Indicator
+		Stream<String> autopsyIdenticatorFields = Stream.of(inputFields.AUTOPSYPERFORMED, inputFields.AUTOPSYRESULTSAVAILABLE);
+		if(!autopsyIdenticatorFields.allMatch(x -> x == null || x.isEmpty())) {
 			ObservationAutopsyPerformedIndicator autopsyPerformedIndicator = createAutopsyPerformedIndicator(inputFields, patientReference, primaryMECReference);
 			examAutopsySection.addEntry(new Reference("Observation/"+autopsyPerformedIndicator.getId()));
 			LocalModelToFhirCMSUtil.addResourceToBundle(returnBundle, autopsyPerformedIndicator);
+		}
+		//Hand Autopsy Location
+		Stream<String> autopsyLocationFields = Stream.of(inputFields.AUTOPSY_STREET, inputFields.AUTOPSY_CITY, inputFields.AUTOPSY_COUNTY, inputFields.AUTOPSY_STATE, inputFields.AUTOPSY_ZIP);
+		if(!autopsyLocationFields.allMatch(x -> x == null || x.isEmpty())) {
+			Location autopsyPerformedLocation = createAutopsyLocation(inputFields);
+			examAutopsySection.addEntry(new Reference("Location/"+autopsyPerformedLocation.getId()));
+			LocalModelToFhirCMSUtil.addResourceToBundle(returnBundle, autopsyPerformedLocation);
 		}
 		return returnBundle;
 	}
@@ -649,6 +659,17 @@ public class LocalToMDIAndEDRSService {
 		autopsyPerformedIndicator.setId(inputFields.BASEFHIRID+"Autopsy");
 		autopsyPerformedIndicator.addPerformer(practitionerReference);
 		return autopsyPerformedIndicator;
+	}
+
+	private Location createAutopsyLocation(MDIAndEDRSModelFields inputFields) {
+		Location returnAutopsyLocation = new Location();
+		returnAutopsyLocation.setId(inputFields.BASEFHIRID+"Autopsy-Location");
+		returnAutopsyLocation.getMeta().addProfile("http://hl7.org/fhir/us/core/StructureDefinition/us-core-location"); //Using this until we have a proper US-Core Location profile in MDI
+		returnAutopsyLocation.setStatus(LocationStatus.ACTIVE);
+		Address autopsyAddress = LocalModelToFhirCMSUtil.createAddress("", inputFields.AUTOPSY_STREET,
+				inputFields.AUTOPSY_CITY, inputFields.AUTOPSY_COUNTY, inputFields.AUTOPSY_STATE, inputFields.AUTOPSY_ZIP, "");
+		returnAutopsyLocation.setAddress(autopsyAddress);
+		return returnAutopsyLocation;
 	}
 	
 	protected Patient addRace(Patient patient, String ombCategory, String detailed, String text) {

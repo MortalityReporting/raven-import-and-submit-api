@@ -214,6 +214,16 @@ public class MDIAndEDRSModelFields extends BaseModelFields{
 	@CsvBindByName
 	public String AUTOPSYRESULTSAVAILABLE = "";
 	@CsvBindByName
+	public String AUTOPSY_STREET = "";
+	@CsvBindByName
+	public String AUTOPSY_CITY = "";
+	@CsvBindByName
+	public String AUTOPSY_COUNTY = "";
+	@CsvBindByName
+	public String AUTOPSY_STATE = "";
+	@CsvBindByName
+	public String AUTOPSY_ZIP = "";
+	@CsvBindByName
 	public String CUSTODY = "";
 	@CsvBindByName
 	public String PREGNANT = "";
@@ -663,6 +673,26 @@ public class MDIAndEDRSModelFields extends BaseModelFields{
 
 	public String getAUTOPSYRESULTSAVAILABLE() {
 		return AUTOPSYRESULTSAVAILABLE;
+	}
+
+	public String getAUTOPSY_STREET() {
+		return AUTOPSY_STREET;
+	}
+
+	public String getAUTOPSY_CITY() {
+		return AUTOPSY_CITY;
+	}
+
+	public String getAUTOPSY_COUNTY() {
+		return AUTOPSY_COUNTY;
+	}
+
+	public String getAUTOPSY_STATE() {
+		return AUTOPSY_STATE;
+	}
+
+	public String getAUTOPSY_ZIP() {
+		return AUTOPSY_ZIP;
 	}
 
 	public String getCUSTODY() {
@@ -1240,6 +1270,31 @@ public class MDIAndEDRSModelFields extends BaseModelFields{
 	public void setAUTOPSYRESULTSAVAILABLE(String AUTOPSYRESULTSAVAILABLE) {
 		this.checkNullSetter(this.AUTOPSYRESULTSAVAILABLE.getClass(), AUTOPSYRESULTSAVAILABLE);
 		this.AUTOPSYRESULTSAVAILABLE = AUTOPSYRESULTSAVAILABLE;
+	}
+
+	public void setAUTOPSY_STREET(String AUTOPSY_STREET) {
+		this.checkNullSetter(this.AUTOPSY_STREET.getClass(), AUTOPSY_STREET);
+		this.AUTOPSY_STREET = AUTOPSY_STREET;
+	}
+
+	public void setAUTOPSY_CITY(String AUTOPSY_CITY) {
+		this.checkNullSetter(this.AUTOPSY_CITY.getClass(), AUTOPSY_CITY);
+		this.AUTOPSY_CITY = AUTOPSY_CITY;
+	}
+
+	public void setAUTOPSY_COUNTY(String AUTOPSY_COUNTY) {
+		this.checkNullSetter(this.AUTOPSY_COUNTY.getClass(), AUTOPSY_COUNTY);
+		this.AUTOPSY_COUNTY = AUTOPSY_COUNTY;
+	}
+
+	public void setAUTOPSY_STATE(String AUTOPSY_STATE) {
+		this.checkNullSetter(this.AUTOPSY_STATE.getClass(), AUTOPSY_STATE);
+		this.AUTOPSY_STATE = AUTOPSY_STATE;
+	}
+
+	public void setAUTOPSY_ZIP(String AUTOPSY_ZIP) {
+		this.checkNullSetter(this.AUTOPSY_ZIP.getClass(), AUTOPSY_ZIP);
+		this.AUTOPSY_ZIP = AUTOPSY_ZIP;
 	}
 
 	public void setCUSTODY(String CUSTODY) {
