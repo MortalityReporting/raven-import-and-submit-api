@@ -25,7 +25,7 @@ import org.hl7.fhir.r4.model.IdType;
 import org.hl7.fhir.r4.model.Quantity;
 import org.hl7.fhir.r4.model.Resource;
 
-public class MDIToFhirCMSUtil {
+public class LocalModelToFhirCMSUtil {
 	public static List<String> dateFormatStrings = Arrays.asList("yyyy-MM-dd", "M/d/yy", "M/d/yyyy", "d-M-yy",
 			"Mdyyyy", "Mdyy", "d-M-yyyy", "d MMMM yy", "d MMMM yyyy", "d MMMM yy zzzz",
 			"d MMMM yyyy zzzz", "E, d MMM yy","E, d MMM yyyy","M-d-yy","M-d-yyyy", "MMMM DD, yy",
@@ -33,7 +33,7 @@ public class MDIToFhirCMSUtil {
 	public static List<String> timeFormatStrings = Arrays.asList("hh:mm:ss a", "hh:mm a",
 			"hh:mm:ss", "hh:mm","hhmm","hhmmss");
 	public static String ageRegex = "(\\d+)\\s*(year|month|week|day|hour|minute)";
-	public static List<String> nameFormatStrings = Arrays.asList("(.*),\\s{0,1}(.*)\\s(.*)", "(\\w+)\\s(\\w+)");
+	public static List<String> nameFormatStrings = Arrays.asList("(.*),\\s{0,1}(.*)\\s(.*)", "(\\w+)\\s(\\w)[\\.]\\s(\\w+)", "(\\w+)\\s(\\w+)");
 	public static String convertUnitOfMeasureStringToCode(String uomString) {
 		switch(uomString) {
 			case "minutes":
@@ -238,7 +238,7 @@ public class MDIToFhirCMSUtil {
 	}
 	
 	public static Address createAddress(String place, String street, String city,
-			String county, String state, String zip) {
+			String county, String state, String zip, String country) {
 		Address returnAddress = new Address();
 		returnAddress.setText(place);
 		returnAddress.addLine(street);
@@ -246,18 +246,28 @@ public class MDIToFhirCMSUtil {
 		returnAddress.setDistrict(county);
 		returnAddress.setState(state);
 		returnAddress.setPostalCode(zip);
+		returnAddress.setCountry(country);
 		return returnAddress;
 	}
-	
+
 	public static HumanName parseHumanName(String name) {
 		for(String nameFormat: nameFormatStrings) {
 			Pattern pattern = Pattern.compile(nameFormat);
 			Matcher matcher = pattern.matcher(name);
 			if(matcher.find()) {
-				HumanName nameResource = new HumanName();
-				nameResource.setFamily(matcher.group(2));
-				nameResource.addGiven(matcher.group(1));
-				return nameResource;
+				if(matcher.groupCount() == 2){
+					HumanName nameResource = new HumanName();
+					nameResource.setFamily(matcher.group(2));
+					nameResource.addGiven(matcher.group(1));
+					return nameResource;
+				}
+				else if(matcher.groupCount() == 3){
+					HumanName nameResource = new HumanName();
+					nameResource.setFamily(matcher.group(3));
+					nameResource.addGiven(matcher.group(1));
+					nameResource.addGiven(matcher.group(2));
+					return nameResource;
+				}
 			}
 		}
 		return null;

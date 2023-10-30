@@ -4,7 +4,7 @@ import java.util.Objects;
 
 import com.opencsv.bean.CsvBindByName;
 
-public class ToxSpecimen {
+public class ToxSpecimen extends BaseModelFields{
 	@CsvBindByName
 	public String NAME = "";
 	@CsvBindByName
@@ -23,9 +23,11 @@ public class ToxSpecimen {
 	public String CONDITION = "";
 
 	public ToxSpecimen() {
+		super();
 	}
 
 	public ToxSpecimen(String NAME, String IDENTIFIER, String BODYSITE, String AMOUNT, String CONTAINER, String COLLECTED_DATETIME, String RECEIPT_DATETIME, String CONDITION) {
+		super();
 		this.NAME = NAME;
 		this.IDENTIFIER = IDENTIFIER;
 		this.BODYSITE = BODYSITE;
