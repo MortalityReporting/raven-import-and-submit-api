@@ -570,6 +570,7 @@ public class LocalToMDIAndEDRSService {
 	private ObservationHowDeathInjuryOccurred createHowDeathInjuryOccurred(MDIAndEDRSModelFields inputFields, Patient patientResource, Practitioner practitionerResource) throws ParseException {
 		ObservationHowDeathInjuryOccurred injuryDescription = new ObservationHowDeathInjuryOccurred(patientResource, practitionerResource, inputFields.CHOWNINJURY);
 		injuryDescription.setId(inputFields.BASEFHIRID+"InjuryDescription");
+		injuryDescription.setStatus(ObservationStatus.FINAL);
 
 		if(inputFields.CINJDATE != null && !inputFields.CINJDATE.isEmpty()) {
 			Date injDate = LocalModelToFhirCMSUtil.parseDate(inputFields.CINJDATE);
