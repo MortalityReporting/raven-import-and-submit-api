@@ -94,12 +94,15 @@ public class UploadAndExportController {
 
 	@PostMapping(value = { "upload-xlsx-file" })
 	public ResponseEntity<JsonNode> uploadXLSXFile(@RequestParam(name = "file", required = true) MultipartFile file,
-			@RequestParam(name = "type", defaultValue = "mdi-to-edrs", required = false) String type)
+			@RequestParam(name = "type", defaultValue = "mdi-and-edrs", required = false) String type)
 			throws JsonProcessingException {
-		if (type.equalsIgnoreCase("mdi-to-edrs")) {
+		if (type.equalsIgnoreCase("mdi-and-edrs")) {
 			return uploadXLSXFileForMDIToEDRS(file);
-		} else {
+		} else if (type.equalsIgnoreCase("tox-to-mdi")){
 			return uploadXLSXFileForToxToMDI(file);
+		}
+		else{
+			throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Invalid 'type' param of '"+type+"' expected a value of 'mdi-and-edrs' or 'tox-to-mdi'");
 		}
 	}
 
