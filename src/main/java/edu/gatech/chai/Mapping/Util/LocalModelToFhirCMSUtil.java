@@ -26,7 +26,7 @@ import org.hl7.fhir.r4.model.Quantity;
 import org.hl7.fhir.r4.model.Resource;
 
 public class LocalModelToFhirCMSUtil {
-	public static List<String> dateFormatStrings = Arrays.asList("yyyy-MM-dd", "M/d/yy", "M/d/yyyy", "d-M-yy",
+	public static List<String> dateFormatStrings = Arrays.asList("mm-dd-yyyy", "mm/dd/yyyy", "yyyy-MM-dd", "M/d/yy", "M/d/yyyy", "d-M-yy",
 			"Mdyyyy", "Mdyy", "d-M-yyyy", "d MMMM yy", "d MMMM yyyy", "d MMMM yy zzzz",
 			"d MMMM yyyy zzzz", "E, d MMM yy","E, d MMM yyyy","M-d-yy","M-d-yyyy", "MMMM DD, yy",
 			"MMMM DD, yyyy", "yy", "yyyy");
