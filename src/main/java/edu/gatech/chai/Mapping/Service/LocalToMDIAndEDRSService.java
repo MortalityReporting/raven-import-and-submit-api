@@ -1,10 +1,12 @@
 package edu.gatech.chai.Mapping.Service;
 
 import java.text.ParseException;
+import java.time.ZoneId;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
+import java.util.TimeZone;
 import java.util.stream.Stream;
 
 import org.hl7.fhir.r4.model.Address;
@@ -40,6 +42,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
+import ca.uhn.fhir.model.api.TemporalPrecisionEnum;
 import ca.uhn.fhir.parser.IParser;
 import edu.gatech.chai.MDI.Model.MDIAndEDRSModelFields;
 import edu.gatech.chai.MDI.context.MDIFhirContext;
@@ -606,7 +609,7 @@ public class LocalToMDIAndEDRSService {
 			if(inputFields.FOUNDTIME != null && !inputFields.FOUNDTIME.isEmpty()) {
 				LocalModelToFhirCMSUtil.addTimeToDate(reportDate, inputFields.FOUNDTIME);
 			}
-			foundObs.setValue(new DateTimeType(reportDate));
+			foundObs.setValue(new DateTimeType(reportDate).setTimeZoneZulu(true));
 		}
 		return foundObs;
 	}
@@ -623,7 +626,8 @@ public class LocalToMDIAndEDRSService {
 			if(inputFields.CDEATHTIME != null && !inputFields.CDEATHTIME.isEmpty()) {
 				LocalModelToFhirCMSUtil.addTimeToDate(certDate, inputFields.CDEATHTIME);
 			}
-			DateTimeType certValueDT = new DateTimeType(certDate);
+			DateTimeType certValueDT = new DateTimeType(certDate, TemporalPrecisionEnum.SECOND, TimeZone.getTimeZone(ZoneId.of("Z")));
+			certValueDT.setTimeZoneZulu(true);
 			returnDeathDate.setValue(certValueDT);
 		}
 		if(inputFields.PRNDATE != null && !inputFields.PRNDATE.isEmpty()) {
@@ -632,6 +636,7 @@ public class LocalToMDIAndEDRSService {
 				LocalModelToFhirCMSUtil.addTimeToDate(prnDate, inputFields.PRNTIME);
 			}
 			DateTimeType prnDT = new DateTimeType(prnDate);
+			prnDT.setTimeZoneZulu(true);
 			returnDeathDate.addDatePronouncedDead(prnDT);
 		}
 		if(inputFields.DEATHLOCATIONTYPE != null && !inputFields.DEATHLOCATIONTYPE.isEmpty()){

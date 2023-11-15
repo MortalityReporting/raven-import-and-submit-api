@@ -1,9 +1,11 @@
 package edu.gatech.chai.Mapping.Service;
 
 import java.text.ParseException;
+import java.time.ZoneId;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.TimeZone;
 import java.util.stream.Stream;
 
 import org.hl7.fhir.r4.model.Bundle;
@@ -31,6 +33,7 @@ import org.hl7.fhir.r4.model.StringType;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import ca.uhn.fhir.model.api.TemporalPrecisionEnum;
 import ca.uhn.fhir.parser.IParser;
 import edu.gatech.chai.MDI.Model.ToxResult;
 import edu.gatech.chai.MDI.Model.ToxSpecimen;
@@ -109,6 +112,9 @@ public class LocalToToxToMDIService {
 		DiagnosticReportToxicologyToMDI diagnosticReport = new DiagnosticReportToxicologyToMDI(
 				DiagnosticReportStatus.FINAL, patientResource, toxOrderCodableConcept, new Date(),
 				LocalModelToFhirCMSUtil.parseDate(inputFields.REPORTDATE));
+		//Some post-construction manipulation of datetimes to ensure they're in the Z format
+		diagnosticReport.getEffectiveDateTimeType().setTimeZoneZulu(true);
+		diagnosticReport.getIssuedElement().setTimeZoneZulu(true);
 		// Toxicology Identifier
 		if (inputFields.TOXCASENUMBER != null && !inputFields.TOXCASENUMBER.isEmpty()) {
 			Identifier identifier = new Identifier();
@@ -259,8 +265,9 @@ public class LocalToToxToMDIService {
 		if (!collectionFields.allMatch(x -> x == null || x.isEmpty())) {
 			sccUsed = true;
 			Date collectedDate = LocalModelToFhirCMSUtil.parseDateAndTime(toxSpecimen.COLLECTED_DATETIME);
-			scc.setCollected(new DateTimeType(collectedDate));
-			Quantity quantity = new Quantity(); // TODO: Handle quantity better than just this manner
+			scc.setCollected(new DateTimeType(collectedDate, TemporalPrecisionEnum.SECOND, TimeZone.getTimeZone(ZoneId.of("Z"))));
+			scc.getCollectedDateTimeType().setTimeZoneZulu(true);
+			Quantity quantity = new Quantity(); //TODO: Handle quantity better than just this manner
 			quantity.setCode(toxSpecimen.AMOUNT);
 			scc.setQuantity(quantity);
 		}
@@ -282,6 +289,7 @@ public class LocalToToxToMDIService {
 			Date receivedDateTime = LocalModelToFhirCMSUtil.parseDate(toxSpecimen.RECEIPT_DATETIME);
 			LocalModelToFhirCMSUtil.addTimeToDate(receivedDateTime, toxSpecimen.RECEIPT_DATETIME);
 			specimenResource.setReceivedTime(receivedDateTime);
+			specimenResource.getReceivedTimeElement().setTimeZoneZulu(true);
 		}
 		return specimenResource;
 	}
@@ -309,7 +317,8 @@ public class LocalToToxToMDIService {
 			if (toxResult.RECORD_TIME != null && !toxResult.RECORD_TIME.isEmpty()) {
 				LocalModelToFhirCMSUtil.addTimeToDate(recordedDateTime, toxResult.RECORD_TIME);
 			}
-			resultResource.setEffective(new DateTimeType(recordedDateTime));
+			resultResource.setEffective(new DateTimeType(recordedDateTime, TemporalPrecisionEnum.SECOND, TimeZone.getTimeZone(ZoneId.of("Z"))));
+			resultResource.getEffectiveDateTimeType().setTimeZoneZulu(true);
 		}
 		// TODO: Add container information
 		// TODO: Work with notes
