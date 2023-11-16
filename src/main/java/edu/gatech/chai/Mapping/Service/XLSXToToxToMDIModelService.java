@@ -29,6 +29,7 @@ import edu.gatech.chai.MDI.Model.ToxToMDIModelFields;
 public class XLSXToToxToMDIModelService {
     private static final Logger logger = LoggerFactory.getLogger(XLSXToToxToMDIModelService.class);
     private static final DataFormatter formatter = new DataFormatter();
+    private static String TEMPLATE_TITLE = "Toxicology-To-MDI Template";
     private static String FILEID_HEADER = "file Id";
     private static String LABORATORY_HEADER = "Laboratory";
     private static final String[] LABORATORY_FIELDS = {"Toxicology Lab Name", "Lab Address: Street", "Lab Address: Street", "Lab Address: City", "Lab Address: County", "Lab Address: State", "Lab Address: Zip", "Laboratory Case Number", "Performer"};
@@ -45,8 +46,12 @@ public class XLSXToToxToMDIModelService {
     public List<ToxToMDIModelFields> convertToMDIModelFields(XSSFWorkbook workbook) throws Exception{
         List<ToxToMDIModelFields> returnList = new ArrayList<ToxToMDIModelFields>();
         for(int sheetIndex = 0;sheetIndex < workbook.getNumberOfSheets(); sheetIndex++){
-            ToxToMDIModelFields modelFields = new ToxToMDIModelFields();
             XSSFSheet sheet = workbook.getSheetAt(sheetIndex);
+            if(sheet.getRow(0) == null || 
+            !formatter.formatCellValue(sheet.getRow(0).getCell(0)).equalsIgnoreCase(TEMPLATE_TITLE)){
+                continue;
+            }
+            ToxToMDIModelFields modelFields = new ToxToMDIModelFields();
             //File Id
             Cell fileId = findCellFromColumn(sheet, HEADER_COLUMN, FILEID_HEADER);
             Cell fileIdValueCell = sheet.getRow(fileId.getRowIndex() + 1).getCell(HEADER_COLUMN);
