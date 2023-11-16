@@ -1,5 +1,7 @@
 package edu.gatech.chai.Mapping.Service;
 
+import java.time.ZoneId;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
@@ -42,6 +44,10 @@ public class XLSXToToxToMDIModelService {
     private static String NOTES_HEADER = "Notes";
 
     private static int HEADER_COLUMN = 0;
+
+    public XLSXToToxToMDIModelService(){
+        formatter.addFormat("MM/dd/YYYY", new java.text.SimpleDateFormat("MM/dd/YYYY"));
+    }
 
     public List<ToxToMDIModelFields> convertToMDIModelFields(XSSFWorkbook workbook) throws Exception{
         List<ToxToMDIModelFields> returnList = new ArrayList<ToxToMDIModelFields>();
@@ -112,7 +118,13 @@ public class XLSXToToxToMDIModelService {
                 valueCell = sheet.getRow(currentRow).getCell(HEADER_COLUMN + 1);
                 currentValue = "";
                 if(valueCell != null){
-                    currentValue = formatter.formatCellValue(valueCell);
+                    if(currentKey.equalsIgnoreCase("Decedent DOB")){
+                        currentValue = DateTimeFormatter.ofPattern("MM/dd/yyyy").format(
+                            valueCell.getDateCellValue().toInstant().atZone(ZoneId.systemDefault()).toLocalDate());
+                    }
+                    else{
+                        currentValue = formatter.formatCellValue(valueCell);
+                    }
                 }
             }
             modelFields = mapDecedentFields(modelFields, decedentMap);
@@ -196,6 +208,7 @@ public class XLSXToToxToMDIModelService {
         });
         Optional.ofNullable(decedentMap.get("MDI Case System")).ifPresent(x -> modelFields.MDICASESYSTEM = x);
         Optional.ofNullable(decedentMap.get("MDI Case Number")).ifPresent(x -> modelFields.MDICASEID = x);
+        Optional.ofNullable(decedentMap.get("Decedent Sex")).ifPresent(x -> modelFields.DECEDENTSEX = x);
         Optional.ofNullable(decedentMap.get("Decedent DOB")).ifPresent(x -> modelFields.BIRTHDATE = x);
         Optional.ofNullable(decedentMap.get("ME/C Case Notes")).ifPresent(x -> modelFields.MECNOTES = x);
         Optional.ofNullable(decedentMap.get("Date/Time of Specimen Collection")).ifPresent(x -> modelFields.SPECIMENCOLLECTION_DATETIME = x);

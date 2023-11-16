@@ -40,6 +40,8 @@ public class ToxToMDIModelFields extends BaseModelFields{
 	@CsvBindByName
 	public String LASTNAME = "";
 	@CsvBindByName
+	public String DECEDENTSEX = "";
+	@CsvBindByName
 	public String SUFFIXNAME = "";
 	@CsvBindByName
 	public String BIRTHDATE = "";
@@ -60,7 +62,7 @@ public class ToxToMDIModelFields extends BaseModelFields{
 		super();
 	}
 
-	public ToxToMDIModelFields(String FILEID, String TOXCASENUMBER, String TOXORGNAME, String TOXORDERCODE, String TOXPERFORMER, String TOXORGSTREET, String TOXORGCITY, String TOXORGCOUNTY, String TOXORGSTATE, String TOXORGZIP, String TOXORGCOUNTRY, String MDICASEID, String MDICASESYSTEM, String FIRSTNAME, String MIDNAME, String LASTNAME, String SUFFIXNAME, String BIRTHDATE, String MECNOTES, String SPECIMENCOLLECTION_DATETIME, String REPORTDATE, List<ToxSpecimen> SPECIMENS, List<ToxResult> RESULTS, List<String> NOTES) {
+	public ToxToMDIModelFields(String FILEID, String TOXCASENUMBER, String TOXORGNAME, String TOXORDERCODE, String TOXPERFORMER, String TOXORGSTREET, String TOXORGCITY, String TOXORGCOUNTY, String TOXORGSTATE, String TOXORGZIP, String TOXORGCOUNTRY, String MDICASEID, String MDICASESYSTEM, String FIRSTNAME, String MIDNAME, String LASTNAME, String DECEDENTSEX, String SUFFIXNAME, String BIRTHDATE, String MECNOTES, String SPECIMENCOLLECTION_DATETIME, String REPORTDATE, List<ToxSpecimen> SPECIMENS, List<ToxResult> RESULTS, List<String> NOTES) {
 		super();
 		this.FILEID = FILEID;
 		this.TOXCASENUMBER = TOXCASENUMBER;
@@ -78,6 +80,7 @@ public class ToxToMDIModelFields extends BaseModelFields{
 		this.FIRSTNAME = FIRSTNAME;
 		this.MIDNAME = MIDNAME;
 		this.LASTNAME = LASTNAME;
+		this.DECEDENTSEX = DECEDENTSEX;
 		this.SUFFIXNAME = SUFFIXNAME;
 		this.BIRTHDATE = BIRTHDATE;
 		this.MECNOTES = MECNOTES;
@@ -151,6 +154,10 @@ public class ToxToMDIModelFields extends BaseModelFields{
 
     public String getLASTNAME() {
         return LASTNAME;
+    }
+
+	public String getDECEDENTSEX() {
+        return DECEDENTSEX;
     }
 
     public String getSUFFIXNAME() {
@@ -265,6 +272,11 @@ public class ToxToMDIModelFields extends BaseModelFields{
 		this.checkNullSetter(this.LASTNAME.getClass(), LASTNAME);
 		this.LASTNAME = LASTNAME;
 	}
+
+	public String setDECEDENTSEX(String DECEDENTSEX) {
+		this.checkNullSetter(this.DECEDENTSEX.getClass(), DECEDENTSEX);
+        return DECEDENTSEX;
+    }
 	
 	public void setSUFFIXNAME(String SUFFIXNAME) {
 		this.checkNullSetter(this.SUFFIXNAME.getClass(), SUFFIXNAME);
@@ -338,6 +350,7 @@ public class ToxToMDIModelFields extends BaseModelFields{
 			", FIRSTNAME='" + getFIRSTNAME() + "'" +
 			", MIDNAME='" + getMIDNAME() + "'" +
 			", LASTNAME='" + getLASTNAME() + "'" +
+			", DECEDENTSEX='" + getDECEDENTSEX() + "'" +
 			", SUFFIXNAME='" + getSUFFIXNAME() + "'" +
 			", BIRTHDATE='" + getBIRTHDATE() + "'" +
 			", MECNOTES='" + getMECNOTES() + "'" +
@@ -348,4 +361,5 @@ public class ToxToMDIModelFields extends BaseModelFields{
 			", NOTES='" + getNOTES() + "'" +
 			"}";
 	}
+	
 }

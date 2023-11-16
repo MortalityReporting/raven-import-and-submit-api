@@ -14,6 +14,7 @@ import org.hl7.fhir.r4.model.CodeableConcept;
 import org.hl7.fhir.r4.model.Coding;
 import org.hl7.fhir.r4.model.DateTimeType;
 import org.hl7.fhir.r4.model.DiagnosticReport.DiagnosticReportStatus;
+import org.hl7.fhir.r4.model.Enumerations.AdministrativeGender;
 import org.hl7.fhir.r4.model.Extension;
 import org.hl7.fhir.r4.model.HumanName;
 import org.hl7.fhir.r4.model.HumanName.NameUse;
@@ -189,6 +190,18 @@ public class LocalToToxToMDIService {
 			}
 			returnDecedent.addName(name);
 		}
+		if (inputFields.DECEDENTSEX != null && !inputFields.DECEDENTSEX.isEmpty()){
+			if(LocalModelToFhirCMSUtil.containsIgnoreCase(inputFields.DECEDENTSEX, "Female")) {
+				returnDecedent.setGender(AdministrativeGender.FEMALE);
+			}
+			else if(LocalModelToFhirCMSUtil.containsIgnoreCase(inputFields.DECEDENTSEX, "Male")) {
+				returnDecedent.setGender(AdministrativeGender.MALE);
+			}
+			else{
+				returnDecedent.setGender(AdministrativeGender.UNKNOWN);
+			}
+		}
+
 		if (inputFields.BIRTHDATE != null && !inputFields.BIRTHDATE.isEmpty()) {
 			Date birthDate = LocalModelToFhirCMSUtil.parseDate(inputFields.BIRTHDATE);
 			returnDecedent.setBirthDate(birthDate);
