@@ -29,6 +29,7 @@ import org.hl7.fhir.r4.model.HumanName;
 import org.hl7.fhir.r4.model.HumanName.NameUse;
 import org.hl7.fhir.r4.model.Location.LocationStatus;
 import org.hl7.fhir.r4.model.Identifier;
+import org.hl7.fhir.r4.model.InstantType;
 import org.hl7.fhir.r4.model.Location;
 import org.hl7.fhir.r4.model.Meta;
 import org.hl7.fhir.r4.model.Observation;
@@ -85,7 +86,10 @@ public class LocalToMDIAndEDRSService {
 		BundleDocumentMDIAndEDRS returnBundle = new BundleDocumentMDIAndEDRS();
 		returnBundle.setId(inputFields.BASEFHIRID + "MDIAndEDRS-Document-Bundle");
 		Date now = new Date();
-		returnBundle.setTimestamp(now);
+		DateTimeType dtElement = new DateTimeType(now);
+		dtElement.setTimeZoneZulu(true);
+		InstantType instantElement = new InstantType(now, TemporalPrecisionEnum.MILLI, TimeZone.getTimeZone(ZoneId.of("Z")));
+		returnBundle.setTimestampElement(instantElement);
 		//Assigning a raven generated system identifier
 		returnBundle.setIdentifier(new Identifier().setSystem("urn:raven:temporary").setValue(Long.toString(now.getTime())));
 		returnBundle.setType(BundleType.BATCH);
@@ -100,7 +104,7 @@ public class LocalToMDIAndEDRSService {
 		returnBundle.getEntryFirstRep().setFullUrl(mainComposition.getId());
 		mainComposition.setIdentifier(caseIdentifier);
 		mainComposition.setStatus(CompositionStatus.PRELIMINARY);
-		mainComposition.setDate(new Date());
+		mainComposition.setDateElement(dtElement);
 		if(inputFields.MDICASEID != null && !inputFields.MDICASEID.isEmpty()){
 			mainComposition.addMDICaseIdExtension(raven_generated_systemid, inputFields.MDICASEID);
 		}

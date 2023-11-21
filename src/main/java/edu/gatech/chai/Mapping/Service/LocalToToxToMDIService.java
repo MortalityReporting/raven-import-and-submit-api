@@ -32,6 +32,7 @@ import org.hl7.fhir.r4.model.Specimen.SpecimenCollectionComponent;
 import org.hl7.fhir.r4.model.Specimen.SpecimenContainerComponent;
 import org.hl7.fhir.r4.model.StringType;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import ca.uhn.fhir.model.api.TemporalPrecisionEnum;
@@ -52,6 +53,8 @@ import edu.gatech.chai.VRDR.model.util.DecedentUtil;
 @Service
 public class LocalToToxToMDIService {
 
+	@Value("${raven_generated_systemid}")
+	private String raven_generated_systemid;
 	@Autowired
 	private MDIFhirContext mdiFhirContext;
 
@@ -120,7 +123,7 @@ public class LocalToToxToMDIService {
 		if (inputFields.TOXCASENUMBER != null && !inputFields.TOXCASENUMBER.isEmpty()) {
 			Identifier identifier = new Identifier();
 			identifier.setType(CompositionMDIAndEDRSUtil.trackingNumberTOXType);
-			identifier.setSystem("urn:raven-import:mdi:" + inputFields.FILEID);
+			identifier.setSystem(raven_generated_systemid);
 			identifier.setValue(inputFields.TOXCASENUMBER);
 			diagnosticReport.addTrackingNumberExtension(identifier);
 		}
@@ -129,7 +132,7 @@ public class LocalToToxToMDIService {
 		if (!mdiIdentifierFields.allMatch(x -> x == null || x.isEmpty())) {
 			Identifier identifier = new Identifier();
 			identifier.setType(CompositionMDIAndEDRSUtil.trackingNumberMDIType);
-			identifier.setSystem(inputFields.MDICASESYSTEM);
+			identifier.setSystem(raven_generated_systemid);
 			identifier.setValue(inputFields.MDICASEID);
 			diagnosticReport.addTrackingNumberExtension(identifier);
 		}
