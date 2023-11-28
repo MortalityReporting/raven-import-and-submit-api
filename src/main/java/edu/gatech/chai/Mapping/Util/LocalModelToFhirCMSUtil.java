@@ -20,6 +20,10 @@ import org.hl7.fhir.r4.model.Bundle;
 import org.hl7.fhir.r4.model.Bundle.BundleEntryComponent;
 import org.hl7.fhir.r4.model.Bundle.BundleEntryRequestComponent;
 import org.hl7.fhir.r4.model.Bundle.HTTPVerb;
+import org.hl7.fhir.r4.model.Quantity.QuantityComparator;
+
+import ca.uhn.fhir.model.dstu2.valueset.QuantityComparatorEnum;
+
 import org.hl7.fhir.r4.model.HumanName;
 import org.hl7.fhir.r4.model.IdType;
 import org.hl7.fhir.r4.model.Quantity;
@@ -33,6 +37,7 @@ public class LocalModelToFhirCMSUtil {
 	public static List<String> timeFormatStrings = Arrays.asList("hh:mm:ss a", "hh:mm a",
 			"hh:mm:ss", "hh:mm","hhmm","hhmmss");
 	public static String ageRegex = "(\\d+)\\s*(year|month|week|day|hour|minute)";
+	public static String valueAndUnitRegex = "(\\<|\\<=|\\>=|\\>|ad)?s*(\\d+(\\.\\d+)?)\\s*(((P|T|G|M|k|h|da|d|c|m|μ|n|p)?(m|s|A|K|g|L))(\\/(P|T|G|M|k|h|da|d|c|m|μ|n|p)?(m|s|A|K|g|L))?)";
 	public static List<String> nameFormatStrings = Arrays.asList("(.*),\\s{0,1}(.*)\\s(.*)", "(\\w+)\\s(\\w)[\\.]\\s(\\w+)", "(\\w+)\\s(\\w+)");
 	public static String convertUnitOfMeasureStringToCode(String uomString) {
 		switch(uomString) {
@@ -197,45 +202,25 @@ public class LocalModelToFhirCMSUtil {
 	    return null;
 	}
 
-	public static Quantity parseQuantity(String ageString) {
+	public static Quantity parseQuantity(String quantityString) {
 		Quantity returnQuantity = new Quantity();
-		Pattern r = Pattern.compile(ageRegex);
-	    Matcher m = r.matcher(ageString.toLowerCase());
+		Pattern r = Pattern.compile(valueAndUnitRegex, Pattern.MULTILINE);
+	    Matcher m = r.matcher(quantityString);
 		if(m.find()) {
-			String quantity =  m.group(1);
-			String type = m.group(2);
-			returnQuantity.setValue(Double.parseDouble(quantity));
-			returnQuantity.setSystem("http://hl7.org/fhir/ValueSet/age-units");
-			switch(type) {
-				case "year":
-					returnQuantity.setUnit("a");
-					returnQuantity.setCode("a");
-					return returnQuantity;
-				case "month":
-					returnQuantity.setUnit("mo");
-					returnQuantity.setCode("mo");
-					return returnQuantity;
-				case "week":
-					returnQuantity.setUnit("wk");
-					returnQuantity.setCode("wk");
-					return returnQuantity;
-				case "day":
-					returnQuantity.setUnit("d");
-					returnQuantity.setCode("d");
-					return returnQuantity;
-				case "hour":
-					returnQuantity.setUnit("h");
-					returnQuantity.setCode("h");
-					return returnQuantity;
-				case "minute":
-					returnQuantity.setUnit("min");
-					returnQuantity.setCode("min");
-					return returnQuantity;
+			String comparatorSymbol =m.group(1);
+			String decimalQuantityString =  m.group(2);
+			String unitString = m.group(4);
+			if(comparatorSymbol != null && !comparatorSymbol.isEmpty()){
+				returnQuantity.setComparator(QuantityComparator.fromCode(comparatorSymbol));
 			}
+			returnQuantity.setValue(Double.parseDouble(decimalQuantityString));
+			returnQuantity.setUnit(unitString);
+			return returnQuantity;
 		}
-
 	    return null;
 	}
+
+	
 	
 	public static Address createAddress(String place, String street, String city,
 			String county, String state, String zip, String country) {

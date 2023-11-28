@@ -20,6 +20,7 @@ import org.hl7.fhir.r4.model.HumanName;
 import org.hl7.fhir.r4.model.HumanName.NameUse;
 import org.hl7.fhir.r4.model.Identifier;
 import org.hl7.fhir.r4.model.MessageHeader.MessageSourceComponent;
+import org.hl7.fhir.r4.model.Observation.ObservationStatus;
 import org.hl7.fhir.r4.model.Meta;
 import org.hl7.fhir.r4.model.Organization;
 import org.hl7.fhir.r4.model.Patient;
@@ -55,6 +56,8 @@ public class LocalToToxToMDIService {
 
 	@Value("${raven_generated_systemid}")
 	private String raven_generated_systemid;
+	@Value("${my_url}")
+	private String my_url;
 	@Autowired
 	private MDIFhirContext mdiFhirContext;
 
@@ -84,6 +87,7 @@ public class LocalToToxToMDIService {
 		messageHeader.setId(idTemplate + "-MessageHeader-Tox-To-MDI");
 		MessageSourceComponent msc = new MessageSourceComponent();
 		msc.setName("Raven Generated Import");
+		msc.setEndpoint(my_url);
 		messageHeader.setSource(msc);
 		LocalModelToFhirCMSUtil.addResourceToBundle(returnBundle, messageHeader);
 		// Handle Performer
@@ -180,8 +184,14 @@ public class LocalToToxToMDIService {
 		returnDecedent
 				.setMeta(new Meta().addProfile("http://hl7.org/fhir/us/core/StructureDefinition/us-core-patient"));
 		returnDecedent.setId(idTemplate + "-Decedent");
+		Stream<String> caseIdFields = Stream.of(inputFields.MDICASESYSTEM);
 		Stream<String> nameFields = Stream.of(inputFields.FIRSTNAME, inputFields.LASTNAME, inputFields.MIDNAME,
 				inputFields.SUFFIXNAME);
+		if(!caseIdFields.allMatch(x -> x == null || x.isEmpty())){
+			Identifier patientIdentifier = new Identifier();
+			patientIdentifier.setSystem(raven_generated_systemid);
+			patientIdentifier.setValue(inputFields.MDICASEID);
+		}
 		if (!nameFields.allMatch(x -> x == null || x.isEmpty())) {
 			HumanName name = new HumanName();
 			name.addGiven(inputFields.FIRSTNAME);
@@ -283,8 +293,7 @@ public class LocalToToxToMDIService {
 			Date collectedDate = LocalModelToFhirCMSUtil.parseDateAndTime(toxSpecimen.COLLECTED_DATETIME);
 			scc.setCollected(new DateTimeType(collectedDate, TemporalPrecisionEnum.SECOND, TimeZone.getTimeZone(ZoneId.of("Z"))));
 			scc.getCollectedDateTimeType().setTimeZoneZulu(true);
-			Quantity quantity = new Quantity(); //TODO: Handle quantity better than just this manner
-			quantity.setCode(toxSpecimen.AMOUNT);
+			Quantity quantity = LocalModelToFhirCMSUtil.parseQuantity(toxSpecimen.AMOUNT);
 			scc.setQuantity(quantity);
 		}
 		Stream<String> bodySiteFields = Stream.of(toxSpecimen.BODYSITE);
@@ -317,7 +326,14 @@ public class LocalToToxToMDIService {
 		resultResource.setId(idTemplateWithIndex);
 		resultResource.setSubject(subjectReference);
 		resultResource.setCode(new CodeableConcept().setText(toxResult.ANALYSIS));
-		resultResource.setValue(new StringType(toxResult.VALUE)); // TODO: work with range
+		resultResource.setStatus(ObservationStatus.FINAL);
+		Quantity valueQuantity = LocalModelToFhirCMSUtil.parseQuantity(toxResult.VALUE);
+		if(valueQuantity != null){
+			resultResource.setValue(valueQuantity);
+		}
+		else{
+			resultResource.setValue(new StringType(toxResult.VALUE)); // TODO: work with range
+		}
 		if (toxResult.METHOD != null && !toxResult.METHOD.isEmpty()) {
 			resultResource.setMethod(new CodeableConcept().setText(toxResult.METHOD));
 		}
