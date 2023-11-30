@@ -9,6 +9,7 @@ import java.util.TimeZone;
 import java.util.stream.Stream;
 
 import org.hl7.fhir.r4.model.Bundle;
+import org.hl7.fhir.r4.model.CodeType;
 import org.hl7.fhir.r4.model.Bundle.BundleType;
 import org.hl7.fhir.r4.model.CodeableConcept;
 import org.hl7.fhir.r4.model.Coding;
@@ -32,6 +33,7 @@ import org.hl7.fhir.r4.model.Resource;
 import org.hl7.fhir.r4.model.Specimen.SpecimenCollectionComponent;
 import org.hl7.fhir.r4.model.Specimen.SpecimenContainerComponent;
 import org.hl7.fhir.r4.model.StringType;
+import org.hl7.fhir.r4.model.UriType;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
@@ -47,6 +49,7 @@ import edu.gatech.chai.MDI.model.resource.DiagnosticReportToxicologyToMDI;
 import edu.gatech.chai.MDI.model.resource.MessageHeaderToxicologyToMDI;
 import edu.gatech.chai.MDI.model.resource.ObservationToxicologyLabResult;
 import edu.gatech.chai.MDI.model.resource.SpecimenToxicologyLab;
+import edu.gatech.chai.MDI.model.resource.util.CommonUtil;
 import edu.gatech.chai.MDI.model.resource.util.CompositionMDIAndEDRSUtil;
 import edu.gatech.chai.Mapping.Util.LocalModelToFhirCMSUtil;
 import edu.gatech.chai.VRDR.model.util.DecedentUtil;
@@ -60,7 +63,11 @@ public class LocalToToxToMDIService {
 	private String my_url;
 	@Autowired
 	private MDIFhirContext mdiFhirContext;
+	private Extension dataAbsentNotAskedExtension;
 
+	public LocalToToxToMDIService(){
+		dataAbsentNotAskedExtension = new Extension("http://hl7.org/fhir/StructureDefinition/data-absent-reason", new CodeType("not-asked"));
+	}
 	public String convertToMDIString(ToxToMDIModelFields inputFields, int index) throws ParseException {
 		Bundle fullBundle = convertToMDI(inputFields, index);
 		return convertToMDIString(fullBundle);
@@ -256,6 +263,19 @@ public class LocalToToxToMDIService {
 			practitionerRole.setOrganization(organizationReference);
 			LocalModelToFhirCMSUtil.addResourceToBundle(bundle, practitionerRole);
 			returnPerformer = practitionerRole;
+			//Assign a data-absent-reason to the practitionerRole.identifier of 'not-asked'
+			StringType notAskedStringType = new StringType();
+			notAskedStringType.addExtension(dataAbsentNotAskedExtension);
+			UriType notAskedUriType = new UriType();
+			notAskedUriType.addExtension(dataAbsentNotAskedExtension);
+			Identifier notAskedIdentifier = new Identifier();
+			notAskedIdentifier.setValueElement(notAskedStringType);
+			notAskedIdentifier.setSystemElement(notAskedUriType);
+			practitionerRole.addIdentifier(notAskedIdentifier);
+			//Assugb a data-absent-reason to the practitionerRole.endpoint of 'not-asked'
+			Reference notAskedEndpoint = new Reference();
+			notAskedEndpoint.addExtension(dataAbsentNotAskedExtension);
+			practitionerRole.addEndpoint(notAskedEndpoint);
 		}
 		Stream<String> practitionerFields = Stream.of(inputFields.TOXPERFORMER);
 		if (!practitionerFields.allMatch(x -> x == null || x.isEmpty())) {
@@ -327,13 +347,7 @@ public class LocalToToxToMDIService {
 		resultResource.setSubject(subjectReference);
 		resultResource.setCode(new CodeableConcept().setText(toxResult.ANALYSIS));
 		resultResource.setStatus(ObservationStatus.FINAL);
-		Quantity valueQuantity = LocalModelToFhirCMSUtil.parseQuantity(toxResult.VALUE);
-		if(valueQuantity != null){
-			resultResource.setValue(valueQuantity);
-		}
-		else{
-			resultResource.setValue(new StringType(toxResult.VALUE)); // TODO: work with range
-		}
+		resultResource.setValue(new StringType(toxResult.VALUE)); // TODO: work with range
 		if (toxResult.METHOD != null && !toxResult.METHOD.isEmpty()) {
 			resultResource.setMethod(new CodeableConcept().setText(toxResult.METHOD));
 		}
