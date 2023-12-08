@@ -119,8 +119,13 @@ public class XLSXToToxToMDIModelService {
                 currentValue = "";
                 if(valueCell != null){
                     if(currentKey.equalsIgnoreCase("Decedent DOB")){
-                        currentValue = DateTimeFormatter.ofPattern("MM/dd/yyyy").format(
+                        try{
+                            currentValue = DateTimeFormatter.ofPattern("MM/dd/yyyy").format(
                             valueCell.getDateCellValue().toInstant().atZone(ZoneId.systemDefault()).toLocalDate());
+                        }
+                        catch(IllegalStateException e){
+                        modelFields.getErrorListForName("BIRTHDATE").add("Could not parse the value '"+valueCell.getStringCellValue()+"' with format 'MM/dd/yyyy'");
+                        }
                     }
                     else{
                         currentValue = formatter.formatCellValue(valueCell);

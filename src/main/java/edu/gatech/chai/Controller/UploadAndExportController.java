@@ -299,6 +299,39 @@ public class UploadAndExportController {
 	public ObjectNode createTOXToMDIFieldsNode(ToxToMDIModelFields modelFields) {
 		ObjectMapper mapper = new ObjectMapper();
 		ObjectNode fields = mapper.createObjectNode();
+		// Handle non-specimen, non results, non notes object
+		for (Field f : modelFields.getClass().getDeclaredFields()) {
+			String keyName = f.getName();
+			ObjectNode fieldObject = mapper.createObjectNode();
+			String value = "";
+			if(keyName.equalsIgnoreCase("SPECIMEN") || keyName.equalsIgnoreCase("RESULTS") || keyName.equalsIgnoreCase("NOTES")){
+				continue;
+			}
+			if (f.getType().equals(String.class)) {
+				try {
+					value = ((String) f.get(modelFields));
+				} catch (IllegalArgumentException | IllegalAccessException e) {
+					continue;
+				}
+			} else if (f.getType().equals(Boolean.class)) {
+				try {
+					value = Boolean.toString(((Boolean) f.get(modelFields)));
+				} catch (IllegalArgumentException | IllegalAccessException e) {
+					continue;
+				}
+			}
+			if (value.isEmpty()) {
+				fieldObject.put("status", "not mapped");
+			} else {
+				fieldObject.put("status", "mapped");
+			}
+			fieldObject.put("value", value);
+			List<String> errorList = modelFields.getErrorListForName(f.getName());
+			if (!errorList.isEmpty()) {
+				fieldObject.set("errors", mapper.valueToTree(errorList));
+			}
+			fields.set(keyName, fieldObject);
+		}
 		// Handle Specimen
 		if (modelFields.SPECIMENS != null && !modelFields.SPECIMENS.isEmpty()) {
 			ArrayNode specimenArrayNode = mapper.createArrayNode();
