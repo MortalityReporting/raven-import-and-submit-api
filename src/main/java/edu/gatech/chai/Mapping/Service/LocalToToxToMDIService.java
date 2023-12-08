@@ -107,7 +107,8 @@ public class LocalToToxToMDIService {
 			performerResource = createPerformer(inputFields, idTemplate, returnBundle);
 			performerReference = new Reference(
 					performerResource.getResourceType().toString() + "/" + performerResource.getId());
-			LocalModelToFhirCMSUtil.addResourceToBundle(returnBundle, performerResource);
+			//Create performer manually adds practitioner, practitionerrole, whatever it needs. Don't need the hook here to complete it.
+			//LocalModelToFhirCMSUtil.addResourceToBundle(returnBundle, performerResource);
 		}
 		// Create Patient
 		Patient patientResource = null;
@@ -272,7 +273,7 @@ public class LocalToToxToMDIService {
 			notAskedIdentifier.setValueElement(notAskedStringType);
 			notAskedIdentifier.setSystemElement(notAskedUriType);
 			practitionerRole.addIdentifier(notAskedIdentifier);
-			//Assugb a data-absent-reason to the practitionerRole.endpoint of 'not-asked'
+			//Assign a data-absent-reason to the practitionerRole.endpoint of 'not-asked'
 			Reference notAskedEndpoint = new Reference();
 			notAskedEndpoint.addExtension(dataAbsentNotAskedExtension);
 			practitionerRole.addEndpoint(notAskedEndpoint);
