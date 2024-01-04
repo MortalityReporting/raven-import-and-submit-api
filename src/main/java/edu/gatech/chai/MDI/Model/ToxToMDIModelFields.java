@@ -7,8 +7,10 @@ import java.util.Objects;
 import com.opencsv.bean.CsvBindByName;
 
 public class ToxToMDIModelFields extends BaseModelFields{
+	//File Id
 	@CsvBindByName
 	public String FILEID = "";
+	//Laboratory Section
 	@CsvBindByName
 	public String TOXCASENUMBER = "";
 	@CsvBindByName
@@ -29,6 +31,7 @@ public class ToxToMDIModelFields extends BaseModelFields{
 	public String TOXORGZIP = "";
 	@CsvBindByName
 	public String TOXORGCOUNTRY = "";
+	//Decedent Section
 	@CsvBindByName
 	public String MDICASEID = "";
 	@CsvBindByName
@@ -50,11 +53,16 @@ public class ToxToMDIModelFields extends BaseModelFields{
 	@CsvBindByName
 	public String SPECIMENCOLLECTION_DATETIME = "";
 	@CsvBindByName
-	public String REPORTDATE = "";
+	public String RECEIPT_DATETIME = "";
+	@CsvBindByName
+	public String REPORTISSUANCE_DATETIME = "";
+	//Specimens Section
 	@CsvBindByName
 	public List<ToxSpecimen> SPECIMENS = new ArrayList<ToxSpecimen>();
+	//Results Section
 	@CsvBindByName
 	public List<ToxResult> RESULTS = new ArrayList<ToxResult>();
+	//Notes Section
 	@CsvBindByName
 	public List<String> NOTES = new ArrayList<String>();
 
@@ -62,7 +70,7 @@ public class ToxToMDIModelFields extends BaseModelFields{
 		super();
 	}
 
-	public ToxToMDIModelFields(String FILEID, String TOXCASENUMBER, String TOXORGNAME, String TOXORDERCODE, String TOXPERFORMER, String TOXORGSTREET, String TOXORGCITY, String TOXORGCOUNTY, String TOXORGSTATE, String TOXORGZIP, String TOXORGCOUNTRY, String MDICASEID, String MDICASESYSTEM, String FIRSTNAME, String MIDNAME, String LASTNAME, String DECEDENTSEX, String SUFFIXNAME, String BIRTHDATE, String MECNOTES, String SPECIMENCOLLECTION_DATETIME, String REPORTDATE, List<ToxSpecimen> SPECIMENS, List<ToxResult> RESULTS, List<String> NOTES) {
+	public ToxToMDIModelFields(String FILEID, String TOXCASENUMBER, String TOXORGNAME, String TOXORDERCODE, String TOXPERFORMER, String TOXORGSTREET, String TOXORGCITY, String TOXORGCOUNTY, String TOXORGSTATE, String TOXORGZIP, String TOXORGCOUNTRY, String MDICASEID, String MDICASESYSTEM, String FIRSTNAME, String MIDNAME, String LASTNAME, String DECEDENTSEX, String SUFFIXNAME, String BIRTHDATE, String MECNOTES, String SPECIMENCOLLECTION_DATETIME, String RECEIPT_DATETIME, String REPORTDATE, List<ToxSpecimen> SPECIMENS, List<ToxResult> RESULTS, List<String> NOTES) {
 		super();
 		this.FILEID = FILEID;
 		this.TOXCASENUMBER = TOXCASENUMBER;
@@ -85,7 +93,8 @@ public class ToxToMDIModelFields extends BaseModelFields{
 		this.BIRTHDATE = BIRTHDATE;
 		this.MECNOTES = MECNOTES;
 		this.SPECIMENCOLLECTION_DATETIME = SPECIMENCOLLECTION_DATETIME;
-		this.REPORTDATE = REPORTDATE;
+		this.RECEIPT_DATETIME = RECEIPT_DATETIME;
+		this.REPORTISSUANCE_DATETIME = REPORTDATE;
 		this.SPECIMENS = SPECIMENS;
 		this.RESULTS = RESULTS;
 		this.NOTES = NOTES;
@@ -176,8 +185,12 @@ public class ToxToMDIModelFields extends BaseModelFields{
         return SPECIMENCOLLECTION_DATETIME;
     }
 
-    public String getREPORTDATE() {
-        return REPORTDATE;
+	public String getRECEIPT_DATETIME() {
+        return RECEIPT_DATETIME;
+    }
+
+    public String getREPORTISSUANCE_DATETIME() {
+        return REPORTISSUANCE_DATETIME;
     }
 
     public List<ToxSpecimen> getSPECIMENS() {
@@ -297,10 +310,15 @@ public class ToxToMDIModelFields extends BaseModelFields{
 		this.checkNullSetter(this.SPECIMENCOLLECTION_DATETIME.getClass(), SPECIMENCOLLECTION_DATETIME);
 		this.SPECIMENCOLLECTION_DATETIME = SPECIMENCOLLECTION_DATETIME;
 	}
+
+	public void setRECEIPT_DATETIME(String RECEIPT_DATETIME) {
+		this.checkNullSetter(this.RECEIPT_DATETIME.getClass(), RECEIPT_DATETIME);
+		this.RECEIPT_DATETIME = RECEIPT_DATETIME;
+	}
 	
-	public void setREPORTDATE(String REPORTDATE) {
-		this.checkNullSetter(this.REPORTDATE.getClass(), REPORTDATE);
-		this.REPORTDATE = REPORTDATE;
+	public void setREPORTISSUANCE_DATETIME(String REPORTDATE) {
+		this.checkNullSetter(this.REPORTISSUANCE_DATETIME.getClass(), REPORTDATE);
+		this.REPORTISSUANCE_DATETIME = REPORTDATE;
 	}
 	
 	public void setSPECIMENS(List<ToxSpecimen> SPECIMENS) {
@@ -323,12 +341,12 @@ public class ToxToMDIModelFields extends BaseModelFields{
 			return false;
 		}
 		ToxToMDIModelFields toxToMDIModelFields = (ToxToMDIModelFields) o;
-		return Objects.equals(FILEID, toxToMDIModelFields.FILEID) && Objects.equals(TOXCASENUMBER, toxToMDIModelFields.TOXCASENUMBER) && Objects.equals(TOXORGNAME, toxToMDIModelFields.TOXORGNAME) && Objects.equals(TOXORDERCODE, toxToMDIModelFields.TOXORDERCODE) && Objects.equals(TOXPERFORMER, toxToMDIModelFields.TOXPERFORMER) && Objects.equals(TOXORGSTREET, toxToMDIModelFields.TOXORGSTREET) && Objects.equals(TOXORGCITY, toxToMDIModelFields.TOXORGCITY) && Objects.equals(TOXORGCOUNTY, toxToMDIModelFields.TOXORGCOUNTY) && Objects.equals(TOXORGSTATE, toxToMDIModelFields.TOXORGSTATE) && Objects.equals(TOXORGZIP, toxToMDIModelFields.TOXORGZIP) && Objects.equals(TOXORGCOUNTRY, toxToMDIModelFields.TOXORGCOUNTRY) && Objects.equals(MDICASEID, toxToMDIModelFields.MDICASEID) && Objects.equals(MDICASESYSTEM, toxToMDIModelFields.MDICASESYSTEM) && Objects.equals(FIRSTNAME, toxToMDIModelFields.FIRSTNAME) && Objects.equals(MIDNAME, toxToMDIModelFields.MIDNAME) && Objects.equals(LASTNAME, toxToMDIModelFields.LASTNAME) && Objects.equals(SUFFIXNAME, toxToMDIModelFields.SUFFIXNAME) && Objects.equals(BIRTHDATE, toxToMDIModelFields.BIRTHDATE) && Objects.equals(MECNOTES, toxToMDIModelFields.MECNOTES) && Objects.equals(SPECIMENCOLLECTION_DATETIME, toxToMDIModelFields.SPECIMENCOLLECTION_DATETIME) && Objects.equals(REPORTDATE, toxToMDIModelFields.REPORTDATE) && Objects.equals(SPECIMENS, toxToMDIModelFields.SPECIMENS) && Objects.equals(RESULTS, toxToMDIModelFields.RESULTS) && Objects.equals(NOTES, toxToMDIModelFields.NOTES);
+		return Objects.equals(FILEID, toxToMDIModelFields.FILEID) && Objects.equals(TOXCASENUMBER, toxToMDIModelFields.TOXCASENUMBER) && Objects.equals(TOXORGNAME, toxToMDIModelFields.TOXORGNAME) && Objects.equals(TOXORDERCODE, toxToMDIModelFields.TOXORDERCODE) && Objects.equals(TOXPERFORMER, toxToMDIModelFields.TOXPERFORMER) && Objects.equals(TOXORGSTREET, toxToMDIModelFields.TOXORGSTREET) && Objects.equals(TOXORGCITY, toxToMDIModelFields.TOXORGCITY) && Objects.equals(TOXORGCOUNTY, toxToMDIModelFields.TOXORGCOUNTY) && Objects.equals(TOXORGSTATE, toxToMDIModelFields.TOXORGSTATE) && Objects.equals(TOXORGZIP, toxToMDIModelFields.TOXORGZIP) && Objects.equals(TOXORGCOUNTRY, toxToMDIModelFields.TOXORGCOUNTRY) && Objects.equals(MDICASEID, toxToMDIModelFields.MDICASEID) && Objects.equals(MDICASESYSTEM, toxToMDIModelFields.MDICASESYSTEM) && Objects.equals(FIRSTNAME, toxToMDIModelFields.FIRSTNAME) && Objects.equals(MIDNAME, toxToMDIModelFields.MIDNAME) && Objects.equals(LASTNAME, toxToMDIModelFields.LASTNAME) && Objects.equals(SUFFIXNAME, toxToMDIModelFields.SUFFIXNAME) && Objects.equals(BIRTHDATE, toxToMDIModelFields.BIRTHDATE) && Objects.equals(MECNOTES, toxToMDIModelFields.MECNOTES) && Objects.equals(SPECIMENCOLLECTION_DATETIME, toxToMDIModelFields.SPECIMENCOLLECTION_DATETIME) && Objects.equals(RECEIPT_DATETIME, toxToMDIModelFields.RECEIPT_DATETIME) && Objects.equals(REPORTISSUANCE_DATETIME, toxToMDIModelFields.REPORTISSUANCE_DATETIME) && Objects.equals(SPECIMENS, toxToMDIModelFields.SPECIMENS) && Objects.equals(RESULTS, toxToMDIModelFields.RESULTS) && Objects.equals(NOTES, toxToMDIModelFields.NOTES);
 	}
 
 	@Override
 	public int hashCode() {
-		return Objects.hash(FILEID, TOXCASENUMBER, TOXORGNAME, TOXORDERCODE, TOXPERFORMER, TOXORGSTREET, TOXORGCITY, TOXORGCOUNTY, TOXORGSTATE, TOXORGZIP, TOXORGCOUNTRY, MDICASEID, MDICASESYSTEM, FIRSTNAME, MIDNAME, LASTNAME, SUFFIXNAME, BIRTHDATE, MECNOTES, SPECIMENCOLLECTION_DATETIME, REPORTDATE, SPECIMENS, RESULTS, NOTES);
+		return Objects.hash(FILEID, TOXCASENUMBER, TOXORGNAME, TOXORDERCODE, TOXPERFORMER, TOXORGSTREET, TOXORGCITY, TOXORGCOUNTY, TOXORGSTATE, TOXORGZIP, TOXORGCOUNTRY, MDICASEID, MDICASESYSTEM, FIRSTNAME, MIDNAME, LASTNAME, SUFFIXNAME, BIRTHDATE, MECNOTES, SPECIMENCOLLECTION_DATETIME, RECEIPT_DATETIME, REPORTISSUANCE_DATETIME, SPECIMENS, RESULTS, NOTES);
 	}
 
 	@Override
@@ -355,7 +373,8 @@ public class ToxToMDIModelFields extends BaseModelFields{
 			", BIRTHDATE='" + getBIRTHDATE() + "'" +
 			", MECNOTES='" + getMECNOTES() + "'" +
 			", SPECIMENCOLLECTION_DATETIME='" + getSPECIMENCOLLECTION_DATETIME() + "'" +
-			", REPORTDATE='" + getREPORTDATE() + "'" +
+			", RECEIPT_DATETIME='" + getRECEIPT_DATETIME() + "'" +
+			", REPORTDATE='" + getREPORTISSUANCE_DATETIME() + "'" +
 			", SPECIMENS='" + getSPECIMENS() + "'" +
 			", RESULTS='" + getRESULTS() + "'" +
 			", NOTES='" + getNOTES() + "'" +

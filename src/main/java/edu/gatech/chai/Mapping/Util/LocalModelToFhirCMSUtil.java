@@ -6,7 +6,9 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.ZoneOffset;
 import java.time.format.DateTimeParseException;
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 import java.util.TimeZone;
@@ -63,13 +65,20 @@ public class LocalModelToFhirCMSUtil {
 	public static Date parseDate(String dateString) throws ParseException {
 		for (String formatString : dateFormatStrings)
 	    {
+			Date returnDate = null;
 	        try
 	        {
 	        	SimpleDateFormat sdf = new SimpleDateFormat(formatString);
 	        	sdf.setTimeZone(TimeZone.getDefault());
-	            return sdf.parse(dateString);
+	            returnDate = sdf.parse(dateString);
 	        }
 	        catch (ParseException e) {}
+			if(returnDate != null){
+				if(returnDate.getYear() > 8100){
+					throw new ParseException("Found a year greater than 4 digits in the date: "+dateString, 0);
+				}
+				return returnDate;
+			}
 	    }
 		throw new ParseException("Could not format date: "+dateString, 0);
 	}
@@ -86,6 +95,17 @@ public class LocalModelToFhirCMSUtil {
 	    }
 		throw new ParseException("Could not format time: "+timeString, 0);
 	}
+	
+	public static Date addTimeToDate(Date date,Date time) {
+		if(date == null || time == null){
+			return date;
+		}
+		date.setHours(time.getHours());
+		date.setMinutes(time.getMinutes());
+		date.setSeconds(time.getSeconds());
+		return date;
+	}
+
 	public static Date addTimeToDate(Date date,String timeString) throws ParseException {
 		Date timeDate = parseTime(timeString);
 		date.setHours(timeDate.getHours());
@@ -99,33 +119,38 @@ public class LocalModelToFhirCMSUtil {
 		return date;
 	}
 
-	public static Date parseDateAndTime(String dateAndTimeString) {
+	public static Date parseDateAndTime(String dateAndTimeString) throws ParseException{
 		LocalDateTime localDateTime = null;
+		Date date = null;
 		try{
 			localDateTime = LocalDateTime.parse(dateAndTimeString);
 		}
 		catch (DateTimeParseException e) {}
-		Date date = null;
 		if (localDateTime != null){
 			date = Date.from(localDateTime.toInstant(ZoneOffset.UTC));
 			return date;
 		}
 		else{
+			List<String> dateTimeAndDateStringFormats = new ArrayList<String>();
 			for(String dateString : dateFormatStrings){
 				for(String timeString : timeFormatStrings){
-					try{
-						String dateTimeFormat = dateString + " " + timeString;
-						SimpleDateFormat sdf = new SimpleDateFormat(dateTimeFormat);
-	            		sdf.setTimeZone(TimeZone.getDefault());
-	            		date = sdf.parse(dateAndTimeString);
-						if(date != null)
-							return date;
-					}
-					catch(ParseException e) {}
+					dateTimeAndDateStringFormats.add(dateString + " " + timeString);
 				}
 			}
+			dateTimeAndDateStringFormats.addAll(dateFormatStrings);
+			for(String dateTimeFormat:dateTimeAndDateStringFormats){
+				try{
+					SimpleDateFormat sdf = new SimpleDateFormat(dateTimeFormat);
+					sdf.setTimeZone(TimeZone.getDefault());
+					date = sdf.parse(dateAndTimeString);
+					if(date != null){
+						return date;
+					}
+				}
+				catch(ParseException e){}
+			}
 		}
-		return null;
+		throw new ParseException("Could not format datetime: "+dateAndTimeString, 0);
 	}
 	public static boolean containsIgnoreCase(String src, String what) {
 	    final int length = what.length();

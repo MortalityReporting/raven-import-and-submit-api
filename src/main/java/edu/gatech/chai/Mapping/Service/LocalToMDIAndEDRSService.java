@@ -60,6 +60,7 @@ import edu.gatech.chai.MDI.model.resource.ObservationHowDeathInjuryOccurred;
 import edu.gatech.chai.MDI.model.resource.ObservationMannerOfDeath;
 import edu.gatech.chai.MDI.model.resource.ObservationTobaccoUseContributedToDeath;
 import edu.gatech.chai.MDI.model.resource.ProcedureDeathCertification;
+import edu.gatech.chai.Mapping.Util.CommonMappingUtil;
 import edu.gatech.chai.Mapping.Util.LocalModelToFhirCMSUtil;
 import edu.gatech.chai.VRDR.model.util.DecedentUtil;
 
@@ -476,7 +477,7 @@ public class LocalToMDIAndEDRSService {
 	}
 	
 	
-	private ObservationTobaccoUseContributedToDeath createObservationTobaccoUseContributedToDeath(MDIAndEDRSModelFields inputFields, Reference decedentReference) throws ParseException {
+	private ObservationTobaccoUseContributedToDeath createObservationTobaccoUseContributedToDeath(MDIAndEDRSModelFields inputFields, Reference decedentReference) {
 		ObservationTobaccoUseContributedToDeath tobacco = new ObservationTobaccoUseContributedToDeath();
 		tobacco.setStatus(ObservationStatus.PRELIMINARY);
 		tobacco.setId(inputFields.BASEFHIRID + "Tobacco");
@@ -485,7 +486,7 @@ public class LocalToMDIAndEDRSService {
 		return tobacco;
 	}
 	
-	private ObservationDecedentPregnancy createObservationDecedentPregnancy(MDIAndEDRSModelFields inputFields, Reference decedentReference) throws ParseException {
+	private ObservationDecedentPregnancy createObservationDecedentPregnancy(MDIAndEDRSModelFields inputFields, Reference decedentReference) {
 		ObservationDecedentPregnancy pregnant = new ObservationDecedentPregnancy();
 		pregnant.setStatus(ObservationStatus.PRELIMINARY);
 		pregnant.setId(inputFields.BASEFHIRID + "Pregnancy");
@@ -574,15 +575,16 @@ public class LocalToMDIAndEDRSService {
 		return manner;
 	}
 	
-	private ObservationHowDeathInjuryOccurred createHowDeathInjuryOccurred(MDIAndEDRSModelFields inputFields, Patient patientResource, Practitioner practitionerResource) throws ParseException {
+	private ObservationHowDeathInjuryOccurred createHowDeathInjuryOccurred(MDIAndEDRSModelFields inputFields, Patient patientResource, Practitioner practitionerResource){
 		ObservationHowDeathInjuryOccurred injuryDescription = new ObservationHowDeathInjuryOccurred(patientResource, practitionerResource, inputFields.CHOWNINJURY);
 		injuryDescription.setId(inputFields.BASEFHIRID+"InjuryDescription");
 		injuryDescription.setStatus(ObservationStatus.FINAL);
 
 		if(inputFields.CINJDATE != null && !inputFields.CINJDATE.isEmpty()) {
-			Date injDate = LocalModelToFhirCMSUtil.parseDate(inputFields.CINJDATE);
+			Date injDate = CommonMappingUtil.parseDateFromField(inputFields, "CINJDATE", inputFields.CINJDATE);
 			if(inputFields.CINJTIME != null && !inputFields.CINJTIME.isEmpty()) {
-				LocalModelToFhirCMSUtil.addTimeToDate(injDate, inputFields.CINJTIME);
+				Date injTime = CommonMappingUtil.parseDateFromField(inputFields, "CINJTIME", inputFields.CINJTIME);
+				LocalModelToFhirCMSUtil.addTimeToDate(injDate, injTime);
 			}
 			DateTimeType injEffectiveDT = new DateTimeType(injDate);
 			injuryDescription.setEffective(injEffectiveDT);
@@ -601,7 +603,7 @@ public class LocalToMDIAndEDRSService {
 		return injuryDescription;
 	}
 	
-	private Observation createFoundObs(MDIAndEDRSModelFields inputFields, Reference decedentReference) throws ParseException {
+	private Observation createFoundObs(MDIAndEDRSModelFields inputFields, Reference decedentReference) {
 		Observation foundObs = new Observation();
 		foundObs.setId(inputFields.BASEFHIRID+"FoundObs");
 		foundObs.setStatus(ObservationStatus.FINAL);
@@ -609,9 +611,10 @@ public class LocalToMDIAndEDRSService {
 		foundObs.setCode(new CodeableConcept().addCoding(new Coding(
 				"urn:temporary:code", "1000001", "Date and Time found dead, unconcious and in distress")));
 		if(inputFields.FOUNDDATE != null && !inputFields.FOUNDDATE.isEmpty()) {
-			Date reportDate = LocalModelToFhirCMSUtil.parseDate(inputFields.FOUNDDATE);
-			if(inputFields.FOUNDTIME != null && !inputFields.FOUNDTIME.isEmpty()) {
-				LocalModelToFhirCMSUtil.addTimeToDate(reportDate, inputFields.FOUNDTIME);
+			Date reportDate = CommonMappingUtil.parseDateFromField(inputFields, "FOUNDDATE", inputFields.FOUNDDATE);
+			if(reportDate != null && inputFields.FOUNDTIME != null && !inputFields.FOUNDTIME.isEmpty()) {
+				Date reportTime = CommonMappingUtil.parseDateTimeFromField(inputFields, "FOUNDTIME", inputFields.FOUNDTIME);
+				LocalModelToFhirCMSUtil.addTimeToDate(reportDate, reportTime);
 			}
 			foundObs.setValue(new DateTimeType(reportDate).setTimeZoneZulu(true));
 		}
@@ -626,18 +629,21 @@ public class LocalToMDIAndEDRSService {
 			returnDeathDate.addPerformer(pronouncerReference);
 		}
 		if(inputFields.CDEATHDATE != null && !inputFields.CDEATHDATE.isEmpty()) {
-			Date certDate = LocalModelToFhirCMSUtil.parseDate(inputFields.CDEATHDATE);
-			if(inputFields.CDEATHTIME != null && !inputFields.CDEATHTIME.isEmpty()) {
-				LocalModelToFhirCMSUtil.addTimeToDate(certDate, inputFields.CDEATHTIME);
+			Date certDate = CommonMappingUtil.parseDateFromField(inputFields, "CDEATHDATE", inputFields.CDEATHDATE);
+			if(certDate != null && inputFields.CDEATHTIME != null && !inputFields.CDEATHTIME.isEmpty()) {
+				Date certTime = CommonMappingUtil.parseDateTimeFromField(inputFields, "CDEATHTIME", inputFields.CDEATHTIME);
+				LocalModelToFhirCMSUtil.addTimeToDate(certDate, certTime);
 			}
 			DateTimeType certValueDT = new DateTimeType(certDate, TemporalPrecisionEnum.SECOND, TimeZone.getTimeZone(ZoneId.of("Z")));
 			certValueDT.setTimeZoneZulu(true);
 			returnDeathDate.setValue(certValueDT);
 		}
 		if(inputFields.PRNDATE != null && !inputFields.PRNDATE.isEmpty()) {
-			Date prnDate = LocalModelToFhirCMSUtil.parseDate(inputFields.PRNDATE);
-			if(inputFields.PRNTIME != null && !inputFields.PRNTIME.isEmpty()) {
-				LocalModelToFhirCMSUtil.addTimeToDate(prnDate, inputFields.PRNTIME);
+			CommonMappingUtil.parseDateTimeFromField(inputFields, "PRNDATE", inputFields.PRNDATE);
+			Date prnDate = CommonMappingUtil.parseDateTimeFromField(inputFields, "PRNDATE", inputFields.PRNDATE);
+			if(prnDate != null && inputFields.PRNTIME != null && !inputFields.PRNTIME.isEmpty()) {
+				Date prnTime = CommonMappingUtil.parseDateTimeFromField(inputFields, "PRNTIME", inputFields.PRNTIME);
+				LocalModelToFhirCMSUtil.addTimeToDate(prnDate, prnTime);
 			}
 			DateTimeType prnDT = new DateTimeType(prnDate);
 			prnDT.setTimeZoneZulu(true);

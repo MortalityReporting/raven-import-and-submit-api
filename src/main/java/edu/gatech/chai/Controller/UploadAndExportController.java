@@ -144,12 +144,7 @@ public class UploadAndExportController {
 			//Convert
 			logger.info("XLSX MDI-To-Tox Upload: Creating FHIR Data");
 			String bundleString = "";
-			try {
-				bundleString = mDIToToxToMDIService.convertToMDIString(modelFields, i);
-			} catch (ParseException e1) {
-				e1.printStackTrace();
-				continue;
-			}
+			bundleString = mDIToToxToMDIService.convertToMDIString(modelFields, i);
 			logger.info("XLSX MDI-To-Tox Upload: Creating Response Object");
 			ObjectNode responseObject = mapper.createObjectNode();
 			try {

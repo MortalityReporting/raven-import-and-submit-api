@@ -1,6 +1,5 @@
 package edu.gatech.chai.Mapping.Service;
 
-import java.text.ParseException;
 import java.time.ZoneId;
 import java.util.Date;
 import java.util.HashMap;
@@ -49,8 +48,8 @@ import edu.gatech.chai.MDI.model.resource.DiagnosticReportToxicologyToMDI;
 import edu.gatech.chai.MDI.model.resource.MessageHeaderToxicologyToMDI;
 import edu.gatech.chai.MDI.model.resource.ObservationToxicologyLabResult;
 import edu.gatech.chai.MDI.model.resource.SpecimenToxicologyLab;
-import edu.gatech.chai.MDI.model.resource.util.CommonUtil;
 import edu.gatech.chai.MDI.model.resource.util.CompositionMDIAndEDRSUtil;
+import edu.gatech.chai.Mapping.Util.CommonMappingUtil;
 import edu.gatech.chai.Mapping.Util.LocalModelToFhirCMSUtil;
 import edu.gatech.chai.VRDR.model.util.DecedentUtil;
 
@@ -68,18 +67,18 @@ public class LocalToToxToMDIService {
 	public LocalToToxToMDIService(){
 		dataAbsentNotAskedExtension = new Extension("http://hl7.org/fhir/StructureDefinition/data-absent-reason", new CodeType("not-asked"));
 	}
-	public String convertToMDIString(ToxToMDIModelFields inputFields, int index) throws ParseException {
+	public String convertToMDIString(ToxToMDIModelFields inputFields, int index) {
 		Bundle fullBundle = convertToMDI(inputFields, index);
 		return convertToMDIString(fullBundle);
 	}
 
-	public String convertToMDIString(Bundle fullBundle) throws ParseException {
+	public String convertToMDIString(Bundle fullBundle) {
 		IParser parser = mdiFhirContext.getCtx().newJsonParser();
 		String returnString = parser.encodeResourceToString(fullBundle);
 		return returnString;
 	}
 
-	public Bundle convertToMDI(ToxToMDIModelFields inputFields, int index) throws ParseException {
+	public Bundle convertToMDI(ToxToMDIModelFields inputFields, int index) {
 		// Create Tox-to-MDI Bundle
 		BundleMessageToxToMDI returnBundle = new BundleMessageToxToMDI();
 		String idTemplate = inputFields.FILEID + "-" + index;
@@ -125,9 +124,11 @@ public class LocalToToxToMDIService {
 		if (inputFields.TOXORDERCODE != null && !inputFields.TOXORDERCODE.isEmpty()) {
 			toxOrderCodableConcept.setText(inputFields.TOXORDERCODE);
 		}
+		Date specimenReceiptDate = CommonMappingUtil.parseDateTimeFromField(inputFields,"RECEIPT_DATETIME",inputFields.RECEIPT_DATETIME);
+		Date reportIssuedDate = CommonMappingUtil.parseDateTimeFromField(inputFields,"REPORTISSUANCE_DATETIME",inputFields.REPORTISSUANCE_DATETIME);
 		DiagnosticReportToxicologyToMDI diagnosticReport = new DiagnosticReportToxicologyToMDI(
-				DiagnosticReportStatus.FINAL, patientResource, toxOrderCodableConcept, new Date(),
-				LocalModelToFhirCMSUtil.parseDate(inputFields.REPORTDATE));
+				DiagnosticReportStatus.FINAL, patientResource, toxOrderCodableConcept, specimenReceiptDate,
+				reportIssuedDate);
 		//Some post-construction manipulation of datetimes to ensure they're in the Z format
 		diagnosticReport.getEffectiveDateTimeType().setTimeZoneZulu(true);
 		diagnosticReport.getIssuedElement().setTimeZoneZulu(true);
@@ -155,10 +156,7 @@ public class LocalToToxToMDIService {
 		LocalModelToFhirCMSUtil.addResourceToBundle(returnBundle, diagnosticReport);
 		messageHeader.addFocus(new Reference("DiagnosticReport/" + diagnosticReport.getId()));
 		// Create Specimen
-		Map<String, Reference> specimenNameToReference = new HashMap<String, Reference>(); // Local map to get a
-																							// reference from a common
-																							// string name for a
-																							// specimen
+		Map<String, Reference> specimenNameToReference = new HashMap<String, Reference>();
 		for (int i = 0; i < inputFields.SPECIMENS.size(); i++) {
 			ToxSpecimen toxSpecimen = inputFields.SPECIMENS.get(i);
 			Stream<String> specimenFields = Stream.of(toxSpecimen.NAME);
@@ -187,7 +185,7 @@ public class LocalToToxToMDIService {
 		return returnBundle;
 	}
 
-	private Patient createPatient(ToxToMDIModelFields inputFields, String idTemplate) throws ParseException {
+	private Patient createPatient(ToxToMDIModelFields inputFields, String idTemplate) {
 		Patient returnDecedent = new Patient();
 		returnDecedent
 				.setMeta(new Meta().addProfile("http://hl7.org/fhir/us/core/StructureDefinition/us-core-patient"));
@@ -224,7 +222,7 @@ public class LocalToToxToMDIService {
 		}
 
 		if (inputFields.BIRTHDATE != null && !inputFields.BIRTHDATE.isEmpty()) {
-			Date birthDate = LocalModelToFhirCMSUtil.parseDate(inputFields.BIRTHDATE);
+			Date birthDate = CommonMappingUtil.parseDateFromField(inputFields, "BIRTHDATE", inputFields.BIRTHDATE);
 			returnDecedent.setBirthDate(birthDate);
 		}
 		return returnDecedent;
@@ -297,7 +295,7 @@ public class LocalToToxToMDIService {
 	}
 
 	private SpecimenToxicologyLab createSpecimen(ToxSpecimen toxSpecimen, int specimenIndex, String idTemplate,
-			Reference subjectReference) throws ParseException {
+			Reference subjectReference) {
 		String idTemplateWithIndex = idTemplate + "-Specimen-" + specimenIndex;
 		SpecimenToxicologyLab specimenResource = new SpecimenToxicologyLab();
 		specimenResource.setId(idTemplateWithIndex);
@@ -311,7 +309,7 @@ public class LocalToToxToMDIService {
 		Stream<String> collectionFields = Stream.of(toxSpecimen.COLLECTED_DATETIME, toxSpecimen.AMOUNT);
 		if (!collectionFields.allMatch(x -> x == null || x.isEmpty())) {
 			sccUsed = true;
-			Date collectedDate = LocalModelToFhirCMSUtil.parseDateAndTime(toxSpecimen.COLLECTED_DATETIME);
+			Date collectedDate = CommonMappingUtil.parseDateTimeFromField(toxSpecimen, idTemplate, idTemplateWithIndex);
 			scc.setCollected(new DateTimeType(collectedDate, TemporalPrecisionEnum.SECOND, TimeZone.getTimeZone(ZoneId.of("Z"))));
 			scc.getCollectedDateTimeType().setTimeZoneZulu(true);
 			Quantity quantity = LocalModelToFhirCMSUtil.parseQuantity(toxSpecimen.AMOUNT);
@@ -332,8 +330,7 @@ public class LocalToToxToMDIService {
 		}
 		Stream<String> receivedFields = Stream.of(toxSpecimen.RECEIPT_DATETIME);
 		if (!receivedFields.allMatch(x -> x == null || x.isEmpty())) {
-			Date receivedDateTime = LocalModelToFhirCMSUtil.parseDate(toxSpecimen.RECEIPT_DATETIME);
-			LocalModelToFhirCMSUtil.addTimeToDate(receivedDateTime, toxSpecimen.RECEIPT_DATETIME);
+			Date receivedDateTime = CommonMappingUtil.parseDateTimeFromField(toxSpecimen, "RECEIPT_DATETIME", toxSpecimen.RECEIPT_DATETIME);
 			specimenResource.setReceivedTime(receivedDateTime);
 			specimenResource.getReceivedTimeElement().setTimeZoneZulu(true);
 		}
@@ -341,7 +338,7 @@ public class LocalToToxToMDIService {
 	}
 
 	private ObservationToxicologyLabResult createResult(ToxResult toxResult, int resultIndex, String idTemplate,
-			Map<String, Reference> specimenMap, Reference subjectReference) throws ParseException {
+			Map<String, Reference> specimenMap, Reference subjectReference) {
 		String idTemplateWithIndex = idTemplate + "-Result-" + resultIndex;
 		ObservationToxicologyLabResult resultResource = new ObservationToxicologyLabResult();
 		resultResource.setId(idTemplateWithIndex);
@@ -360,11 +357,12 @@ public class LocalToToxToMDIService {
 		}
 		Stream<String> receivedFields = Stream.of(toxResult.RECORD_DATE, toxResult.RECORD_TIME);
 		if (!receivedFields.allMatch(x -> x == null || x.isEmpty())) {
-			Date recordedDateTime = LocalModelToFhirCMSUtil.parseDate(toxResult.RECORD_DATE);
-			if (toxResult.RECORD_TIME != null && !toxResult.RECORD_TIME.isEmpty()) {
-				LocalModelToFhirCMSUtil.addTimeToDate(recordedDateTime, toxResult.RECORD_TIME);
+			Date recordedDate = CommonMappingUtil.parseDateFromField(toxResult, "RECORD_DATE", toxResult.RECORD_DATE);
+			if (recordedDate != null && toxResult.RECORD_TIME != null && !toxResult.RECORD_TIME.isEmpty()) {
+				Date recordedTime = CommonMappingUtil.parseDateFromField(toxResult, "RECORD_TIME", toxResult.RECORD_TIME);
+				LocalModelToFhirCMSUtil.addTimeToDate(recordedDate, recordedTime);
 			}
-			resultResource.setEffective(new DateTimeType(recordedDateTime, TemporalPrecisionEnum.SECOND, TimeZone.getTimeZone(ZoneId.of("Z"))));
+			resultResource.setEffective(new DateTimeType(recordedDate, TemporalPrecisionEnum.SECOND, TimeZone.getTimeZone(ZoneId.of("Z"))));
 			resultResource.getEffectiveDateTimeType().setTimeZoneZulu(true);
 		}
 		// TODO: Add container information
@@ -411,4 +409,5 @@ public class LocalToToxToMDIService {
 		patient.addExtension(extension);
 		return patient;
 	}
+
 }
