@@ -323,6 +323,7 @@ public class UploadAndExportController {
 			fieldObject.put("value", value);
 			List<String> errorList = modelFields.getErrorListForName(f.getName());
 			if (!errorList.isEmpty()) {
+				fieldObject.put("status", "error");
 				fieldObject.set("errors", mapper.valueToTree(errorList));
 			}
 			fields.set(keyName, fieldObject);
