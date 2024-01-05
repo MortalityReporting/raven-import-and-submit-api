@@ -323,8 +323,8 @@ public class UploadAndExportController {
 			fieldObject.put("value", value);
 			List<String> errorList = modelFields.getErrorListForName(f.getName());
 			if (!errorList.isEmpty()) {
-				fieldObject.put("status", "error");
 				fieldObject.set("errors", mapper.valueToTree(errorList));
+				fieldObject.put("status", "not mapped");
 			}
 			fields.set(keyName, fieldObject);
 		}
@@ -354,6 +354,7 @@ public class UploadAndExportController {
 					List<String> errorList = toxSpecimen.getErrorListForName(f.getName());
 					if (!errorList.isEmpty()) {
 						fieldObject.set("errors", mapper.valueToTree(errorList));
+						fieldObject.put("status", "not mapped");
 					}
 					specimenFields.set(keyName, fieldObject);
 				}
@@ -387,6 +388,7 @@ public class UploadAndExportController {
 					List<String> errorList = toxResult.getErrorListForName(f.getName());
 					if (!errorList.isEmpty()) {
 						fieldObject.set("errors", mapper.valueToTree(errorList));
+						fieldObject.put("status", "not mapped");
 					}
 					resultFields.set(keyName, fieldObject);
 				}
@@ -446,6 +448,7 @@ public class UploadAndExportController {
 			fieldObject.put("value", value);
 			List<String> errorList = modelFields.getErrorListForName(f.getName());
 			if (!errorList.isEmpty()) {
+				fieldObject.put("status", "not mapped");
 				fieldObject.set("errors", mapper.valueToTree(errorList));
 			}
 			fields.set(keyName, fieldObject);
