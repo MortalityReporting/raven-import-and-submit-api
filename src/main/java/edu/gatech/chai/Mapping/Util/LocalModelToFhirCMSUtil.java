@@ -22,14 +22,22 @@ import org.hl7.fhir.r4.model.Bundle;
 import org.hl7.fhir.r4.model.Bundle.BundleEntryComponent;
 import org.hl7.fhir.r4.model.Bundle.BundleEntryRequestComponent;
 import org.hl7.fhir.r4.model.Bundle.HTTPVerb;
+import org.hl7.fhir.r4.model.CodeType;
+import org.hl7.fhir.r4.model.Extension;
 import org.hl7.fhir.r4.model.Quantity.QuantityComparator;
+import org.hl7.fhir.r4.model.Reference;
 
 import ca.uhn.fhir.model.dstu2.valueset.QuantityComparatorEnum;
 
 import org.hl7.fhir.r4.model.HumanName;
 import org.hl7.fhir.r4.model.IdType;
+import org.hl7.fhir.r4.model.Identifier;
+import org.hl7.fhir.r4.model.Practitioner;
+import org.hl7.fhir.r4.model.PractitionerRole;
 import org.hl7.fhir.r4.model.Quantity;
 import org.hl7.fhir.r4.model.Resource;
+import org.hl7.fhir.r4.model.StringType;
+import org.hl7.fhir.r4.model.UriType;
 
 public class LocalModelToFhirCMSUtil {
 	public static List<String> dateFormatStrings = Arrays.asList("yyyy-MM-dd","MM-dd-yyyy", "MM/dd/yyyy", "yyyy-MM-dd", "M/d/yy", "M/d/yyyy", "d-M-yy",
@@ -41,6 +49,7 @@ public class LocalModelToFhirCMSUtil {
 	public static String ageRegex = "(\\d+)\\s*(year|month|week|day|hour|minute)";
 	public static String valueAndUnitRegex = "(\\<|\\<=|\\>=|\\>|ad)?s*(\\d+(\\.\\d+)?)\\s*(((P|T|G|M|k|h|da|d|c|m|μ|n|p)?(m|s|A|K|g|L))(\\/(P|T|G|M|k|h|da|d|c|m|μ|n|p)?(m|s|A|K|g|L))?)";
 	public static List<String> nameFormatStrings = Arrays.asList("(.*),\\s{0,1}(.*)\\s(.*)", "(\\w+)\\s(\\w)[\\.]\\s(\\w+)", "(\\w+)\\s(\\w+)");
+	public static Extension dataAbsentNotAskedExtension = new Extension("http://hl7.org/fhir/StructureDefinition/data-absent-reason", new CodeType("not-asked"));
 	public static String convertUnitOfMeasureStringToCode(String uomString) {
 		switch(uomString) {
 			case "minutes":
@@ -281,5 +290,36 @@ public class LocalModelToFhirCMSUtil {
 			}
 		}
 		return null;
+	}
+
+	public static Practitioner setIdentiferDataAbsentReasonNotAsked(Practitioner practitioner){
+		StringType notAskedStringType = new StringType();
+		notAskedStringType.addExtension(dataAbsentNotAskedExtension);
+		UriType notAskedUriType = new UriType();
+		notAskedUriType.addExtension(dataAbsentNotAskedExtension);
+		Identifier notAskedIdentifier = new Identifier();
+		notAskedIdentifier.setValueElement(notAskedStringType);
+		notAskedIdentifier.setSystemElement(notAskedUriType);
+		practitioner.addIdentifier(notAskedIdentifier);
+		return practitioner;
+	}
+
+	public static PractitionerRole setIdentiferDataAbsentReasonNotAsked(PractitionerRole practitionerRole){
+		StringType notAskedStringType = new StringType();
+		notAskedStringType.addExtension(dataAbsentNotAskedExtension);
+		UriType notAskedUriType = new UriType();
+		notAskedUriType.addExtension(dataAbsentNotAskedExtension);
+		Identifier notAskedIdentifier = new Identifier();
+		notAskedIdentifier.setValueElement(notAskedStringType);
+		notAskedIdentifier.setSystemElement(notAskedUriType);
+		practitionerRole.addIdentifier(notAskedIdentifier);
+		return practitionerRole;
+	}
+
+	public static PractitionerRole setEndpointDataAbsentReasonNotAsked(PractitionerRole practitionerRole){
+		Reference notAskedEndpoint = new Reference();
+		notAskedEndpoint.addExtension(dataAbsentNotAskedExtension);
+		practitionerRole.addEndpoint(notAskedEndpoint);
+		return practitionerRole;
 	}
 }

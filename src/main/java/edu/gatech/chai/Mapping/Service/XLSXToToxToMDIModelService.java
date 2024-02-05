@@ -33,13 +33,15 @@ public class XLSXToToxToMDIModelService {
     private static String FILEID_HEADER = "file Id";
     private static String LABORATORY_HEADER = "Laboratory";
     private static final String[] LABORATORY_FIELDS = {"Toxicology Lab Name", "Lab Address: Street", "Lab Address: Street", "Lab Address: City", "Lab Address: County", "Lab Address: State", "Lab Address: Zip", "Laboratory Case Number", "Performer"};
+    private static String AGENCY_HEADER = "Agency Name";
+    private static final String[] AGENCY_FIELDS = {"MDI Agency Name", "MDI Agency Address: Street", "MDI Agency Address: City", "MDI Agency Address: County", "MDI Agency Address: State", "MDI Agency Address: Zip", "Pathologist/Coroner", "Investigator/Point of Contact"};
     private static String DECEDENT_HEADER = "Decedent";
-    private static final String[] DECEDENT_FIELDS = {"Decedent Name", "MDI Case System", "MDI Case Number", "Decedent Sex", "Decedent DOB", "ME/C Case Notes", "Date/Time of Specimen Collection", "Date/Time of Receipt", "Date of Report Issuance", "Name of Certifier"};
+    private static final String[] DECEDENT_FIELDS = {"Toxicology Laboratory Case Number", "Decedent Name", "MDI Case Management Number", "Examination/Autopsy Number", "Decedent Sex", "Decedent DOB", "ME/C Case Notes", "Date of Report Issuance", "Analyst", "Toxicologist/Certifier (Title)"};
     private static String SPECIMEN_HEADER = "Specimens";
-    private static final String[] SPECIMEN_FIELDS = {"Name", "Identifier", "Body Site", "Amount", "Date/Time Collected", "Date/Time of Receipt", "Condition", "Container", "Notes"};
+    private static final String[] SPECIMEN_FIELDS = {"Name", "Specimen Unique Identifier", "Body Site", "Amount", "Container", "Date/Time Collected", "Date/Time of Receipt", "Condition", "Comments"};
     private static String RESULTS_HEADER = "Results";
     private static final String[] RESULTS_FIELDS = {"Analyte/Analysis", "Specimen", "Method", "Value", "Range", "Description"};
-    private static String NOTES_HEADER = "Notes";
+    private static String NOTES_HEADER = "General Comments";
 
     private static String[] DATE_FIELDS = {"Decedent DOB", "Date of Report Issuance"};
     private static String[] DATETIME_FIELDS = {"Date/Time of Specimen Collection", "Date/Time of Receipt"};
@@ -99,7 +101,6 @@ public class XLSXToToxToMDIModelService {
                      currentValue = interpretCellValue(valueCell, currentKey, modelFields);
                 }
             }
-            modelFields = mapLaboratoryFields(modelFields, laboratoryMap);
 
             //Decedent Fields
             Cell decedentHeader = findCellFromColumn(sheet, HEADER_COLUMN, DECEDENT_HEADER);
@@ -129,8 +130,34 @@ public class XLSXToToxToMDIModelService {
                     currentValue = interpretCellValue(valueCell, currentKey, modelFields);
                 }
             }
-            modelFields = mapDecedentFields(modelFields, decedentMap);
-
+            //Agency Fields
+            Cell agencyHeader = findCellFromColumn(sheet, HEADER_COLUMN, AGENCY_HEADER);
+            Map<String,String> agencyMap = new HashMap<String,String>();
+            currentRow = agencyHeader.getRowIndex() + 1;
+            keyCell = sheet.getRow(currentRow).getCell(HEADER_COLUMN);
+            currentKey = "";
+            if(keyCell != null){
+                currentKey = dataFormatter.formatCellValue(keyCell);
+            }
+            valueCell = sheet.getRow(currentRow).getCell(HEADER_COLUMN + 1);
+            currentValue = "";
+            if(valueCell != null){
+                currentValue = dataFormatter.formatCellValue(valueCell);
+            }
+            while(Arrays.stream(AGENCY_FIELDS).anyMatch(currentKey::equalsIgnoreCase)){
+                agencyMap.put(currentKey, currentValue);
+                currentRow = currentRow + 1;
+                keyCell = sheet.getRow(currentRow).getCell(HEADER_COLUMN);
+                currentKey = "";
+                if(keyCell != null){
+                    currentKey = dataFormatter.formatCellValue(keyCell);
+                }
+                valueCell = sheet.getRow(currentRow).getCell(HEADER_COLUMN + 1);
+                currentValue = "";
+                if(valueCell != null){
+                    currentValue = interpretCellValue(valueCell, currentKey, modelFields);
+                }
+            }
             //Specimen
             //Create Specimen Header Map
             Cell specimenHeader = findCellFromColumn(sheet, HEADER_COLUMN, SPECIMEN_HEADER);
@@ -185,17 +212,22 @@ public class XLSXToToxToMDIModelService {
                 }
                 notesRow = sheet.getRow(notesRow.getRowNum() + 1);
             }
+            //Map collected fields to entity
+            modelFields = mapLaboratoryFields(modelFields, laboratoryMap);
+            modelFields = mapDecedentFields(modelFields, decedentMap);
+            modelFields = mapAgencyFields(modelFields, agencyMap);
+
             returnList.add(modelFields);
         }
         return returnList;
     }
 
     public ToxToMDIModelFields mapLaboratoryFields(ToxToMDIModelFields modelFields, Map<String,String> laboratoryMap){
-        Optional.ofNullable(laboratoryMap.get("Toxicology Lab Name")).ifPresent(x -> modelFields.TOXORGNAME = x);
-        Optional.ofNullable(laboratoryMap.get("Lab Address: Street")).ifPresent(x -> modelFields.TOXORGSTREET = x);
-        Optional.ofNullable(laboratoryMap.get("Lab Address: County")).ifPresent(x -> modelFields.TOXORGCOUNTY = x);
-        Optional.ofNullable(laboratoryMap.get("Lab Address: State")).ifPresent(x -> modelFields.TOXORGSTATE = x);
-        Optional.ofNullable(laboratoryMap.get("Lab Address: Zip")).ifPresent(x -> modelFields.TOXORGZIP = x);
+        Optional.ofNullable(laboratoryMap.get("Toxicology Lab Name")).ifPresent(x -> modelFields.TOXORG_NAME = x);
+        Optional.ofNullable(laboratoryMap.get("Lab Address: Street")).ifPresent(x -> modelFields.TOXORG_STREET = x);
+        Optional.ofNullable(laboratoryMap.get("Lab Address: County")).ifPresent(x -> modelFields.TOXORG_COUNTY = x);
+        Optional.ofNullable(laboratoryMap.get("Lab Address: State")).ifPresent(x -> modelFields.TOXORG_STATE = x);
+        Optional.ofNullable(laboratoryMap.get("Lab Address: Zip")).ifPresent(x -> modelFields.TOXORG_ZIP = x);
         Optional.ofNullable(laboratoryMap.get("Laboratory Case Number")).ifPresent(x -> modelFields.TOXCASENUMBER = x);
         Optional.ofNullable(laboratoryMap.get("Performer")).ifPresent(x -> modelFields.TOXPERFORMER = x);
         return modelFields;
@@ -218,6 +250,18 @@ public class XLSXToToxToMDIModelService {
         Optional.ofNullable(decedentMap.get("Date/Time of Receipt")).ifPresent(x -> modelFields.RECEIPT_DATETIME = x);
         Optional.ofNullable(decedentMap.get("Date of Report Issuance")).ifPresent(x -> modelFields.REPORTISSUANCE_DATETIME = x);
         //Optional.ofNullable(decedentMap.get("Name of Certifier")).ifPresent(x -> modelFields. = x); TODO Map Certifier
+        return modelFields;
+    }
+
+    public ToxToMDIModelFields mapAgencyFields(ToxToMDIModelFields modelFields, Map<String,String> agencyMap){
+        Optional.ofNullable(agencyMap.get("MDI Agency Name")).ifPresent(x -> modelFields.AGENCY_NAME = x);
+        Optional.ofNullable(agencyMap.get("MDI Agency Address: Street")).ifPresent(x -> modelFields.AGENCY_STREET = x);
+        Optional.ofNullable(agencyMap.get("MDI Agency Address: City")).ifPresent(x -> modelFields.AGENCY_CITY = x);
+        Optional.ofNullable(agencyMap.get("MDI Agency Address: County")).ifPresent(x -> modelFields.AGENCY_COUNTY = x);
+        Optional.ofNullable(agencyMap.get("MDI Agency Address: State")).ifPresent(x -> modelFields.AGENCY_STATE = x);
+        Optional.ofNullable(agencyMap.get("MDI Agency Address: Zip")).ifPresent(x -> modelFields.AGENCY_ZIP = x);
+        Optional.ofNullable(agencyMap.get("Pathologist/Coroner")).ifPresent(x -> modelFields.CORONER_NAME = x);
+        Optional.ofNullable(agencyMap.get("Investigator/Point of Contact")).ifPresent(x -> modelFields.INVESTIGATOR = x);
         return modelFields;
     }
 

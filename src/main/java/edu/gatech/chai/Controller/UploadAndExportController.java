@@ -6,9 +6,7 @@ import java.io.InputStreamReader;
 import java.io.Reader;
 import java.lang.reflect.Field;
 import java.text.ParseException;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.apache.tika.Tika;
@@ -16,13 +14,10 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.CrossOrigin;
-import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.client.HttpStatusCodeException;
@@ -48,7 +43,6 @@ import edu.gatech.chai.Mapping.Service.LocalToMDIAndEDRSService;
 import edu.gatech.chai.Mapping.Service.LocalToToxToMDIService;
 import edu.gatech.chai.Mapping.Service.XLSXToMDIAndEDRSModelService;
 import edu.gatech.chai.Mapping.Service.XLSXToToxToMDIModelService;
-import edu.gatech.chai.Submission.Entity.PatientSubmit;
 import edu.gatech.chai.Submission.Repository.PatientSubmitRepository;
 import edu.gatech.chai.Submission.Service.SubmitBundleService;
 
@@ -61,8 +55,6 @@ public class UploadAndExportController {
 	LocalToToxToMDIService mDIToToxToMDIService;
 	@Autowired
 	SubmitBundleService submitBundleService;
-	@Autowired
-	private PatientSubmitRepository patientSubmitRepository;
 	@Autowired
 	private XLSXToMDIAndEDRSModelService xLSXToMDIToEDRSService;
 	@Autowired

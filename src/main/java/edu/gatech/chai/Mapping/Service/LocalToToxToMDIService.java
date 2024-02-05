@@ -62,10 +62,8 @@ public class LocalToToxToMDIService {
 	private String my_url;
 	@Autowired
 	private MDIFhirContext mdiFhirContext;
-	private Extension dataAbsentNotAskedExtension;
 
 	public LocalToToxToMDIService(){
-		dataAbsentNotAskedExtension = new Extension("http://hl7.org/fhir/StructureDefinition/data-absent-reason", new CodeType("not-asked"));
 	}
 	public String convertToMDIString(ToxToMDIModelFields inputFields, int index) {
 		Bundle fullBundle = convertToMDI(inputFields, index);
@@ -96,12 +94,21 @@ public class LocalToToxToMDIService {
 		msc.setEndpoint(my_url);
 		messageHeader.setSource(msc);
 		LocalModelToFhirCMSUtil.addResourceToBundle(returnBundle, messageHeader);
-		// Handle Performer
+		//Handle Local Agency
+		Stream<String> agencyFields = Stream.of(inputFields.AGENCY_NAME, inputFields.AGENCY_STREET,
+			inputFields.AGENCY_CITY, inputFields.AGENCY_COUNTY, inputFields.AGENCY_STATE,
+			inputFields.AGENCY_ZIP, inputFields.CORONER_NAME, inputFields.INVESTIGATOR);
+		//Local Agency will be an organizationrole + organization and practitioner for now.
+		//TODO: Add Relevant MDI resources when they become available
+		if(!agencyFields.allMatch(x -> x == null || x.isEmpty())) {
+			createAgency(inputFields, idTemplate, returnBundle, messageHeader);
+		}
+		// Handle Laboratory Performer
 		Resource performerResource = null; // Performer can be a US-Core-Practitioner or a PractitionerRole
 		Reference performerReference = null;
-		Stream<String> performerFields = Stream.of(inputFields.TOXORGNAME, inputFields.TOXORGSTREET,
-				inputFields.TOXORGCITY, inputFields.TOXORGCOUNTY, inputFields.TOXORGSTATE, inputFields.TOXORGZIP,
-				inputFields.TOXORGCOUNTRY, inputFields.TOXPERFORMER);
+		Stream<String> performerFields = Stream.of(inputFields.TOXORG_NAME, inputFields.TOXORG_STREET,
+				inputFields.TOXORG_CITY, inputFields.TOXORG_COUNTY, inputFields.TOXORG_STATE, inputFields.TOXORG_ZIP,
+				inputFields.TOXORG_COUNTRY, inputFields.TOXPERFORMER);
 		if (!performerFields.allMatch(x -> x == null || x.isEmpty())) {
 			performerResource = createPerformer(inputFields, idTemplate, returnBundle);
 			performerReference = new Reference(
@@ -228,6 +235,82 @@ public class LocalToToxToMDIService {
 		return returnDecedent;
 	}
 
+	private Resource createAgency(ToxToMDIModelFields inputFields, String idTemplate, BundleMessageToxToMDI bundle, MessageHeaderToxicologyToMDI messageHeader) {
+		Stream<String> organizationFields = Stream.of(inputFields.AGENCY_NAME,inputFields.AGENCY_STREET, inputFields.AGENCY_CITY, inputFields.AGENCY_COUNTY,
+			inputFields.AGENCY_STATE, inputFields.AGENCY_ZIP);
+		Stream<String> organizationAddressFields = Stream.of(inputFields.AGENCY_STREET, inputFields.AGENCY_CITY, inputFields.AGENCY_COUNTY,
+			inputFields.AGENCY_STATE, inputFields.AGENCY_ZIP);
+		Organization agencyOrganization = null;
+		Practitioner coronerPractitioner = null;
+		Practitioner investigatorPractitioner = null;
+		PractitionerRole agencyCoronerPractitionerRole = null;
+		PractitionerRole agencyInvestigatorPractitionerRole = null;
+
+		Reference agencyOrganizationReference = null;
+		Reference coronerPractitionerReference = null;
+		Reference investigatorPractitionerReference = null;
+		//Create Organization
+		if (!organizationFields.allMatch(x -> x == null || x.isEmpty())) {
+			agencyOrganization = new Organization();
+			agencyOrganization.setId(idTemplate + "-Agency-Organization");
+			agencyOrganization.setMeta(
+					new Meta().addProfile("http://hl7.org/fhir/us/core/StructureDefinition/us-core-organization"));
+			agencyOrganization.setActive(true);
+			agencyOrganization.setName(inputFields.AGENCY_NAME);
+			if(!organizationAddressFields.allMatch(x -> x == null || x.isEmpty())) {
+				agencyOrganization.addAddress(LocalModelToFhirCMSUtil.createAddress(inputFields.AGENCY_NAME, inputFields.AGENCY_STREET,
+					inputFields.AGENCY_CITY, inputFields.AGENCY_COUNTY, inputFields.AGENCY_STATE, inputFields.AGENCY_ZIP,
+					""));
+			}
+			agencyOrganizationReference = new Reference("Organization/" + agencyOrganization.getId());
+			LocalModelToFhirCMSUtil.addResourceToBundle(bundle, agencyOrganization);
+		}
+		//Create Coroner
+		if(inputFields.CORONER_NAME != null && !inputFields.CORONER_NAME.isEmpty()){
+			coronerPractitioner = new Practitioner();
+			coronerPractitioner.setId(idTemplate + "-Agency-Coroner");
+			coronerPractitioner.setMeta(
+					new Meta().addProfile("http://hl7.org/fhir/us/core/StructureDefinition/us-core-practitioner"));
+			coronerPractitioner.addName(LocalModelToFhirCMSUtil.parseHumanName(inputFields.CORONER_NAME));
+			LocalModelToFhirCMSUtil.setIdentiferDataAbsentReasonNotAsked(coronerPractitioner);
+			coronerPractitionerReference = new Reference("Practitioner/" + coronerPractitioner.getId());
+			LocalModelToFhirCMSUtil.addResourceToBundle(bundle, coronerPractitioner);
+		}
+		//Create Investigator
+		if(inputFields.INVESTIGATOR != null && !inputFields.INVESTIGATOR.isEmpty()){
+			investigatorPractitioner = new Practitioner();
+			investigatorPractitioner.setId(idTemplate + "-Agency-Investigator");
+			investigatorPractitioner.setMeta(
+					new Meta().addProfile("http://hl7.org/fhir/us/core/StructureDefinition/us-core-practitioner"));
+					investigatorPractitioner.addName(LocalModelToFhirCMSUtil.parseHumanName(inputFields.INVESTIGATOR));
+			LocalModelToFhirCMSUtil.setIdentiferDataAbsentReasonNotAsked(investigatorPractitioner);
+			investigatorPractitionerReference = new Reference("Practitioner/" + investigatorPractitioner.getId());
+			LocalModelToFhirCMSUtil.addResourceToBundle(bundle, investigatorPractitioner);
+		}
+		//If Organzation and at least one practitioner exists, create a practitionerrole per org-practitioner pair
+		if(agencyOrganization != null && (coronerPractitioner != null || investigatorPractitioner != null)){
+			if(coronerPractitioner != null){
+				agencyCoronerPractitionerRole = new PractitionerRole();
+				agencyCoronerPractitionerRole.setId(idTemplate + "-Agency");
+				agencyCoronerPractitionerRole.setMeta(
+					new Meta().addProfile("http://hl7.org/fhir/us/core/StructureDefinition/us-core-practitioner"));
+				agencyCoronerPractitionerRole.setOrganization(agencyOrganizationReference);
+				agencyCoronerPractitionerRole.setPractitioner(coronerPractitionerReference);
+				LocalModelToFhirCMSUtil.addResourceToBundle(bundle, agencyCoronerPractitionerRole);
+			}
+			if(investigatorPractitioner != null){
+				agencyInvestigatorPractitionerRole = new PractitionerRole();
+				agencyInvestigatorPractitionerRole.setId(idTemplate + "-Agency");
+				agencyInvestigatorPractitionerRole.setMeta(
+					new Meta().addProfile("http://hl7.org/fhir/us/core/StructureDefinition/us-core-practitioner"));
+				agencyInvestigatorPractitionerRole.setOrganization(agencyOrganizationReference);
+				agencyInvestigatorPractitionerRole.setPractitioner(investigatorPractitionerReference);
+				LocalModelToFhirCMSUtil.addResourceToBundle(bundle, agencyInvestigatorPractitionerRole);
+			}
+		}
+		return bundle;
+	}
+
 	private Resource createPerformer(ToxToMDIModelFields inputFields, String idTemplate, BundleMessageToxToMDI bundle) {
 		// If there's an organization, create a PractitionerRole with Organization and
 		// Practitioner, otherwise just create a practitioner
@@ -239,42 +322,31 @@ public class LocalToToxToMDIService {
 		Reference practitionerRoleReference = null;
 		Practitioner practitioner = null;
 		Reference practitionerReference = null;
-		Stream<String> organizationFields = Stream.of(inputFields.TOXORGNAME, inputFields.TOXORGSTREET,
-				inputFields.TOXORGCITY, inputFields.TOXORGCOUNTY, inputFields.TOXORGSTATE, inputFields.TOXORGZIP,
-				inputFields.TOXORGCOUNTRY);
+		Stream<String> organizationFields = Stream.of(inputFields.TOXORG_NAME, inputFields.TOXORG_STREET,
+				inputFields.TOXORG_CITY, inputFields.TOXORG_COUNTY, inputFields.TOXORG_STATE, inputFields.TOXORG_ZIP,
+				inputFields.TOXORG_COUNTRY);
 		if (!organizationFields.allMatch(x -> x == null || x.isEmpty())) {
 			practitionerRoleSet = true;
 			organization = new Organization();
-			organization.setId(idTemplate + "-Organization");
+			organization.setId(idTemplate + "-Laboratory-Organization");
 			organization.setMeta(
 					new Meta().addProfile("http://hl7.org/fhir/us/core/StructureDefinition/us-core-organization"));
 			organization.setActive(true);
-			organization.setName(inputFields.TOXORGNAME);
-			organization.addAddress(LocalModelToFhirCMSUtil.createAddress(inputFields.TOXORGNAME, inputFields.TOXORGSTREET,
-					inputFields.TOXORGCITY, inputFields.TOXORGCOUNTY, inputFields.TOXORGSTATE, inputFields.TOXORGZIP,
-					inputFields.TOXORGCOUNTRY));
+			organization.setName(inputFields.TOXORG_NAME);
+			organization.addAddress(LocalModelToFhirCMSUtil.createAddress(inputFields.TOXORG_NAME, inputFields.TOXORG_STREET,
+					inputFields.TOXORG_CITY, inputFields.TOXORG_COUNTY, inputFields.TOXORG_STATE, inputFields.TOXORG_ZIP,
+					inputFields.TOXORG_COUNTRY));
 			organizationReference = new Reference("Organization/" + organization.getId());
 			LocalModelToFhirCMSUtil.addResourceToBundle(bundle, organization);
 			practitionerRole = new PractitionerRole();
-			practitionerRole.setId(idTemplate + "-PractitionerRole");
+			practitionerRole.setId(idTemplate + "-Laboratory-PractitionerRole");
 			practitionerRole.setMeta(
 					new Meta().addProfile("http://hl7.org/fhir/us/core/StructureDefinition/us-core-practitionerrole"));
 			practitionerRole.setOrganization(organizationReference);
 			LocalModelToFhirCMSUtil.addResourceToBundle(bundle, practitionerRole);
 			returnPerformer = practitionerRole;
-			//Assign a data-absent-reason to the practitionerRole.identifier of 'not-asked'
-			StringType notAskedStringType = new StringType();
-			notAskedStringType.addExtension(dataAbsentNotAskedExtension);
-			UriType notAskedUriType = new UriType();
-			notAskedUriType.addExtension(dataAbsentNotAskedExtension);
-			Identifier notAskedIdentifier = new Identifier();
-			notAskedIdentifier.setValueElement(notAskedStringType);
-			notAskedIdentifier.setSystemElement(notAskedUriType);
-			practitionerRole.addIdentifier(notAskedIdentifier);
-			//Assign a data-absent-reason to the practitionerRole.endpoint of 'not-asked'
-			Reference notAskedEndpoint = new Reference();
-			notAskedEndpoint.addExtension(dataAbsentNotAskedExtension);
-			practitionerRole.addEndpoint(notAskedEndpoint);
+			LocalModelToFhirCMSUtil.setIdentiferDataAbsentReasonNotAsked(practitionerRole);
+			LocalModelToFhirCMSUtil.setEndpointDataAbsentReasonNotAsked(practitionerRole);
 		}
 		Stream<String> practitionerFields = Stream.of(inputFields.TOXPERFORMER);
 		if (!practitionerFields.allMatch(x -> x == null || x.isEmpty())) {
