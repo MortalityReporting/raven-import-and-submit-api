@@ -126,7 +126,7 @@ public class XLSXToToxToMDIModelService {
                 }
                 valueCell = sheet.getRow(currentRow).getCell(HEADER_COLUMN + 1);
                 currentValue = "";
-                if(valueCell != null){
+                if(valueCell != null && valueCell.getDateCellValue() != null){
                     currentValue = interpretCellValue(valueCell, currentKey, modelFields);
                 }
             }
@@ -154,7 +154,7 @@ public class XLSXToToxToMDIModelService {
                 }
                 valueCell = sheet.getRow(currentRow).getCell(HEADER_COLUMN + 1);
                 currentValue = "";
-                if(valueCell != null){
+                if(valueCell != null valueCell.getDateCellValue() != null){
                     currentValue = interpretCellValue(valueCell, currentKey, modelFields);
                 }
             }

@@ -19,6 +19,7 @@ import org.hl7.fhir.r4.model.Extension;
 import org.hl7.fhir.r4.model.HumanName;
 import org.hl7.fhir.r4.model.HumanName.NameUse;
 import org.hl7.fhir.r4.model.Identifier;
+import org.hl7.fhir.r4.model.MessageHeader.MessageDestinationComponent;
 import org.hl7.fhir.r4.model.MessageHeader.MessageSourceComponent;
 import org.hl7.fhir.r4.model.Observation.ObservationStatus;
 import org.hl7.fhir.r4.model.Meta;
@@ -264,6 +265,10 @@ public class LocalToToxToMDIService {
 			}
 			agencyOrganizationReference = new Reference("Organization/" + agencyOrganization.getId());
 			LocalModelToFhirCMSUtil.addResourceToBundle(bundle, agencyOrganization);
+			MessageDestinationComponent mdc = new MessageDestinationComponent();
+			mdc.setReceiverTarget(agencyOrganization);
+			mdc.setReceiver(agencyOrganizationReference);
+			messageHeader.addDestination(mdc);
 		}
 		//Create Coroner
 		if(inputFields.CORONER_NAME != null && !inputFields.CORONER_NAME.isEmpty()){
