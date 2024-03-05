@@ -42,16 +42,20 @@ import org.hl7.fhir.r4.model.Procedure;
 import org.hl7.fhir.r4.model.Procedure.ProcedureStatus;
 import org.hl7.fhir.r4.model.Reference;
 import org.hl7.fhir.r4.model.StringType;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import ca.uhn.fhir.model.api.TemporalPrecisionEnum;
 import ca.uhn.fhir.parser.IParser;
+import edu.gatech.chai.Controller.UploadAndExportController;
 import edu.gatech.chai.MDI.Model.MDIAndEDRSModelFields;
 import edu.gatech.chai.MDI.context.MDIFhirContext;
 import edu.gatech.chai.MDI.model.resource.BundleDocumentMDIAndEDRS;
 import edu.gatech.chai.MDI.model.resource.CompositionMDIAndEDRS;
+import edu.gatech.chai.MDI.model.resource.ObservationCauseOfDeathPart1;
 import edu.gatech.chai.MDI.model.resource.ObservationHowDeathInjuryOccurred;
 import edu.gatech.chai.Mapping.Util.CommonMappingUtil;
 import edu.gatech.chai.Mapping.Util.LocalModelToFhirCMSUtil;
@@ -62,10 +66,13 @@ import edu.gatech.chai.VRDR.model.CauseOfDeathPart1;
 import edu.gatech.chai.VRDR.model.CauseOfDeathPart2;
 import edu.gatech.chai.VRDR.model.DeathCertificationProcedure;
 import edu.gatech.chai.VRDR.model.DeathDate;
+import edu.gatech.chai.VRDR.model.Decedent;
 import edu.gatech.chai.VRDR.model.DecedentPregnancyStatus;
+import edu.gatech.chai.VRDR.model.InjuryIncident;
 import edu.gatech.chai.VRDR.model.InjuryLocation;
 import edu.gatech.chai.VRDR.model.MannerOfDeath;
 import edu.gatech.chai.VRDR.model.TobaccoUseContributedToDeath;
+import edu.gatech.chai.VRDR.model.util.CauseOfDeathConditionUtil;
 import edu.gatech.chai.VRDR.model.util.DecedentUtil;
 
 @Service
@@ -76,8 +83,11 @@ public class LocalToMDIAndEDRSService {
 	@Autowired
 	private MDIFhirContext mdiFhirContext;
 	
+	private static final Logger logger = LoggerFactory.getLogger(LocalToMDIAndEDRSService.class);
+
 	public String convertToMDIString(MDIAndEDRSModelFields inputFields) throws ParseException {
 		Bundle fullBundle = convertToMDI(inputFields);
+		logger.info("Creating bundle:"+fullBundle.getId());
 		return convertToMDIString(fullBundle);
 	}
 
@@ -244,11 +254,11 @@ public class LocalToMDIAndEDRSService {
 			mainComposition.getCauseMannerSection().addEntry(new Reference("Observation/"+manner.getId()));
 			LocalModelToFhirCMSUtil.addResourceToBundle(returnBundle, manner);
 		}
-		// Handle HowDeathInjuryOccurred
+		// Handle InjuryIncident
 		Stream<String> deathInjuryFields = Stream.of(inputFields.CHOWNINJURY, inputFields.CINJDATE, inputFields.CINJTIME, inputFields.INJURYLOCATION,
 				inputFields.ATWORK,inputFields.TRANSPORTATION);
 		if(!deathInjuryFields.allMatch(x -> x == null || x.isEmpty())) {
-			ObservationHowDeathInjuryOccurred deathInjuryDescription = createHowDeathInjuryOccurred(inputFields, patientResource, certifierResource);
+			InjuryIncident deathInjuryDescription = createInjuryIncident(inputFields, patientReference, certifierReference);
 			mainComposition.getCauseMannerSection().addEntry(new Reference("Observation/"+deathInjuryDescription.getId()));
 			LocalModelToFhirCMSUtil.addResourceToBundle(returnBundle, deathInjuryDescription);
 		}
@@ -522,11 +532,15 @@ public class LocalToMDIAndEDRSService {
 			String interval = (i < intervals.size()) ? intervals.get(i) : "";
 			if(cause != null && !cause.isEmpty()) {
 				int lineNumber = i + 1; //entry 0 = line number 1
-				CauseOfDeathPart1 causeOfDeathCondition = new CauseOfDeathPart1();
+				ObservationCauseOfDeathPart1 causeOfDeathCondition = new ObservationCauseOfDeathPart1();
 				causeOfDeathCondition.setSubject(patientReference);
 				causeOfDeathCondition.addPerformer(practitionerReference);
-				causeOfDeathCondition.setValue(cause);
-				causeOfDeathCondition.createInterval(interval);
+				causeOfDeathCondition.setValue(new CodeableConcept().setText(cause));
+				if(interval != null && !interval.isEmpty()){
+					Observation.ObservationComponentComponent component = new Observation.ObservationComponentComponent();
+      				component.setCode(CauseOfDeathConditionUtil.intervalComponentCode);
+      				component.setValue(new StringType(interval));
+				}
 				causeOfDeathCondition.setId(inputFields.BASEFHIRID+"CauseOfDeathPart1-"+i);
 				causeOfDeathCondition.setStatus(ObservationStatus.PRELIMINARY);
 				//CauseOfDeathPart1 VRDR model didn't specify linenumber component directly so we have to do it manually
@@ -549,7 +563,7 @@ public class LocalToMDIAndEDRSService {
 			conditionContrib.setStatus(ObservationStatus.PRELIMINARY);
 			conditionContrib.setSubject(patientReference);
 			conditionContrib.addPerformer(practitionerReference);
-			conditionContrib.setCode(new CodeableConcept().setText(otherCause));
+			conditionContrib.setValue(new CodeableConcept().setText(otherCause));
 			returnList.add(conditionContrib);
 			i++;
 		}
@@ -596,11 +610,14 @@ public class LocalToMDIAndEDRSService {
 		return manner;
 	}
 	
-	private ObservationHowDeathInjuryOccurred createHowDeathInjuryOccurred(MDIAndEDRSModelFields inputFields, Patient patientResource, Practitioner practitionerResource){
-		ObservationHowDeathInjuryOccurred injuryDescription = new ObservationHowDeathInjuryOccurred(patientResource, practitionerResource, inputFields.CHOWNINJURY);
+	private InjuryIncident createInjuryIncident(MDIAndEDRSModelFields inputFields, Reference patientReference, Reference certifierReference){
+		InjuryIncident injuryDescription = new InjuryIncident();
 		injuryDescription.setId(inputFields.BASEFHIRID+"InjuryDescription");
 		injuryDescription.setStatus(ObservationStatus.FINAL);
-
+		injuryDescription.setSubject(patientReference);
+		if(certifierReference != null){
+			injuryDescription.addPerformer(certifierReference);
+		}
 		if(inputFields.CINJDATE != null && !inputFields.CINJDATE.isEmpty()) {
 			Date injDate = CommonMappingUtil.parseDateFromField(inputFields, "CINJDATE", inputFields.CINJDATE);
 			if(inputFields.CINJTIME != null && !inputFields.CINJTIME.isEmpty()) {
@@ -612,14 +629,14 @@ public class LocalToMDIAndEDRSService {
 		}
 
 		if(inputFields.INJURYLOCATION != null && !inputFields.INJURYLOCATION.isEmpty()) {
-			injuryDescription.addPlaceOfInjury(inputFields.INJURYLOCATION);
+			injuryDescription.addPlaceOfInjuryComponent(inputFields.INJURYLOCATION);
 		}
 
 		if(inputFields.ATWORK != null && !inputFields.ATWORK.isEmpty()){
-			injuryDescription.addWorkInjuryIndicator(inputFields.ATWORK);
+			injuryDescription.addInjuredAtWorkComponent(inputFields.ATWORK);
 		}
 		if(inputFields.TRANSPORTATION != null && !inputFields.TRANSPORTATION.isEmpty()){
-			injuryDescription.addTransportationRole(inputFields.TRANSPORTATION);
+			injuryDescription.addTransportationEventIndicatorComponent(inputFields.TRANSPORTATION);
 		}
 		return injuryDescription;
 	}

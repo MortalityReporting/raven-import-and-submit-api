@@ -168,7 +168,7 @@ public class UploadAndExportController {
 	@PostMapping(value = {"upload-mdi-to-edrs-xlsx-file"})
     public ResponseEntity<JsonNode> uploadXLSXFileForMDIToEDRS(@RequestParam(name = "file", required = true) MultipartFile file) throws JsonProcessingException {
 		//Read XLSX File submitted
-		logger.info("XLSX MDI-To-EDRS Upload: Starting XLSX File Read");
+		logger.info("XLSX MDI-and-EDRS Upload: Starting XLSX File Read");
 		Tika tika = new Tika();
 		String detectedType;
 		XSSFWorkbook workbook = null;
@@ -217,7 +217,7 @@ public class UploadAndExportController {
 			responseObject.set("fields", fields);
 			//Actually submit to the fhir server here!
 			if(submitFlag){
-				logger.info("XLSX TOX-To-MDI Upload: Uploading Tox-To-EDRS To FhirBase");
+				logger.info("XLSX MDI-and-EDRS Upload: Uploading Tox-To-EDRS To FhirBase");
 				JsonNode responseInfo = submitToFhirBase(bundleString, modelFields, mapper);
 				responseObject.set("fhirResponse", responseInfo);
 				responseObject.put("Narrative", "");
