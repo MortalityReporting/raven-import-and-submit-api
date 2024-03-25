@@ -151,6 +151,15 @@ public class LocalToMDIAndEDRSService {
 			mainComposition.setSubject(patientReference);
 			LocalModelToFhirCMSUtil.addResourceToBundle(returnBundle, patientResource);
 		}
+		//Special handling to identify a primaryMEC. If a certifier is found but no ME/C is found; just the MEC
+		if(inputFields.MENAME == null || inputFields.MENAME.isEmpty()){
+			if(inputFields.CERTIFIER_NAME != null && !inputFields.CERTIFIER_NAME.isEmpty()){
+				inputFields.MENAME = inputFields.CERTIFIER_NAME;
+			}
+			else if(inputFields.PRONOUNCERNAME != null && !inputFields.PRONOUNCERNAME.isEmpty()){
+				inputFields.MENAME = inputFields.PRONOUNCERNAME;
+			}
+		}
 		// Handle Primary Medical Examiner/Coroner
 		Stream<String> primaryMECFields = Stream.of(inputFields.MENAME,inputFields.MELICENSE,inputFields.MEPHONE,
 			inputFields.ME_STREET,inputFields.ME_CITY,inputFields.ME_COUNTY,inputFields.ME_STATE,inputFields.ME_ZIP);
