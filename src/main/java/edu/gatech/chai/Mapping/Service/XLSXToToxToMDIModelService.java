@@ -13,6 +13,7 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import org.apache.poi.ss.usermodel.Cell;
+import org.apache.poi.ss.usermodel.CellType;
 import org.apache.poi.ss.usermodel.DataFormatter;
 import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.xssf.usermodel.XSSFRow;
@@ -32,11 +33,11 @@ public class XLSXToToxToMDIModelService {
     private static String TEMPLATE_TITLE = "Toxicology-To-MDI Template";
     private static String FILEID_HEADER = "file Id";
     private static String LABORATORY_HEADER = "Laboratory";
-    private static final String[] LABORATORY_FIELDS = {"Toxicology Lab Name", "Lab Address: Street", "Lab Address: Street", "Lab Address: City", "Lab Address: County", "Lab Address: State", "Lab Address: Zip", "Laboratory Case Number", "Performer"};
+    private static final String[] LABORATORY_FIELDS = {"Toxicology Lab Name", "Lab Address: Street", "Lab Address: City", "Lab Address: County", "Lab Address: State", "Lab Address: Zip", "Laboratory Case Number", "Performer"};
     private static String AGENCY_HEADER = "Agency Name";
     private static final String[] AGENCY_FIELDS = {"MDI Agency Name", "MDI Agency Address: Street", "MDI Agency Address: City", "MDI Agency Address: County", "MDI Agency Address: State", "MDI Agency Address: Zip", "Pathologist/Coroner", "Investigator/Point of Contact"};
     private static String DECEDENT_HEADER = "Decedent";
-    private static final String[] DECEDENT_FIELDS = {"Toxicology Laboratory Case Number", "Decedent Name", "MDI Case Management Number", "Examination/Autopsy Number", "Decedent Sex", "Decedent DOB", "ME/C Case Notes", "Date of Report Issuance", "Analyst", "Toxicologist/Certifier (Title)"};
+    private static final String[] DECEDENT_FIELDS = {"Decedent Name", "MDI Case Management Number", "Examination/Autopsy Number", "Decedent Sex", "Decedent DOB", "ME/C Case Notes", "Date of Report Issuance", "Analyst", "Toxicologist/Certifier (Title)"};
     private static String SPECIMEN_HEADER = "Specimens";
     private static final String[] SPECIMEN_FIELDS = {"Name", "Specimen Unique Identifier", "Body Site", "Amount", "Container", "Date/Time Collected", "Date/Time of Receipt", "Condition", "Comments"};
     private static String RESULTS_HEADER = "Results";
@@ -126,7 +127,7 @@ public class XLSXToToxToMDIModelService {
                 }
                 valueCell = sheet.getRow(currentRow).getCell(HEADER_COLUMN + 1);
                 currentValue = "";
-                if(valueCell != null && valueCell.getDateCellValue() != null){
+                if(valueCell != null){
                     currentValue = interpretCellValue(valueCell, currentKey, modelFields);
                 }
             }
@@ -154,7 +155,7 @@ public class XLSXToToxToMDIModelService {
                 }
                 valueCell = sheet.getRow(currentRow).getCell(HEADER_COLUMN + 1);
                 currentValue = "";
-                if(valueCell != null && valueCell.getDateCellValue() != null){
+                if(valueCell != null){
                     currentValue = interpretCellValue(valueCell, currentKey, modelFields);
                 }
             }
