@@ -52,6 +52,7 @@ import edu.gatech.chai.MDI.model.resource.SpecimenToxicologyLab;
 import edu.gatech.chai.MDI.model.resource.util.CompositionMDIAndEDRSUtil;
 import edu.gatech.chai.Mapping.Util.CommonMappingUtil;
 import edu.gatech.chai.Mapping.Util.LocalModelToFhirCMSUtil;
+import edu.gatech.chai.VRCL.model.PatientVitalRecords;
 import edu.gatech.chai.VRDR.model.util.DecedentUtil;
 
 @Service
@@ -194,9 +195,7 @@ public class LocalToToxToMDIService {
 	}
 
 	private Patient createPatient(ToxToMDIModelFields inputFields, String idTemplate) {
-		Patient returnDecedent = new Patient();
-		returnDecedent
-				.setMeta(new Meta().addProfile("http://hl7.org/fhir/us/core/StructureDefinition/us-core-patient"));
+		Patient returnDecedent = new PatientVitalRecords();
 		returnDecedent.setId(idTemplate + "-Decedent");
 		Stream<String> caseIdFields = Stream.of(inputFields.MDICASESYSTEM);
 		Stream<String> nameFields = Stream.of(inputFields.FIRSTNAME, inputFields.LASTNAME, inputFields.MIDNAME,

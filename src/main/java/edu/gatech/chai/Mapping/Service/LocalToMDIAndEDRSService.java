@@ -62,6 +62,7 @@ import edu.gatech.chai.Mapping.Util.LocalModelToFhirCMSUtil;
 import edu.gatech.chai.USCore.model.util.CommonUtil;
 import edu.gatech.chai.VRCL.model.AutopsyPerformedIndicator;
 import edu.gatech.chai.VRCL.model.LocationVitalRecords;
+import edu.gatech.chai.VRCL.model.PatientVitalRecords;
 import edu.gatech.chai.VRDR.model.CauseOfDeathPart1;
 import edu.gatech.chai.VRDR.model.CauseOfDeathPart2;
 import edu.gatech.chai.VRDR.model.DeathCertificationProcedure;
@@ -293,8 +294,7 @@ public class LocalToMDIAndEDRSService {
 	}
 	
 	private Patient createPatient(MDIAndEDRSModelFields inputFields) throws ParseException {
-		Patient returnDecedent = new Patient();
-		returnDecedent.setMeta(new Meta().addProfile("http://hl7.org/fhir/us/core/StructureDefinition/us-core-patient"));
+		Patient returnDecedent = new PatientVitalRecords();
 		returnDecedent.setId(inputFields.BASEFHIRID + "Decedent");
 		/*Stream<String> caseIdFields = Stream.of(inputFields.SYSTEMID,inputFields.CASEID);
 		if(!caseIdFields.allMatch(x -> x == null || x.isEmpty())) {
