@@ -1,4 +1,4 @@
-package edu.gatech.chai.Mapping.Service;
+package edu.gatech.chai.Mapping.Service.mdi;
 
 import java.text.ParseException;
 import java.time.ZoneId;
@@ -50,24 +50,20 @@ import org.springframework.stereotype.Service;
 
 import ca.uhn.fhir.model.api.TemporalPrecisionEnum;
 import ca.uhn.fhir.parser.IParser;
-import edu.gatech.chai.Controller.UploadAndExportController;
 import edu.gatech.chai.MDI.Model.MDIAndEDRSModelFields;
 import edu.gatech.chai.MDI.context.MDIFhirContext;
 import edu.gatech.chai.MDI.model.resource.BundleDocumentMDIAndEDRS;
 import edu.gatech.chai.MDI.model.resource.CompositionMDIAndEDRS;
 import edu.gatech.chai.MDI.model.resource.ObservationCauseOfDeathPart1;
-import edu.gatech.chai.MDI.model.resource.ObservationHowDeathInjuryOccurred;
 import edu.gatech.chai.Mapping.Util.CommonMappingUtil;
 import edu.gatech.chai.Mapping.Util.LocalModelToFhirCMSUtil;
 import edu.gatech.chai.USCore.model.util.CommonUtil;
 import edu.gatech.chai.VRCL.model.AutopsyPerformedIndicator;
 import edu.gatech.chai.VRCL.model.LocationVitalRecords;
 import edu.gatech.chai.VRCL.model.PatientVitalRecords;
-import edu.gatech.chai.VRDR.model.CauseOfDeathPart1;
 import edu.gatech.chai.VRDR.model.CauseOfDeathPart2;
 import edu.gatech.chai.VRDR.model.DeathCertificationProcedure;
 import edu.gatech.chai.VRDR.model.DeathDate;
-import edu.gatech.chai.VRDR.model.Decedent;
 import edu.gatech.chai.VRDR.model.DecedentPregnancyStatus;
 import edu.gatech.chai.VRDR.model.InjuryIncident;
 import edu.gatech.chai.VRDR.model.InjuryLocation;
@@ -507,7 +503,7 @@ public class LocalToMDIAndEDRSService {
 	
 	private TobaccoUseContributedToDeath createObservationTobaccoUseContributedToDeath(MDIAndEDRSModelFields inputFields, Reference decedentReference) {
 		TobaccoUseContributedToDeath tobacco = new TobaccoUseContributedToDeath();
-		tobacco.setStatus(ObservationStatus.PRELIMINARY);
+		tobacco.setStatus(ObservationStatus.FINAL);
 		tobacco.setId(inputFields.BASEFHIRID + "Tobacco");
 		tobacco.setSubject(decedentReference);
 		tobacco.setValue(inputFields.TOBACCO);

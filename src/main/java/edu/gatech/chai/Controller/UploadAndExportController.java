@@ -39,10 +39,10 @@ import edu.gatech.chai.MDI.Model.MDIAndEDRSModelFields;
 import edu.gatech.chai.MDI.Model.ToxResult;
 import edu.gatech.chai.MDI.Model.ToxSpecimen;
 import edu.gatech.chai.MDI.Model.ToxToMDIModelFields;
-import edu.gatech.chai.Mapping.Service.LocalToMDIAndEDRSService;
-import edu.gatech.chai.Mapping.Service.LocalToToxToMDIService;
-import edu.gatech.chai.Mapping.Service.XLSXToMDIAndEDRSModelService;
-import edu.gatech.chai.Mapping.Service.XLSXToToxToMDIModelService;
+import edu.gatech.chai.Mapping.Service.mdi.LocalToMDIAndEDRSService;
+import edu.gatech.chai.Mapping.Service.mdi.LocalToToxToMDIService;
+import edu.gatech.chai.Mapping.Service.mdi.XLSXToMDIAndEDRSModelService;
+import edu.gatech.chai.Mapping.Service.mdi.XLSXToToxToMDIModelService;
 import edu.gatech.chai.Submission.Repository.PatientSubmitRepository;
 import edu.gatech.chai.Submission.Service.SubmitBundleService;
 

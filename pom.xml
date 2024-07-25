@@ -32,11 +32,11 @@
     	<artifactId>MDI</artifactId>
     	<version>1.2.1-STU-2.0.0-US</version>
     </dependency>
-    <!--<dependency>
+    <dependency>
       <groupId>edu.gatech</groupId>
       <artifactId>nvdrs</artifactId>
       <version>0.2.3</version>
-    </dependency> -->
+    </dependency>
     <dependency>
       <groupId>junit</groupId>
       <artifactId>junit</artifactId>

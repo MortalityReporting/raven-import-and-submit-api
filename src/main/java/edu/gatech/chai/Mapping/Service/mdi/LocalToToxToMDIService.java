@@ -1,4 +1,4 @@
-package edu.gatech.chai.Mapping.Service;
+package edu.gatech.chai.Mapping.Service.mdi;
 
 import java.time.ZoneId;
 import java.util.Date;
