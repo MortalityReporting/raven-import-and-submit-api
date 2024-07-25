@@ -4,7 +4,7 @@
 
   <groupId>edu.gatech</groupId>
   <artifactId>raven-import-and-submit-api</artifactId>
-  <version>1.2.0</version>
+  <version>1.3.0</version>
   <packaging>war</packaging>
 
   <name>raven-import-and-submit-api</name>
@@ -13,13 +13,16 @@
   <properties>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
-		<java.version>1.10</java.version>
+		<java.version>17</java.version>
+    <maven.compiler.source>17</maven.compiler.source>
+    <maven.compiler.target>17</maven.compiler.target>
+    <maven.compiler.release>17</maven.compiler.release>
   </properties>
 
   <parent>
     <groupId>org.springframework.boot</groupId>
     <artifactId>spring-boot-starter-parent</artifactId>
-    <version>2.1.0.RELEASE</version>
+    <version>3.2.5</version>
     <relativePath/>
   </parent>
 	
@@ -27,8 +30,13 @@
     <dependency>
     	<groupId>edu.gatech.chai</groupId>
     	<artifactId>MDI</artifactId>
-    	<version>1.2.0-STU-2.0.0-US</version>
+    	<version>1.2.1-STU-2.0.0-US</version>
     </dependency>
+    <!--<dependency>
+      <groupId>edu.gatech</groupId>
+      <artifactId>nvdrs</artifactId>
+      <version>0.2.3</version>
+    </dependency> -->
     <dependency>
       <groupId>junit</groupId>
       <artifactId>junit</artifactId>
@@ -39,10 +47,6 @@
 		  <groupId>org.springframework.boot</groupId>
 		  <artifactId>spring-boot-starter-data-jpa</artifactId>
 	  </dependency>  -->
-    <dependency>
-      <groupId>org.springframework.boot</groupId>
-      <artifactId>spring-boot-starter-data-jpa</artifactId>
-    </dependency>
     <dependency>
       <groupId>org.springframework.boot</groupId>
       <artifactId>spring-boot-starter-data-rest</artifactId>
@@ -77,16 +81,6 @@
       <optional>true</optional>
     </dependency>
     <dependency>
-          <groupId>com.fasterxml.jackson.dataformat</groupId>
-          <artifactId>jackson-dataformat-xml</artifactId>
-          <version>2.11.1</version>
-    </dependency>
-    <dependency>
-        <groupId>com.fasterxml.jackson.core</groupId>
-        <artifactId>jackson-core</artifactId>
-        <version>2.11.1</version>
-    </dependency>
-    <dependency>
         <groupId>org.apache.poi</groupId>
         <artifactId>poi</artifactId>
         <version>4.1.2</version>
@@ -104,11 +98,31 @@
     </dependency>
   </dependencies>
   
+  <repositories>
+    <repository>
+        <id>nvdrs-mvn-repo</id>
+        <url>https://maven.pkg.github.com/MortalityReporting/nvdrs_flatfile/</url>
+        <snapshots>
+            <enabled>true</enabled>
+            <updatePolicy>always</updatePolicy>
+        </snapshots>
+    </repository>
+</repositories>
+
   <build>
+    <pluginManagement>
+      <plugins>
+        <plugin>
+          <artifactId>maven-surefire-plugin</artifactId>
+          <version>3.0.0-M5</version>
+        </plugin>
+      </plugins>
+    </pluginManagement>
     <plugins>
 	  <plugin>
 	    <groupId>org.springframework.boot</groupId>
         <artifactId>spring-boot-maven-plugin</artifactId>
+        <version>3.2.5</version>
       </plugin>
     </plugins>
   </build>
