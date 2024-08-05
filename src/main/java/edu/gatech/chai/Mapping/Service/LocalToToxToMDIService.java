@@ -53,7 +53,7 @@ import edu.gatech.chai.MDI.model.resource.util.CompositionMDIAndEDRSUtil;
 import edu.gatech.chai.Mapping.Util.CommonMappingUtil;
 import edu.gatech.chai.Mapping.Util.LocalModelToFhirCMSUtil;
 import edu.gatech.chai.VRCL.model.PatientVitalRecords;
-import edu.gatech.chai.VRDR.model.util.DecedentUtil;
+import edu.gatech.chai.model.util.DecedentUtil;
 
 @Service
 public class LocalToToxToMDIService {

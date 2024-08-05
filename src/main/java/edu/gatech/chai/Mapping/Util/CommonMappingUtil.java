@@ -9,7 +9,7 @@ import org.hl7.fhir.r4.model.CodeableConcept;
 
 import edu.gatech.chai.MDI.Model.BaseModelFields;
 import edu.gatech.chai.MDI.Model.ToxToMDIModelFields;
-import edu.gatech.chai.VRDR.model.util.CommonUtil;
+import edu.gatech.chai.model.util.CommonUtil;
 
 public class CommonMappingUtil {
 	public static String trueValueRegex = "yes|true|y";

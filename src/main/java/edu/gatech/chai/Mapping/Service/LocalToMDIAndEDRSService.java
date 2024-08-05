@@ -63,18 +63,18 @@ import edu.gatech.chai.USCore.model.util.CommonUtil;
 import edu.gatech.chai.VRCL.model.AutopsyPerformedIndicator;
 import edu.gatech.chai.VRCL.model.LocationVitalRecords;
 import edu.gatech.chai.VRCL.model.PatientVitalRecords;
-import edu.gatech.chai.VRDR.model.CauseOfDeathPart1;
-import edu.gatech.chai.VRDR.model.CauseOfDeathPart2;
-import edu.gatech.chai.VRDR.model.DeathCertificationProcedure;
-import edu.gatech.chai.VRDR.model.DeathDate;
-import edu.gatech.chai.VRDR.model.Decedent;
-import edu.gatech.chai.VRDR.model.DecedentPregnancyStatus;
-import edu.gatech.chai.VRDR.model.InjuryIncident;
-import edu.gatech.chai.VRDR.model.InjuryLocation;
-import edu.gatech.chai.VRDR.model.MannerOfDeath;
-import edu.gatech.chai.VRDR.model.TobaccoUseContributedToDeath;
-import edu.gatech.chai.VRDR.model.util.CauseOfDeathConditionUtil;
-import edu.gatech.chai.VRDR.model.util.DecedentUtil;
+import edu.gatech.chai.model.CauseOfDeathPart1;
+import edu.gatech.chai.model.CauseOfDeathPart2;
+import edu.gatech.chai.model.DeathCertificationProcedure;
+import edu.gatech.chai.model.DeathDate;
+import edu.gatech.chai.model.Decedent;
+import edu.gatech.chai.model.DecedentPregnancyStatus;
+import edu.gatech.chai.model.InjuryIncident;
+import edu.gatech.chai.model.InjuryLocation;
+import edu.gatech.chai.model.MannerOfDeath;
+import edu.gatech.chai.model.TobaccoUseContributedToDeath;
+import edu.gatech.chai.model.util.CauseOfDeathConditionUtil;
+import edu.gatech.chai.model.util.DecedentUtil;
 
 @Service
 public class LocalToMDIAndEDRSService {
