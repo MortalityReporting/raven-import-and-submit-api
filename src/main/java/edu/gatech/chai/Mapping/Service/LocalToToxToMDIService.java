@@ -33,7 +33,6 @@ import org.hl7.fhir.r4.model.Resource;
 import org.hl7.fhir.r4.model.Specimen.SpecimenCollectionComponent;
 import org.hl7.fhir.r4.model.Specimen.SpecimenContainerComponent;
 import org.hl7.fhir.r4.model.StringType;
-import org.hl7.fhir.r4.model.UriType;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
@@ -53,7 +52,7 @@ import edu.gatech.chai.MDI.model.resource.util.CompositionMDIAndEDRSUtil;
 import edu.gatech.chai.Mapping.Util.CommonMappingUtil;
 import edu.gatech.chai.Mapping.Util.LocalModelToFhirCMSUtil;
 import edu.gatech.chai.VRCL.model.PatientVitalRecords;
-import edu.gatech.chai.model.util.DecedentUtil;
+import edu.gatech.chai.VRDR.model.util.DecedentUtil;
 
 @Service
 public class LocalToToxToMDIService {
