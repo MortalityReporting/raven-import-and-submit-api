@@ -111,6 +111,8 @@ public class XLSXToMDIAndEDRSModelService {
         returnModel.setCAUSEB(getStringForColumnAndName(sheet, returnModel, fieldMap,currentColumn,"Cause of Death Part I Line b"));
         returnModel.setCAUSEC(getStringForColumnAndName(sheet, returnModel, fieldMap,currentColumn,"Cause of Death Part I Line c"));
         returnModel.setCAUSED(getStringForColumnAndName(sheet, returnModel, fieldMap,currentColumn,"Cause of Death Part I Line d"));
+        returnModel.setCERTIFIER_IDENTIFIER(getStringForColumnAndName(sheet, returnModel, fieldMap,currentColumn,"Certifier Identifier"));
+        returnModel.setCERTIFIER_IDENTIFIER_SYSTEM(getStringForColumnAndName(sheet, returnModel, fieldMap,currentColumn,"Certifier Identifier System"));
         returnModel.setCERTIFIER_NAME(getStringForColumnAndName(sheet, returnModel, fieldMap,currentColumn,"Certifier Name"));
         returnModel.setCERTIFIER_TYPE(getStringForColumnAndName(sheet, returnModel, fieldMap,currentColumn,"Certifier Type"));
         returnModel.setCHOWNINJURY(getStringForColumnAndName(sheet, returnModel, fieldMap,currentColumn,"How injury occurred"));

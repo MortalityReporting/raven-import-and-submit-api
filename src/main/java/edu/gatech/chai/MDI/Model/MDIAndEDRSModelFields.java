@@ -251,6 +251,10 @@ public class MDIAndEDRSModelFields extends BaseModelFields{
 	public String ME_ZIP = "";
 	@CsvBindByName
 	public String PRONOUNCERNAME = "";
+	@CsvBindByName
+	public String CERTIFIER_IDENTIFIER = "";
+	@CsvBindByName
+	public String CERTIFIER_IDENTIFIER_SYSTEM = "";
 
 	public MDIAndEDRSModelFields() {
 		super();
@@ -751,6 +755,14 @@ public class MDIAndEDRSModelFields extends BaseModelFields{
 
 	public String getPRONOUNCERNAME() {
 		return PRONOUNCERNAME;
+	}
+
+	public String getCERTIFIER_IDENTIFIER() {
+		return CERTIFIER_IDENTIFIER;
+	}
+
+	public String getCERTIFIER_IDENTIFIER_SYSTEM() {
+		return CERTIFIER_IDENTIFIER_SYSTEM;
 	}
 
 	// Setters
@@ -1371,6 +1383,16 @@ public class MDIAndEDRSModelFields extends BaseModelFields{
 	public void setPRONOUNCERNAME(String PRONOUNCERNAME) {
 		this.checkNullSetter(this.PRONOUNCERNAME.getClass(), PRONOUNCERNAME);
 		this.PRONOUNCERNAME = PRONOUNCERNAME;
+	}
+
+	public void setCERTIFIER_IDENTIFIER(String CERTIFIER_IDENTIFIER) {
+		this.checkNullSetter(this.CERTIFIER_IDENTIFIER.getClass(), CERTIFIER_IDENTIFIER);
+		this.CERTIFIER_IDENTIFIER = CERTIFIER_IDENTIFIER;
+	}
+
+	public void setCERTIFIER_IDENTIFIER_SYSTEM(String CERTIFIER_IDENTIFIER_SYSTEM) {
+		this.checkNullSetter(this.CERTIFIER_IDENTIFIER_SYSTEM.getClass(), CERTIFIER_IDENTIFIER_SYSTEM);
+		this.CERTIFIER_IDENTIFIER_SYSTEM = CERTIFIER_IDENTIFIER_SYSTEM;
 	}
 
 	// Other methods and implementation details go here...
