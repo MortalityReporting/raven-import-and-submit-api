@@ -184,6 +184,7 @@ public class LocalToMDIAndEDRSService {
 			//Special handling if the Primary Medical Examiner/Coroner is the same as the Certifier
 			if(inputFields.MENAME.equalsIgnoreCase(inputFields.CERTIFIER_NAME)){
 				certifierResource = primaryMECResource;
+				certifierResource = updatePrimaryMECWithCertifierInformation(inputFields, certifierResource);
 			}
 			else{
 				certifierResource = createCertifier(inputFields);
@@ -496,6 +497,23 @@ public class LocalToMDIAndEDRSService {
 			//TODO: Add certifier qualification component that makes sense here
 		}
 		return returnCertifier;
+	}
+
+	private PractitionerVitalRecords updatePrimaryMECWithCertifierInformation(MDIAndEDRSModelFields inputFields, PractitionerVitalRecords certifierResource){
+		if(inputFields.CERTIFIER_IDENTIFIER != null && !inputFields.CERTIFIER_IDENTIFIER.isEmpty()) {
+			Identifier certIdentifier = new Identifier();
+			certIdentifier.setValue(inputFields.CERTIFIER_IDENTIFIER);
+			String certIdentifierSystem = "urn:mdi:raven:provideridentifier";
+			if(inputFields.CERTIFIER_IDENTIFIER_SYSTEM != null && !inputFields.CERTIFIER_IDENTIFIER_SYSTEM.isEmpty()){
+				certIdentifierSystem = inputFields.CERTIFIER_IDENTIFIER_SYSTEM;
+			}
+			certIdentifier.setSystem(certIdentifierSystem);
+			certifierResource.addIdentifier(certIdentifier);
+		}
+		if(inputFields.CERTIFIER_TYPE != null && !inputFields.CERTIFIER_TYPE.isEmpty()) {
+			//TODO: Add certifier qualification component that makes sense here
+		}
+		return certifierResource;
 	}
 
 	private PractitionerVitalRecords createPronouncer(MDIAndEDRSModelFields inputFields) {
