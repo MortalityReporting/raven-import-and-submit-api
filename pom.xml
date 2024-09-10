@@ -94,17 +94,6 @@
       <version>2.4.1</version>
     </dependency>
   </dependencies>
-  
-  <repositories>
-    <repository>
-        <id>nvdrs-mvn-repo</id>
-        <url>https://maven.pkg.github.com/MortalityReporting/nvdrs_flatfile/</url>
-        <snapshots>
-            <enabled>true</enabled>
-            <updatePolicy>always</updatePolicy>
-        </snapshots>
-    </repository>
-</repositories>
 
 <build>
   <plugins>
