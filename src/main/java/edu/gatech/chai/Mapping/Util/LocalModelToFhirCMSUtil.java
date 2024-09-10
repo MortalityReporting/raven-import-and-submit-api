@@ -6,7 +6,9 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.ZoneOffset;
 import java.time.format.DateTimeParseException;
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 import java.util.TimeZone;
@@ -20,20 +22,34 @@ import org.hl7.fhir.r4.model.Bundle;
 import org.hl7.fhir.r4.model.Bundle.BundleEntryComponent;
 import org.hl7.fhir.r4.model.Bundle.BundleEntryRequestComponent;
 import org.hl7.fhir.r4.model.Bundle.HTTPVerb;
+import org.hl7.fhir.r4.model.CodeType;
+import org.hl7.fhir.r4.model.Extension;
+import org.hl7.fhir.r4.model.Quantity.QuantityComparator;
+import org.hl7.fhir.r4.model.Reference;
+
+import ca.uhn.fhir.model.dstu2.valueset.QuantityComparatorEnum;
+
 import org.hl7.fhir.r4.model.HumanName;
 import org.hl7.fhir.r4.model.IdType;
+import org.hl7.fhir.r4.model.Identifier;
+import org.hl7.fhir.r4.model.Practitioner;
+import org.hl7.fhir.r4.model.PractitionerRole;
 import org.hl7.fhir.r4.model.Quantity;
 import org.hl7.fhir.r4.model.Resource;
+import org.hl7.fhir.r4.model.StringType;
+import org.hl7.fhir.r4.model.UriType;
 
 public class LocalModelToFhirCMSUtil {
-	public static List<String> dateFormatStrings = Arrays.asList("yyyy-MM-dd", "M/d/yy", "M/d/yyyy", "d-M-yy",
+	public static List<String> dateFormatStrings = Arrays.asList("yyyy-MM-dd","MM-dd-yyyy", "MM/dd/yyyy", "yyyy-MM-dd", "M/d/yy", "M/d/yyyy", "d-M-yy",
 			"Mdyyyy", "Mdyy", "d-M-yyyy", "d MMMM yy", "d MMMM yyyy", "d MMMM yy zzzz",
 			"d MMMM yyyy zzzz", "E, d MMM yy","E, d MMM yyyy","M-d-yy","M-d-yyyy", "MMMM DD, yy",
 			"MMMM DD, yyyy", "yy", "yyyy");
 	public static List<String> timeFormatStrings = Arrays.asList("hh:mm:ss a", "hh:mm a",
 			"hh:mm:ss", "hh:mm","hhmm","hhmmss");
 	public static String ageRegex = "(\\d+)\\s*(year|month|week|day|hour|minute)";
+	public static String valueAndUnitRegex = "(\\<|\\<=|\\>=|\\>|ad)?s*(\\d+(\\.\\d+)?)\\s*(((P|T|G|M|k|h|da|d|c|m|μ|n|p)?(m|s|A|K|g|L))(\\/(P|T|G|M|k|h|da|d|c|m|μ|n|p)?(m|s|A|K|g|L))?)";
 	public static List<String> nameFormatStrings = Arrays.asList("(.*),\\s{0,1}(.*)\\s(.*)", "(\\w+)\\s(\\w)[\\.]\\s(\\w+)", "(\\w+)\\s(\\w+)");
+	public static Extension dataAbsentNotAskedExtension = new Extension("http://hl7.org/fhir/StructureDefinition/data-absent-reason", new CodeType("not-asked"));
 	public static String convertUnitOfMeasureStringToCode(String uomString) {
 		switch(uomString) {
 			case "minutes":
@@ -58,13 +74,20 @@ public class LocalModelToFhirCMSUtil {
 	public static Date parseDate(String dateString) throws ParseException {
 		for (String formatString : dateFormatStrings)
 	    {
+			Date returnDate = null;
 	        try
 	        {
 	        	SimpleDateFormat sdf = new SimpleDateFormat(formatString);
 	        	sdf.setTimeZone(TimeZone.getDefault());
-	            return sdf.parse(dateString);
+	            returnDate = sdf.parse(dateString);
 	        }
 	        catch (ParseException e) {}
+			if(returnDate != null){
+				if(returnDate.getYear() > 8100){
+					throw new ParseException("Found a year greater than 4 digits in the date: "+dateString, 0);
+				}
+				return returnDate;
+			}
 	    }
 		throw new ParseException("Could not format date: "+dateString, 0);
 	}
@@ -81,6 +104,17 @@ public class LocalModelToFhirCMSUtil {
 	    }
 		throw new ParseException("Could not format time: "+timeString, 0);
 	}
+	
+	public static Date addTimeToDate(Date date,Date time) {
+		if(date == null || time == null){
+			return date;
+		}
+		date.setHours(time.getHours());
+		date.setMinutes(time.getMinutes());
+		date.setSeconds(time.getSeconds());
+		return date;
+	}
+
 	public static Date addTimeToDate(Date date,String timeString) throws ParseException {
 		Date timeDate = parseTime(timeString);
 		date.setHours(timeDate.getHours());
@@ -94,33 +128,38 @@ public class LocalModelToFhirCMSUtil {
 		return date;
 	}
 
-	public static Date parseDateAndTime(String dateAndTimeString) {
+	public static Date parseDateAndTime(String dateAndTimeString) throws ParseException{
 		LocalDateTime localDateTime = null;
+		Date date = null;
 		try{
 			localDateTime = LocalDateTime.parse(dateAndTimeString);
 		}
 		catch (DateTimeParseException e) {}
-		Date date = null;
 		if (localDateTime != null){
 			date = Date.from(localDateTime.toInstant(ZoneOffset.UTC));
 			return date;
 		}
 		else{
+			List<String> dateTimeAndDateStringFormats = new ArrayList<String>();
 			for(String dateString : dateFormatStrings){
 				for(String timeString : timeFormatStrings){
-					try{
-						String dateTimeFormat = dateString + " " + timeString;
-						SimpleDateFormat sdf = new SimpleDateFormat(dateTimeFormat);
-	            		sdf.setTimeZone(TimeZone.getDefault());
-	            		date = sdf.parse(dateAndTimeString);
-						if(date != null)
-							return date;
-					}
-					catch(ParseException e) {}
+					dateTimeAndDateStringFormats.add(dateString + " " + timeString);
 				}
 			}
+			dateTimeAndDateStringFormats.addAll(dateFormatStrings);
+			for(String dateTimeFormat:dateTimeAndDateStringFormats){
+				try{
+					SimpleDateFormat sdf = new SimpleDateFormat(dateTimeFormat);
+					sdf.setTimeZone(TimeZone.getDefault());
+					date = sdf.parse(dateAndTimeString);
+					if(date != null){
+						return date;
+					}
+				}
+				catch(ParseException e){}
+			}
 		}
-		return null;
+		throw new ParseException("Could not format datetime: "+dateAndTimeString, 0);
 	}
 	public static boolean containsIgnoreCase(String src, String what) {
 	    final int length = what.length();
@@ -197,45 +236,25 @@ public class LocalModelToFhirCMSUtil {
 	    return null;
 	}
 
-	public static Quantity parseQuantity(String ageString) {
+	public static Quantity parseQuantity(String quantityString) {
 		Quantity returnQuantity = new Quantity();
-		Pattern r = Pattern.compile(ageRegex);
-	    Matcher m = r.matcher(ageString.toLowerCase());
+		Pattern r = Pattern.compile(valueAndUnitRegex, Pattern.MULTILINE);
+	    Matcher m = r.matcher(quantityString);
 		if(m.find()) {
-			String quantity =  m.group(1);
-			String type = m.group(2);
-			returnQuantity.setValue(Double.parseDouble(quantity));
-			returnQuantity.setSystem("http://hl7.org/fhir/ValueSet/age-units");
-			switch(type) {
-				case "year":
-					returnQuantity.setUnit("a");
-					returnQuantity.setCode("a");
-					return returnQuantity;
-				case "month":
-					returnQuantity.setUnit("mo");
-					returnQuantity.setCode("mo");
-					return returnQuantity;
-				case "week":
-					returnQuantity.setUnit("wk");
-					returnQuantity.setCode("wk");
-					return returnQuantity;
-				case "day":
-					returnQuantity.setUnit("d");
-					returnQuantity.setCode("d");
-					return returnQuantity;
-				case "hour":
-					returnQuantity.setUnit("h");
-					returnQuantity.setCode("h");
-					return returnQuantity;
-				case "minute":
-					returnQuantity.setUnit("min");
-					returnQuantity.setCode("min");
-					return returnQuantity;
+			String comparatorSymbol =m.group(1);
+			String decimalQuantityString =  m.group(2);
+			String unitString = m.group(4);
+			if(comparatorSymbol != null && !comparatorSymbol.isEmpty()){
+				returnQuantity.setComparator(QuantityComparator.fromCode(comparatorSymbol));
 			}
+			returnQuantity.setValue(Double.parseDouble(decimalQuantityString));
+			returnQuantity.setUnit(unitString);
+			return returnQuantity;
 		}
-
 	    return null;
 	}
+
+	
 	
 	public static Address createAddress(String place, String street, String city,
 			String county, String state, String zip, String country) {
@@ -271,5 +290,36 @@ public class LocalModelToFhirCMSUtil {
 			}
 		}
 		return null;
+	}
+
+	public static Practitioner setIdentiferDataAbsentReasonNotAsked(Practitioner practitioner){
+		StringType notAskedStringType = new StringType();
+		notAskedStringType.addExtension(dataAbsentNotAskedExtension);
+		UriType notAskedUriType = new UriType();
+		notAskedUriType.addExtension(dataAbsentNotAskedExtension);
+		Identifier notAskedIdentifier = new Identifier();
+		notAskedIdentifier.setValueElement(notAskedStringType);
+		notAskedIdentifier.setSystemElement(notAskedUriType);
+		practitioner.addIdentifier(notAskedIdentifier);
+		return practitioner;
+	}
+
+	public static PractitionerRole setIdentiferDataAbsentReasonNotAsked(PractitionerRole practitionerRole){
+		StringType notAskedStringType = new StringType();
+		notAskedStringType.addExtension(dataAbsentNotAskedExtension);
+		UriType notAskedUriType = new UriType();
+		notAskedUriType.addExtension(dataAbsentNotAskedExtension);
+		Identifier notAskedIdentifier = new Identifier();
+		notAskedIdentifier.setValueElement(notAskedStringType);
+		notAskedIdentifier.setSystemElement(notAskedUriType);
+		practitionerRole.addIdentifier(notAskedIdentifier);
+		return practitionerRole;
+	}
+
+	public static PractitionerRole setEndpointDataAbsentReasonNotAsked(PractitionerRole practitionerRole){
+		Reference notAskedEndpoint = new Reference();
+		notAskedEndpoint.addExtension(dataAbsentNotAskedExtension);
+		practitionerRole.addEndpoint(notAskedEndpoint);
+		return practitionerRole;
 	}
 }

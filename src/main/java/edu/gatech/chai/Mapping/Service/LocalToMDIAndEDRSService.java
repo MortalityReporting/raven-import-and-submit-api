@@ -1,10 +1,12 @@
 package edu.gatech.chai.Mapping.Service;
 
 import java.text.ParseException;
+import java.time.ZoneId;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
+import java.util.TimeZone;
 import java.util.stream.Stream;
 
 import org.hl7.fhir.r4.model.Address;
@@ -25,38 +27,60 @@ import org.hl7.fhir.r4.model.Enumerations.AdministrativeGender;
 import org.hl7.fhir.r4.model.Extension;
 import org.hl7.fhir.r4.model.HumanName;
 import org.hl7.fhir.r4.model.HumanName.NameUse;
-import org.hl7.fhir.r4.model.Location.LocationStatus;
 import org.hl7.fhir.r4.model.Identifier;
+import org.hl7.fhir.r4.model.InstantType;
+import org.hl7.fhir.r4.model.IntegerType;
 import org.hl7.fhir.r4.model.Location;
+import org.hl7.fhir.r4.model.Location.LocationStatus;
 import org.hl7.fhir.r4.model.Meta;
+import org.hl7.fhir.r4.model.Narrative;
+import org.hl7.fhir.r4.model.Narrative.NarrativeStatus;
+import org.hl7.fhir.r4.model.Narrative.NarrativeStatusEnumFactory;
 import org.hl7.fhir.r4.model.Observation;
+import org.hl7.fhir.r4.model.Observation.ObservationComponentComponent;
 import org.hl7.fhir.r4.model.Observation.ObservationStatus;
 import org.hl7.fhir.r4.model.Patient;
 import org.hl7.fhir.r4.model.Practitioner;
+import org.hl7.fhir.r4.model.Procedure;
 import org.hl7.fhir.r4.model.Procedure.ProcedureStatus;
+import org.hl7.fhir.utilities.xhtml.NodeType;
+import org.hl7.fhir.utilities.xhtml.XhtmlNode;
 import org.hl7.fhir.r4.model.Reference;
 import org.hl7.fhir.r4.model.StringType;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
+import ca.uhn.fhir.model.api.TemporalPrecisionEnum;
 import ca.uhn.fhir.parser.IParser;
+import edu.gatech.chai.Controller.UploadAndExportController;
 import edu.gatech.chai.MDI.Model.MDIAndEDRSModelFields;
 import edu.gatech.chai.MDI.context.MDIFhirContext;
 import edu.gatech.chai.MDI.model.resource.BundleDocumentMDIAndEDRS;
 import edu.gatech.chai.MDI.model.resource.CompositionMDIAndEDRS;
-import edu.gatech.chai.MDI.model.resource.LocationDeath;
-import edu.gatech.chai.MDI.model.resource.LocationInjury;
-import edu.gatech.chai.MDI.model.resource.ObservationAutopsyPerformedIndicator;
 import edu.gatech.chai.MDI.model.resource.ObservationCauseOfDeathPart1;
-import edu.gatech.chai.MDI.model.resource.ObservationContributingCauseOfDeathPart2;
-import edu.gatech.chai.MDI.model.resource.ObservationDeathDate;
-import edu.gatech.chai.MDI.model.resource.ObservationDecedentPregnancy;
 import edu.gatech.chai.MDI.model.resource.ObservationHowDeathInjuryOccurred;
-import edu.gatech.chai.MDI.model.resource.ObservationMannerOfDeath;
-import edu.gatech.chai.MDI.model.resource.ObservationTobaccoUseContributedToDeath;
-import edu.gatech.chai.MDI.model.resource.ProcedureDeathCertification;
+import edu.gatech.chai.MDI.model.resource.util.ProcedureDeathCertificationUtil;
+import edu.gatech.chai.Mapping.Util.CommonMappingUtil;
 import edu.gatech.chai.Mapping.Util.LocalModelToFhirCMSUtil;
+import edu.gatech.chai.USCore.model.util.CommonUtil;
+import edu.gatech.chai.VRCL.model.AutopsyPerformedIndicator;
+import edu.gatech.chai.VRCL.model.LocationVitalRecords;
+import edu.gatech.chai.VRCL.model.PatientVitalRecords;
+import edu.gatech.chai.VRCL.model.PractitionerVitalRecords;
+import edu.gatech.chai.VRDR.model.CauseOfDeathPart1;
+import edu.gatech.chai.VRDR.model.CauseOfDeathPart2;
+import edu.gatech.chai.VRDR.model.DeathCertificationProcedure;
+import edu.gatech.chai.VRDR.model.DeathDate;
+import edu.gatech.chai.VRDR.model.Decedent;
+import edu.gatech.chai.VRDR.model.DecedentPregnancyStatus;
+import edu.gatech.chai.VRDR.model.InjuryIncident;
+import edu.gatech.chai.VRDR.model.InjuryLocation;
+import edu.gatech.chai.VRDR.model.MannerOfDeath;
+import edu.gatech.chai.VRDR.model.TobaccoUseContributedToDeath;
+import edu.gatech.chai.VRDR.model.util.CauseOfDeathConditionUtil;
 import edu.gatech.chai.VRDR.model.util.DecedentUtil;
 
 @Service
@@ -67,8 +91,11 @@ public class LocalToMDIAndEDRSService {
 	@Autowired
 	private MDIFhirContext mdiFhirContext;
 	
+	private static final Logger logger = LoggerFactory.getLogger(LocalToMDIAndEDRSService.class);
+
 	public String convertToMDIString(MDIAndEDRSModelFields inputFields) throws ParseException {
 		Bundle fullBundle = convertToMDI(inputFields);
+		logger.info("Creating bundle:"+fullBundle.getId());
 		return convertToMDIString(fullBundle);
 	}
 
@@ -82,7 +109,10 @@ public class LocalToMDIAndEDRSService {
 		BundleDocumentMDIAndEDRS returnBundle = new BundleDocumentMDIAndEDRS();
 		returnBundle.setId(inputFields.BASEFHIRID + "MDIAndEDRS-Document-Bundle");
 		Date now = new Date();
-		returnBundle.setTimestamp(now);
+		DateTimeType dtElement = new DateTimeType(now);
+		dtElement.setTimeZoneZulu(true);
+		InstantType instantElement = new InstantType(now, TemporalPrecisionEnum.MILLI, TimeZone.getTimeZone(ZoneId.of("Z")));
+		returnBundle.setTimestampElement(instantElement);
 		//Assigning a raven generated system identifier
 		returnBundle.setIdentifier(new Identifier().setSystem("urn:raven:temporary").setValue(Long.toString(now.getTime())));
 		returnBundle.setType(BundleType.BATCH);
@@ -97,7 +127,7 @@ public class LocalToMDIAndEDRSService {
 		returnBundle.getEntryFirstRep().setFullUrl(mainComposition.getId());
 		mainComposition.setIdentifier(caseIdentifier);
 		mainComposition.setStatus(CompositionStatus.PRELIMINARY);
-		mainComposition.setDate(new Date());
+		mainComposition.setDateElement(dtElement);
 		if(inputFields.MDICASEID != null && !inputFields.MDICASEID.isEmpty()){
 			mainComposition.addMDICaseIdExtension(raven_generated_systemid, inputFields.MDICASEID);
 		}
@@ -109,11 +139,11 @@ public class LocalToMDIAndEDRSService {
 
 		Patient patientResource = null;
 		Reference patientReference = null;
-		Practitioner primaryMECResource = null;
+		PractitionerVitalRecords primaryMECResource = null;
 		Reference primaryMECReference = null;
-		Practitioner certifierResource = null;
+		PractitionerVitalRecords certifierResource = null;
 		Reference certifierReference = null;
-		Practitioner pronouncerResource = null;
+		PractitionerVitalRecords pronouncerResource = null;
 		Reference pronouncerReference = null;
 		// Handle Patient/Decedent
 		Stream<String> decedentFields = Stream.of(inputFields.FIRSTNAME,inputFields.MIDNAME,inputFields.LASTNAME
@@ -129,6 +159,15 @@ public class LocalToMDIAndEDRSService {
 			mainComposition.setSubject(patientReference);
 			LocalModelToFhirCMSUtil.addResourceToBundle(returnBundle, patientResource);
 		}
+		//Special handling to identify a primaryMEC. If a certifier is found but no ME/C is found; just the MEC
+		if(inputFields.MENAME == null || inputFields.MENAME.isEmpty()){
+			if(inputFields.CERTIFIER_NAME != null && !inputFields.CERTIFIER_NAME.isEmpty()){
+				inputFields.MENAME = inputFields.CERTIFIER_NAME;
+			}
+			else if(inputFields.PRONOUNCERNAME != null && !inputFields.PRONOUNCERNAME.isEmpty()){
+				inputFields.MENAME = inputFields.PRONOUNCERNAME;
+			}
+		}
 		// Handle Primary Medical Examiner/Coroner
 		Stream<String> primaryMECFields = Stream.of(inputFields.MENAME,inputFields.MELICENSE,inputFields.MEPHONE,
 			inputFields.ME_STREET,inputFields.ME_CITY,inputFields.ME_COUNTY,inputFields.ME_STATE,inputFields.ME_ZIP);
@@ -139,11 +178,13 @@ public class LocalToMDIAndEDRSService {
 			LocalModelToFhirCMSUtil.addResourceToBundle(returnBundle, primaryMECResource);
 		}
 		// Handle Certifier
-		Stream<String> certifierFields = Stream.of(inputFields.CERTIFIER_NAME,inputFields.CERTIFIER_TYPE);
+		Stream<String> certifierFields = Stream.of(inputFields.CERTIFIER_NAME,inputFields.CERTIFIER_TYPE,
+			inputFields.CERTIFIER_IDENTIFIER, inputFields.CERTIFIER_IDENTIFIER_SYSTEM);
 		if(!certifierFields.allMatch(x -> x == null || x.isEmpty())) {
 			//Special handling if the Primary Medical Examiner/Coroner is the same as the Certifier
 			if(inputFields.MENAME.equalsIgnoreCase(inputFields.CERTIFIER_NAME)){
 				certifierResource = primaryMECResource;
+				certifierResource = updatePrimaryMECWithCertifierInformation(inputFields, certifierResource);
 			}
 			else{
 				certifierResource = createCertifier(inputFields);
@@ -151,7 +192,8 @@ public class LocalToMDIAndEDRSService {
 			}
 			certifierReference = new Reference("Practitioner/"+certifierResource.getId());
 			mainComposition.addAttester(certifierReference);
-			ProcedureDeathCertification deathCertification = createDeathCertification(inputFields, patientReference, certifierReference);
+			// Handle Death Certification
+			DeathCertificationProcedure deathCertification = createDeathCertificationProcedure(inputFields, patientReference, certifierReference);
 			LocalModelToFhirCMSUtil.addResourceToBundle(returnBundle, deathCertification);
 			mainComposition.getJurisdictionSection().addEntry(new Reference("Procedure/"+deathCertification.getId()));
 		}
@@ -171,12 +213,8 @@ public class LocalToMDIAndEDRSService {
 			}
 			pronouncerReference = new Reference("Practitioner/"+pronouncerResource.getId());
 		}
-		// Handle Death Certification
-		ProcedureDeathCertification deathCertification = createDeathCertification(inputFields, patientReference, certifierReference);
-		LocalModelToFhirCMSUtil.addResourceToBundle(returnBundle, deathCertification);
-		mainComposition.getJurisdictionSection().addEntry(new Reference("Procedure/"+deathCertification.getId()));
 		// Handle Death Location
-		LocationDeath deathLocation = null;
+		LocationVitalRecords deathLocation = null;
 		Stream<String> deathLocFields = Stream.of(inputFields.DEATHLOCATION);
 		if(!deathLocFields.allMatch(x -> x == null || x.isEmpty())) {
 			deathLocation = createDeathLocation(inputFields);
@@ -186,21 +224,21 @@ public class LocalToMDIAndEDRSService {
 		//Handle TobaccoUseContributedToDeath
 		Stream<String> tobaccoFields = Stream.of(inputFields.TOBACCO);
 		if(!tobaccoFields.allMatch(x -> x == null || x.isEmpty())) {
-			ObservationTobaccoUseContributedToDeath tobacco = createObservationTobaccoUseContributedToDeath(inputFields, patientReference);
+			TobaccoUseContributedToDeath tobacco = createObservationTobaccoUseContributedToDeath(inputFields, patientReference);
 			mainComposition.getCircumstancesSection().addEntry(new Reference("Observation/"+tobacco.getId()));
 			LocalModelToFhirCMSUtil.addResourceToBundle(returnBundle, tobacco);
 		}
 		//Handle Decedent Pregnancy
 		Stream<String> pregnantFields = Stream.of(inputFields.PREGNANT);
 		if(!pregnantFields.allMatch(x -> x == null || x.isEmpty())) {
-			ObservationDecedentPregnancy pregnant = createObservationDecedentPregnancy(inputFields, patientReference);
+			DecedentPregnancyStatus pregnant = createObservationDecedentPregnancy(inputFields, patientReference);
 			mainComposition.getCircumstancesSection().addEntry(new Reference("Observation/"+pregnant.getId()));
 			LocalModelToFhirCMSUtil.addResourceToBundle(returnBundle, pregnant);
 		}
 		//Handle Injury Location
 		Stream<String> injuryLocationFields = Stream.of(inputFields.INJURYLOCATION);
 		if(!injuryLocationFields.allMatch(x -> x == null || x.isEmpty())) {
-			LocationInjury injuryLocation = createInjuryLocation(inputFields, patientReference);
+			InjuryLocation injuryLocation = createInjuryLocation(inputFields, patientReference);
 			mainComposition.getCircumstancesSection().addEntry(new Reference("Location/"+injuryLocation.getId()));
 			LocalModelToFhirCMSUtil.addResourceToBundle(returnBundle, injuryLocation);
 		}
@@ -208,7 +246,7 @@ public class LocalToMDIAndEDRSService {
 		Stream<String> deathDateFields = Stream.of(inputFields.PRNDATE, inputFields.PRNTIME,
 				inputFields.CDEATHDATE, inputFields.CDEATHTIME);
 		if(!deathDateFields.allMatch(x -> x == null || x.isEmpty())) {
-			ObservationDeathDate deathDate = createDeathDate(inputFields, patientReference, pronouncerReference);
+			DeathDate deathDate = createDeathDate(inputFields, patientReference, pronouncerReference);
 			mainComposition.getJurisdictionSection().addEntry(new Reference("Observation/"+deathDate.getId()));
 			LocalModelToFhirCMSUtil.addResourceToBundle(returnBundle, deathDate);
 		}
@@ -218,7 +256,7 @@ public class LocalToMDIAndEDRSService {
 				inputFields.DURATIONC, inputFields.DURATIOND);
 		if(!causeOfDeathFields.allMatch(x -> x == null || x.isEmpty())) {
 			//THis list contains CauseOfDeathPart1 and CauseOfDeathPart2 resources
-			List<Observation> causeOfDeathPathway = createCauseOfDeathPathway(inputFields, returnBundle, mainComposition, patientResource, certifierResource);
+			List<Observation> causeOfDeathPathway = createCauseOfDeathPathway(inputFields, returnBundle, mainComposition, patientReference, certifierReference);
 			for(Observation cause:causeOfDeathPathway){
 				mainComposition.getCauseMannerSection().addEntry(new Reference("Observation/"+cause.getId()));
 				LocalModelToFhirCMSUtil.addResourceToBundle(returnBundle, cause);
@@ -228,26 +266,30 @@ public class LocalToMDIAndEDRSService {
 		// Handle Manner Of Death
 		Stream<String> mannerFields = Stream.of(inputFields.MANNER);
 		if(!mannerFields.allMatch(x -> x == null || x.isEmpty())) {
-			ObservationMannerOfDeath manner = createMannerOfDeath(inputFields, patientReference, primaryMECReference);
+			MannerOfDeath manner = createMannerOfDeath(inputFields, patientReference, primaryMECReference);
 			mainComposition.getCauseMannerSection().addEntry(new Reference("Observation/"+manner.getId()));
 			LocalModelToFhirCMSUtil.addResourceToBundle(returnBundle, manner);
 		}
-		// Handle HowDeathInjuryOccurred
+		// Handle InjuryIncident
 		Stream<String> deathInjuryFields = Stream.of(inputFields.CHOWNINJURY, inputFields.CINJDATE, inputFields.CINJTIME, inputFields.INJURYLOCATION,
 				inputFields.ATWORK,inputFields.TRANSPORTATION);
 		if(!deathInjuryFields.allMatch(x -> x == null || x.isEmpty())) {
-			ObservationHowDeathInjuryOccurred deathInjuryDescription = createHowDeathInjuryOccurred(inputFields, patientResource, certifierResource);
+			InjuryIncident deathInjuryDescription = createInjuryIncident(inputFields, patientReference, certifierReference);
 			mainComposition.getCauseMannerSection().addEntry(new Reference("Observation/"+deathInjuryDescription.getId()));
 			LocalModelToFhirCMSUtil.addResourceToBundle(returnBundle, deathInjuryDescription);
 		}
 		SectionComponent medicationHistorySection = mainComposition.getMedicalHistorySection();
+		Narrative narrative = new Narrative();
+		narrative.setStatus(NarrativeStatus.EMPTY);
+		narrative.setDivAsString("<div smlnx=\"http://www.w3.org/1999/xhtml\"><p>unavailable</p></div>");
+		medicationHistorySection.setText(narrative);
 		medicationHistorySection.setEmptyReason(new CodeableConcept().addCoding(new Coding("http://terminology.hl7.org/CodeSystem/list-empty-reason","unavailable","Unavailable")));
 		//Handle Autopsy
 		SectionComponent examAutopsySection = mainComposition.getExamAutopsySection();
 		//Handle Autopsy Indicator
 		Stream<String> autopsyIdenticatorFields = Stream.of(inputFields.AUTOPSYPERFORMED, inputFields.AUTOPSYRESULTSAVAILABLE);
 		if(!autopsyIdenticatorFields.allMatch(x -> x == null || x.isEmpty())) {
-			ObservationAutopsyPerformedIndicator autopsyPerformedIndicator = createAutopsyPerformedIndicator(inputFields, patientReference, primaryMECReference);
+			AutopsyPerformedIndicator autopsyPerformedIndicator = createAutopsyPerformedIndicator(inputFields, patientReference, primaryMECReference);
 			examAutopsySection.addEntry(new Reference("Observation/"+autopsyPerformedIndicator.getId()));
 			LocalModelToFhirCMSUtil.addResourceToBundle(returnBundle, autopsyPerformedIndicator);
 		}
@@ -262,8 +304,7 @@ public class LocalToMDIAndEDRSService {
 	}
 	
 	private Patient createPatient(MDIAndEDRSModelFields inputFields) throws ParseException {
-		Patient returnDecedent = new Patient();
-		returnDecedent.setMeta(new Meta().addProfile("http://hl7.org/fhir/us/core/StructureDefinition/us-core-patient"));
+		Patient returnDecedent = new PatientVitalRecords();
 		returnDecedent.setId(inputFields.BASEFHIRID + "Decedent");
 		/*Stream<String> caseIdFields = Stream.of(inputFields.SYSTEMID,inputFields.CASEID);
 		if(!caseIdFields.allMatch(x -> x == null || x.isEmpty())) {
@@ -406,10 +447,9 @@ public class LocalToMDIAndEDRSService {
 		return returnDecedent;
 	}
 	
-	private Practitioner createPrimaryMEC(MDIAndEDRSModelFields inputFields) {
-		Practitioner returnPractitioner = new Practitioner();
-		returnPractitioner.setMeta(new Meta().addProfile("http://hl7.org/fhir/us/core/StructureDefinition/us-core-practitioner"));
-		returnPractitioner.setId(inputFields.BASEFHIRID + "Practitioner");
+	private PractitionerVitalRecords createPrimaryMEC(MDIAndEDRSModelFields inputFields) {
+		PractitionerVitalRecords returnPractitioner = new PractitionerVitalRecords();
+		returnPractitioner.setId(inputFields.BASEFHIRID + "Primary-Practitioner");
 		if(inputFields.MENAME != null && !inputFields.MENAME.isEmpty()) {
 			HumanName certName = LocalModelToFhirCMSUtil.parseHumanName(inputFields.MENAME);
 			if (certName != null){
@@ -436,13 +476,22 @@ public class LocalToMDIAndEDRSService {
 		return returnPractitioner;
 	}
 
-	private Practitioner createCertifier(MDIAndEDRSModelFields inputFields) {
-		Practitioner returnCertifier = new Practitioner();
-		returnCertifier.setMeta(new Meta().addProfile("http://hl7.org/fhir/us/core/StructureDefinition/us-core-practitioner"));
+	private PractitionerVitalRecords createCertifier(MDIAndEDRSModelFields inputFields) {
+		PractitionerVitalRecords returnCertifier = new PractitionerVitalRecords();
 		returnCertifier.setId(inputFields.BASEFHIRID + "Certifier");
 		if(inputFields.CERTIFIER_NAME != null && !inputFields.CERTIFIER_NAME.isEmpty()) {
 			HumanName certName = LocalModelToFhirCMSUtil.parseHumanName(inputFields.CERTIFIER_NAME);
 			returnCertifier.addName(certName);
+		}
+		if(inputFields.CERTIFIER_IDENTIFIER != null && !inputFields.CERTIFIER_IDENTIFIER.isEmpty()) {
+			Identifier certIdentifier = new Identifier();
+			certIdentifier.setValue(inputFields.CERTIFIER_IDENTIFIER);
+			String certIdentifierSystem = "urn:mdi:raven:provideridentifier";
+			if(inputFields.CERTIFIER_IDENTIFIER_SYSTEM != null && !inputFields.CERTIFIER_IDENTIFIER_SYSTEM.isEmpty()){
+				certIdentifierSystem = inputFields.CERTIFIER_IDENTIFIER_SYSTEM;
+			}
+			certIdentifier.setSystem(certIdentifierSystem);
+			returnCertifier.addIdentifier(certIdentifier);
 		}
 		if(inputFields.CERTIFIER_TYPE != null && !inputFields.CERTIFIER_TYPE.isEmpty()) {
 			//TODO: Add certifier qualification component that makes sense here
@@ -450,9 +499,25 @@ public class LocalToMDIAndEDRSService {
 		return returnCertifier;
 	}
 
-	private Practitioner createPronouncer(MDIAndEDRSModelFields inputFields) {
-		Practitioner returnPronouncer = new Practitioner();
-		returnPronouncer.setMeta(new Meta().addProfile("http://hl7.org/fhir/us/core/StructureDefinition/us-core-practitioner"));
+	private PractitionerVitalRecords updatePrimaryMECWithCertifierInformation(MDIAndEDRSModelFields inputFields, PractitionerVitalRecords certifierResource){
+		if(inputFields.CERTIFIER_IDENTIFIER != null && !inputFields.CERTIFIER_IDENTIFIER.isEmpty()) {
+			Identifier certIdentifier = new Identifier();
+			certIdentifier.setValue(inputFields.CERTIFIER_IDENTIFIER);
+			String certIdentifierSystem = "urn:mdi:raven:provideridentifier";
+			if(inputFields.CERTIFIER_IDENTIFIER_SYSTEM != null && !inputFields.CERTIFIER_IDENTIFIER_SYSTEM.isEmpty()){
+				certIdentifierSystem = inputFields.CERTIFIER_IDENTIFIER_SYSTEM;
+			}
+			certIdentifier.setSystem(certIdentifierSystem);
+			certifierResource.addIdentifier(certIdentifier);
+		}
+		if(inputFields.CERTIFIER_TYPE != null && !inputFields.CERTIFIER_TYPE.isEmpty()) {
+			//TODO: Add certifier qualification component that makes sense here
+		}
+		return certifierResource;
+	}
+
+	private PractitionerVitalRecords createPronouncer(MDIAndEDRSModelFields inputFields) {
+		PractitionerVitalRecords returnPronouncer = new PractitionerVitalRecords();
 		returnPronouncer.setId(inputFields.BASEFHIRID + "Pronouncer");
 		if(inputFields.PRONOUNCERNAME != null && !inputFields.PRONOUNCERNAME.isEmpty()) {
 			HumanName certName = LocalModelToFhirCMSUtil.parseHumanName(inputFields.PRONOUNCERNAME);
@@ -461,16 +526,32 @@ public class LocalToMDIAndEDRSService {
 		return returnPronouncer;
 	}
 
-	private ProcedureDeathCertification createDeathCertification(MDIAndEDRSModelFields inputFields, Reference decedentReference, Reference certifierReference) {
-		ProcedureDeathCertification returnCertification = new ProcedureDeathCertification(decedentReference, certifierReference, inputFields.CERTIFIER_TYPE);
+	private DeathCertificationProcedure createDeathCertificationProcedure(MDIAndEDRSModelFields inputFields, Reference decedentReference, Reference certifierReference) {
+		DeathCertificationProcedure returnCertification = new DeathCertificationProcedure();
+		returnCertification.setSubject(decedentReference);
+		Procedure.ProcedurePerformerComponent procedurePerformerComponent = new Procedure.ProcedurePerformerComponent();
+      	procedurePerformerComponent.setActor(certifierReference);
+		if(inputFields.CERTIFIER_TYPE  != null && !inputFields.CERTIFIER_TYPE.isEmpty()){
+			if(inputFields.CERTIFIER_TYPE.equalsIgnoreCase("Medical Examiner/Coroner")){
+				procedurePerformerComponent.setFunction(CommonUtil.findConceptFromCollectionUsingSimpleString("Medical Examiner/Coroner", ProcedureDeathCertificationUtil.certifierTypes));
+			}
+			else if(inputFields.CERTIFIER_TYPE.equalsIgnoreCase("Pronouncing & Certifying physician")){
+				procedurePerformerComponent.setFunction(CommonUtil.findConceptFromCollectionUsingSimpleString("Pronouncing & Certifying physician", ProcedureDeathCertificationUtil.certifierTypes));
+			}
+			else if(inputFields.CERTIFIER_TYPE.equalsIgnoreCase("Certifying Physician")){
+				procedurePerformerComponent.setFunction(CommonUtil.findConceptFromCollectionUsingSimpleString("Pronouncing & Certifying physician", ProcedureDeathCertificationUtil.certifierTypes));
+			}
+		}
+      	procedurePerformerComponent.setFunction(CommonUtil.findConceptFromCollectionUsingSimpleString(inputFields.CERTIFIER_TYPE, CommonUtil.certifierTypeSet));
+      	returnCertification.addPerformer(procedurePerformerComponent);
 		returnCertification.setStatus(ProcedureStatus.NOTDONE);
 		returnCertification.setId(inputFields.BASEFHIRID + "Certification");
 		return returnCertification;
 	}
 	
 	
-	private ObservationTobaccoUseContributedToDeath createObservationTobaccoUseContributedToDeath(MDIAndEDRSModelFields inputFields, Reference decedentReference) throws ParseException {
-		ObservationTobaccoUseContributedToDeath tobacco = new ObservationTobaccoUseContributedToDeath();
+	private TobaccoUseContributedToDeath createObservationTobaccoUseContributedToDeath(MDIAndEDRSModelFields inputFields, Reference decedentReference) {
+		TobaccoUseContributedToDeath tobacco = new TobaccoUseContributedToDeath();
 		tobacco.setStatus(ObservationStatus.PRELIMINARY);
 		tobacco.setId(inputFields.BASEFHIRID + "Tobacco");
 		tobacco.setSubject(decedentReference);
@@ -478,8 +559,8 @@ public class LocalToMDIAndEDRSService {
 		return tobacco;
 	}
 	
-	private ObservationDecedentPregnancy createObservationDecedentPregnancy(MDIAndEDRSModelFields inputFields, Reference decedentReference) throws ParseException {
-		ObservationDecedentPregnancy pregnant = new ObservationDecedentPregnancy();
+	private DecedentPregnancyStatus createObservationDecedentPregnancy(MDIAndEDRSModelFields inputFields, Reference decedentReference) {
+		DecedentPregnancyStatus pregnant = new DecedentPregnancyStatus();
 		pregnant.setStatus(ObservationStatus.PRELIMINARY);
 		pregnant.setId(inputFields.BASEFHIRID + "Pregnancy");
 		pregnant.setSubject(decedentReference);
@@ -487,15 +568,15 @@ public class LocalToMDIAndEDRSService {
 		return pregnant;
 	}
 
-	private LocationInjury createInjuryLocation(MDIAndEDRSModelFields inputFields, Reference decedentReference){
-		LocationInjury injuryLocation = new LocationInjury();
+	private InjuryLocation createInjuryLocation(MDIAndEDRSModelFields inputFields, Reference decedentReference){
+		InjuryLocation injuryLocation = new InjuryLocation();
 		injuryLocation.setId(inputFields.BASEFHIRID + "Injury-Location");
     	injuryLocation.setName(inputFields.INJURYLOCATION);
     	injuryLocation.setAddress(new Address().setText(inputFields.INJURYLOCATION));
 		return injuryLocation;
 	}
 	
-	private List<Observation> createCauseOfDeathPathway(MDIAndEDRSModelFields inputFields, Bundle bundle, CompositionMDIAndEDRS mainComposition, Patient patientResource, Practitioner practitionerResource) {
+	private List<Observation> createCauseOfDeathPathway(MDIAndEDRSModelFields inputFields, Bundle bundle, CompositionMDIAndEDRS mainComposition, Reference patientReference, Reference practitionerReference) {
 		List<Observation> returnList = new ArrayList<Observation>();
 		List<String> causes = new ArrayList<String>(Arrays.asList(inputFields.CAUSEA,inputFields.CAUSEB,inputFields.CAUSEC,inputFields.CAUSED));
 		List<String> intervals = Arrays.asList(inputFields.DURATIONA,inputFields.DURATIONB,inputFields.DURATIONC,inputFields.DURATIOND);
@@ -505,30 +586,46 @@ public class LocalToMDIAndEDRSService {
 			String interval = (i < intervals.size()) ? intervals.get(i) : "";
 			if(cause != null && !cause.isEmpty()) {
 				int lineNumber = i + 1; //entry 0 = line number 1
-				ObservationCauseOfDeathPart1 causeOfDeathCondition = new ObservationCauseOfDeathPart1(patientResource, practitionerResource, cause, lineNumber, interval);
+				ObservationCauseOfDeathPart1 causeOfDeathCondition = new ObservationCauseOfDeathPart1();
+				causeOfDeathCondition.setSubject(patientReference);
+				causeOfDeathCondition.addPerformer(practitionerReference);
+				causeOfDeathCondition.setValue(new CodeableConcept().setText(cause));
+				if(interval != null && !interval.isEmpty()){
+					Observation.ObservationComponentComponent component = new Observation.ObservationComponentComponent();
+      				component.setCode(CauseOfDeathConditionUtil.intervalComponentCode);
+      				component.setValue(new StringType(interval));
+				}
 				causeOfDeathCondition.setId(inputFields.BASEFHIRID+"CauseOfDeathPart1-"+i);
 				causeOfDeathCondition.setStatus(ObservationStatus.PRELIMINARY);
+				//CauseOfDeathPart1 VRDR model didn't specify linenumber component directly so we have to do it manually
+				ObservationComponentComponent lineNumberComponent = new ObservationComponentComponent(new CodeableConcept(new Coding("http://hl7.org/fhir/us/vrdr/CodeSystem/vrdr-component-cs","lineNumber","")));
+				lineNumberComponent.setValue(new IntegerType(lineNumber));
+				causeOfDeathCondition.addComponent(lineNumberComponent);
 				returnList.add(causeOfDeathCondition);
 			}
 		}
 		String[] otherCauses = inputFields.OSCOND.split("[;\n]");
 		List<String> listArrayOtherCauses = Arrays.asList(otherCauses);
 		int i = 0;
+		/* Turning off CauseofDeath part2 until they fix their tests*/
 		for(String otherCause:listArrayOtherCauses) {
 			if(otherCause.isEmpty()) {
 				continue;
 			}
-			ObservationContributingCauseOfDeathPart2 conditionContrib = new ObservationContributingCauseOfDeathPart2(patientResource, practitionerResource, otherCause);
+			CauseOfDeathPart2 conditionContrib = new CauseOfDeathPart2();
 			conditionContrib.setId(inputFields.BASEFHIRID+"CauseOfDeathPart2-"+i);
 			conditionContrib.setStatus(ObservationStatus.PRELIMINARY);
+			conditionContrib.setSubject(patientReference);
+			conditionContrib.addPerformer(practitionerReference);
+			conditionContrib.setValue(new CodeableConcept().setText(otherCause));
 			returnList.add(conditionContrib);
 			i++;
 		}
 		return returnList;
 	}
 	
-	private ObservationMannerOfDeath createMannerOfDeath(MDIAndEDRSModelFields inputFields, Reference decedentReference, Reference practitionerReference) {
-		ObservationMannerOfDeath manner = new ObservationMannerOfDeath();
+	private MannerOfDeath createMannerOfDeath(MDIAndEDRSModelFields inputFields, Reference decedentReference, Reference practitionerReference) {
+		MannerOfDeath manner = new MannerOfDeath();
 		manner.setId(inputFields.BASEFHIRID+"MannerOfDeath");
 		manner.addPerformer(practitionerReference);
 		Coding mannerCoding = new Coding();
@@ -567,34 +664,38 @@ public class LocalToMDIAndEDRSService {
 		return manner;
 	}
 	
-	private ObservationHowDeathInjuryOccurred createHowDeathInjuryOccurred(MDIAndEDRSModelFields inputFields, Patient patientResource, Practitioner practitionerResource) throws ParseException {
-		ObservationHowDeathInjuryOccurred injuryDescription = new ObservationHowDeathInjuryOccurred(patientResource, practitionerResource, inputFields.CHOWNINJURY);
-		injuryDescription.setId(inputFields.BASEFHIRID+"InjuryDescription");
-		injuryDescription.setStatus(ObservationStatus.FINAL);
-
+	private InjuryIncident createInjuryIncident(MDIAndEDRSModelFields inputFields, Reference patientReference, Reference certifierReference){
+		InjuryIncident injuryIncident = new InjuryIncident();
+		injuryIncident.setId(inputFields.BASEFHIRID+"InjuryIncident");
+		injuryIncident.setStatus(ObservationStatus.FINAL);
+		injuryIncident.setSubject(patientReference);
+		if(certifierReference != null){
+			injuryIncident.addPerformer(certifierReference);
+		}
 		if(inputFields.CINJDATE != null && !inputFields.CINJDATE.isEmpty()) {
-			Date injDate = LocalModelToFhirCMSUtil.parseDate(inputFields.CINJDATE);
+			Date injDate = CommonMappingUtil.parseDateFromField(inputFields, "CINJDATE", inputFields.CINJDATE);
 			if(inputFields.CINJTIME != null && !inputFields.CINJTIME.isEmpty()) {
-				LocalModelToFhirCMSUtil.addTimeToDate(injDate, inputFields.CINJTIME);
+				Date injTime = CommonMappingUtil.parseDateFromField(inputFields, "CINJTIME", inputFields.CINJTIME);
+				LocalModelToFhirCMSUtil.addTimeToDate(injDate, injTime);
 			}
 			DateTimeType injEffectiveDT = new DateTimeType(injDate);
-			injuryDescription.setEffective(injEffectiveDT);
+			injuryIncident.setEffective(injEffectiveDT);
 		}
 
 		if(inputFields.INJURYLOCATION != null && !inputFields.INJURYLOCATION.isEmpty()) {
-			injuryDescription.addPlaceOfInjury(inputFields.INJURYLOCATION);
+			injuryIncident.addPlaceOfInjuryComponent(inputFields.INJURYLOCATION);
 		}
 
 		if(inputFields.ATWORK != null && !inputFields.ATWORK.isEmpty()){
-			injuryDescription.addWorkInjuryIndicator(inputFields.ATWORK);
+			injuryIncident.addInjuredAtWorkComponent(inputFields.ATWORK);
 		}
 		if(inputFields.TRANSPORTATION != null && !inputFields.TRANSPORTATION.isEmpty()){
-			injuryDescription.addTransportationRole(inputFields.TRANSPORTATION);
+			injuryIncident.addTransportationRoleIndicatorComponent(inputFields.TRANSPORTATION);
 		}
-		return injuryDescription;
+		return injuryIncident;
 	}
 	
-	private Observation createFoundObs(MDIAndEDRSModelFields inputFields, Reference decedentReference) throws ParseException {
+	private Observation createFoundObs(MDIAndEDRSModelFields inputFields, Reference decedentReference) {
 		Observation foundObs = new Observation();
 		foundObs.setId(inputFields.BASEFHIRID+"FoundObs");
 		foundObs.setStatus(ObservationStatus.FINAL);
@@ -602,61 +703,69 @@ public class LocalToMDIAndEDRSService {
 		foundObs.setCode(new CodeableConcept().addCoding(new Coding(
 				"urn:temporary:code", "1000001", "Date and Time found dead, unconcious and in distress")));
 		if(inputFields.FOUNDDATE != null && !inputFields.FOUNDDATE.isEmpty()) {
-			Date reportDate = LocalModelToFhirCMSUtil.parseDate(inputFields.FOUNDDATE);
-			if(inputFields.FOUNDTIME != null && !inputFields.FOUNDTIME.isEmpty()) {
-				LocalModelToFhirCMSUtil.addTimeToDate(reportDate, inputFields.FOUNDTIME);
+			Date reportDate = CommonMappingUtil.parseDateFromField(inputFields, "FOUNDDATE", inputFields.FOUNDDATE);
+			if(reportDate != null && inputFields.FOUNDTIME != null && !inputFields.FOUNDTIME.isEmpty()) {
+				Date reportTime = CommonMappingUtil.parseDateTimeFromField(inputFields, "FOUNDTIME", inputFields.FOUNDTIME);
+				LocalModelToFhirCMSUtil.addTimeToDate(reportDate, reportTime);
 			}
-			foundObs.setValue(new DateTimeType(reportDate));
+			foundObs.setValue(new DateTimeType(reportDate).setTimeZoneZulu(true));
 		}
 		return foundObs;
 	}
 	
-	private ObservationDeathDate createDeathDate(MDIAndEDRSModelFields inputFields, Reference decedentReference, Reference pronouncerReference) throws ParseException {
-		ObservationDeathDate returnDeathDate = new ObservationDeathDate();
+	private DeathDate createDeathDate(MDIAndEDRSModelFields inputFields, Reference decedentReference, Reference pronouncerReference) throws ParseException {
+		DeathDate returnDeathDate = new DeathDate();
 		returnDeathDate.setId(inputFields.BASEFHIRID+"DeathDate");
 		returnDeathDate.setSubject(decedentReference);
 		if(pronouncerReference != null && !pronouncerReference.isEmpty()){
 			returnDeathDate.addPerformer(pronouncerReference);
 		}
 		if(inputFields.CDEATHDATE != null && !inputFields.CDEATHDATE.isEmpty()) {
-			Date certDate = LocalModelToFhirCMSUtil.parseDate(inputFields.CDEATHDATE);
-			if(inputFields.CDEATHTIME != null && !inputFields.CDEATHTIME.isEmpty()) {
-				LocalModelToFhirCMSUtil.addTimeToDate(certDate, inputFields.CDEATHTIME);
+			Date certDate = CommonMappingUtil.parseDateFromField(inputFields, "CDEATHDATE", inputFields.CDEATHDATE);
+			if(certDate != null && inputFields.CDEATHTIME != null && !inputFields.CDEATHTIME.isEmpty()) {
+				Date certTime = CommonMappingUtil.parseDateTimeFromField(inputFields, "CDEATHTIME", inputFields.CDEATHTIME);
+				LocalModelToFhirCMSUtil.addTimeToDate(certDate, certTime);
 			}
-			DateTimeType certValueDT = new DateTimeType(certDate);
+			DateTimeType certValueDT = new DateTimeType(certDate, TemporalPrecisionEnum.SECOND, TimeZone.getTimeZone(ZoneId.of("Z")));
+			certValueDT.setTimeZoneZulu(true);
 			returnDeathDate.setValue(certValueDT);
 		}
 		if(inputFields.PRNDATE != null && !inputFields.PRNDATE.isEmpty()) {
-			Date prnDate = LocalModelToFhirCMSUtil.parseDate(inputFields.PRNDATE);
-			if(inputFields.PRNTIME != null && !inputFields.PRNTIME.isEmpty()) {
-				LocalModelToFhirCMSUtil.addTimeToDate(prnDate, inputFields.PRNTIME);
+			CommonMappingUtil.parseDateTimeFromField(inputFields, "PRNDATE", inputFields.PRNDATE);
+			Date prnDate = CommonMappingUtil.parseDateTimeFromField(inputFields, "PRNDATE", inputFields.PRNDATE);
+			if(prnDate != null && inputFields.PRNTIME != null && !inputFields.PRNTIME.isEmpty()) {
+				Date prnTime = CommonMappingUtil.parseDateTimeFromField(inputFields, "PRNTIME", inputFields.PRNTIME);
+				LocalModelToFhirCMSUtil.addTimeToDate(prnDate, prnTime);
 			}
 			DateTimeType prnDT = new DateTimeType(prnDate);
+			prnDT.setTimeZoneZulu(true);
 			returnDeathDate.addDatePronouncedDead(prnDT);
 		}
 		if(inputFields.DEATHLOCATIONTYPE != null && !inputFields.DEATHLOCATIONTYPE.isEmpty()){
-			returnDeathDate.addPlaceOfDeath(inputFields.DEATHLOCATIONTYPE);
+			
+			returnDeathDate.addPlaceOfDeathComponent(inputFields.DEATHLOCATIONTYPE);
 		}
 		if(inputFields.CDEATHESTABLISHEMENTMETHOD != null && !inputFields.CDEATHESTABLISHEMENTMETHOD.isEmpty()){
-			returnDeathDate.setEstablishmentMethod(inputFields.CDEATHESTABLISHEMENTMETHOD);
+			returnDeathDate.addMethod(inputFields.CDEATHESTABLISHEMENTMETHOD);
 		}
 		return returnDeathDate;
 	}
 	
-	private LocationDeath createDeathLocation(MDIAndEDRSModelFields inputFields) {
-		LocationDeath returnDeathLocation = new LocationDeath();
+	private LocationVitalRecords createDeathLocation(MDIAndEDRSModelFields inputFields) {
+		LocationVitalRecords returnDeathLocation = new LocationVitalRecords();
 		returnDeathLocation.setId(inputFields.BASEFHIRID+"Death-Location");
 		returnDeathLocation.setName(inputFields.DEATHLOCATION);
 		returnDeathLocation.setAddress(new Address().setText(inputFields.DEATHLOCATION));
 		return returnDeathLocation;
 	}
 
-	private ObservationAutopsyPerformedIndicator createAutopsyPerformedIndicator(MDIAndEDRSModelFields inputFields,Reference decedentReference,Reference practitionerReference){
+	private AutopsyPerformedIndicator createAutopsyPerformedIndicator(MDIAndEDRSModelFields inputFields,Reference decedentReference,Reference practitionerReference){
 		String resultsAvailable = inputFields.AUTOPSYRESULTSAVAILABLE; //We always provide a resultsAvailable component; and say "no" when not provided by default.
 		if(resultsAvailable == null || resultsAvailable.isEmpty()){
 			resultsAvailable = "No";
 		}
-		ObservationAutopsyPerformedIndicator autopsyPerformedIndicator = new ObservationAutopsyPerformedIndicator(decedentReference, inputFields.AUTOPSYPERFORMED, resultsAvailable);
+		AutopsyPerformedIndicator autopsyPerformedIndicator = new AutopsyPerformedIndicator(inputFields.AUTOPSYPERFORMED, resultsAvailable);
+		autopsyPerformedIndicator.setSubject(decedentReference);
 		autopsyPerformedIndicator.setId(inputFields.BASEFHIRID+"Autopsy");
 		autopsyPerformedIndicator.addPerformer(practitionerReference);
 		return autopsyPerformedIndicator;

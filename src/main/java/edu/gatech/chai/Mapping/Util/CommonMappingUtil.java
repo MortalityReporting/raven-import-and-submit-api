@@ -1,10 +1,14 @@
 package edu.gatech.chai.Mapping.Util;
 
+import java.text.ParseException;
+import java.util.Date;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import org.hl7.fhir.r4.model.CodeableConcept;
 
+import edu.gatech.chai.MDI.Model.BaseModelFields;
+import edu.gatech.chai.MDI.Model.ToxToMDIModelFields;
 import edu.gatech.chai.VRDR.model.util.CommonUtil;
 
 public class CommonMappingUtil {
@@ -30,5 +34,44 @@ public class CommonMappingUtil {
 		else {
 			return CommonUtil.noCode;
 		}
+	}
+
+	public static Date parseDateFromField(BaseModelFields modelFields, String fieldName, String fieldValue){
+		Date returnDate = null;
+		try{
+			if(fieldValue != null && !fieldValue.isEmpty()){
+				returnDate = LocalModelToFhirCMSUtil.parseDate(fieldValue);
+			}
+		}
+		catch(ParseException e){
+			modelFields.getErrorListForName(fieldName).add("Could not parse '"+fieldValue+"' into a date type");
+		}
+		return returnDate;
+	}
+
+	public static Date parseTimeFromField(BaseModelFields modelFields, String fieldName, String fieldValue){
+		Date returnDate = null;
+		try{
+			if(fieldValue != null && !fieldValue.isEmpty()){
+				returnDate = LocalModelToFhirCMSUtil.parseTime(fieldValue);
+			}
+		}
+		catch(ParseException e){
+			modelFields.getErrorListForName(fieldName).add("Could not parse '"+fieldValue+"' into a time type");
+		}
+		return returnDate;
+	}
+
+	public static Date parseDateTimeFromField(BaseModelFields modelFields, String fieldName, String fieldValue){
+		Date returnDate = null;
+		try{
+			if(fieldValue != null && !fieldValue.isEmpty()){
+				returnDate = LocalModelToFhirCMSUtil.parseDateAndTime(fieldValue);
+			}
+		}
+		catch(ParseException e){
+			modelFields.getErrorListForName(fieldName).add("Could not parse '"+fieldValue+"' into a datetime type");
+		}
+		return returnDate;
 	}
 }

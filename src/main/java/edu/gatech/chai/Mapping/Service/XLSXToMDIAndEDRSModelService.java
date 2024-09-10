@@ -44,7 +44,7 @@ public class XLSXToMDIAndEDRSModelService {
         ,"Did Injury Occur at Work?", "How injury occurred"
         ,"Medical Examiner Name","Medical Examiner Phone Number", "Medical Examiner License Number"
         ,"Medical Examiner Office: Street", "Medical Examiner Office: City", "Medical Examiner Office: County", "Medical Examiner Office: State, U.S. Territory or Canadian Province", "Medical Examiner Office: Postal Code"
-        ,"Certifier Name", "Certifier Type", "Case History"};
+        ,"Certifier Name", "Certifier Type", "Certifier Identifier", "Certifier Identifier System", "Case History"};
     private static final String endCapColumnHeader = "End of Cases"; //Cell text we expect at the end of the row.
 
     public List<MDIAndEDRSModelFields> convertToMDIModelFields(XSSFWorkbook workbook) throws Exception{
@@ -111,6 +111,8 @@ public class XLSXToMDIAndEDRSModelService {
         returnModel.setCAUSEB(getStringForColumnAndName(sheet, returnModel, fieldMap,currentColumn,"Cause of Death Part I Line b"));
         returnModel.setCAUSEC(getStringForColumnAndName(sheet, returnModel, fieldMap,currentColumn,"Cause of Death Part I Line c"));
         returnModel.setCAUSED(getStringForColumnAndName(sheet, returnModel, fieldMap,currentColumn,"Cause of Death Part I Line d"));
+        returnModel.setCERTIFIER_IDENTIFIER(getStringForColumnAndName(sheet, returnModel, fieldMap,currentColumn,"Certifier Identifier"));
+        returnModel.setCERTIFIER_IDENTIFIER_SYSTEM(getStringForColumnAndName(sheet, returnModel, fieldMap,currentColumn,"Certifier Identifier System"));
         returnModel.setCERTIFIER_NAME(getStringForColumnAndName(sheet, returnModel, fieldMap,currentColumn,"Certifier Name"));
         returnModel.setCERTIFIER_TYPE(getStringForColumnAndName(sheet, returnModel, fieldMap,currentColumn,"Certifier Type"));
         returnModel.setCHOWNINJURY(getStringForColumnAndName(sheet, returnModel, fieldMap,currentColumn,"How injury occurred"));

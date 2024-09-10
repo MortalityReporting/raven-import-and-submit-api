@@ -6,9 +6,7 @@ import java.io.InputStreamReader;
 import java.io.Reader;
 import java.lang.reflect.Field;
 import java.text.ParseException;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.apache.tika.Tika;
@@ -16,13 +14,10 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.CrossOrigin;
-import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.client.HttpStatusCodeException;
@@ -48,7 +43,6 @@ import edu.gatech.chai.Mapping.Service.LocalToMDIAndEDRSService;
 import edu.gatech.chai.Mapping.Service.LocalToToxToMDIService;
 import edu.gatech.chai.Mapping.Service.XLSXToMDIAndEDRSModelService;
 import edu.gatech.chai.Mapping.Service.XLSXToToxToMDIModelService;
-import edu.gatech.chai.Submission.Entity.PatientSubmit;
 import edu.gatech.chai.Submission.Repository.PatientSubmitRepository;
 import edu.gatech.chai.Submission.Service.SubmitBundleService;
 
@@ -61,8 +55,6 @@ public class UploadAndExportController {
 	LocalToToxToMDIService mDIToToxToMDIService;
 	@Autowired
 	SubmitBundleService submitBundleService;
-	@Autowired
-	private PatientSubmitRepository patientSubmitRepository;
 	@Autowired
 	private XLSXToMDIAndEDRSModelService xLSXToMDIToEDRSService;
 	@Autowired
@@ -144,12 +136,7 @@ public class UploadAndExportController {
 			//Convert
 			logger.info("XLSX MDI-To-Tox Upload: Creating FHIR Data");
 			String bundleString = "";
-			try {
-				bundleString = mDIToToxToMDIService.convertToMDIString(modelFields, i);
-			} catch (ParseException e1) {
-				e1.printStackTrace();
-				continue;
-			}
+			bundleString = mDIToToxToMDIService.convertToMDIString(modelFields, i);
 			logger.info("XLSX MDI-To-Tox Upload: Creating Response Object");
 			ObjectNode responseObject = mapper.createObjectNode();
 			try {
@@ -181,7 +168,7 @@ public class UploadAndExportController {
 	@PostMapping(value = {"upload-mdi-to-edrs-xlsx-file"})
     public ResponseEntity<JsonNode> uploadXLSXFileForMDIToEDRS(@RequestParam(name = "file", required = true) MultipartFile file) throws JsonProcessingException {
 		//Read XLSX File submitted
-		logger.info("XLSX MDI-To-EDRS Upload: Starting XLSX File Read");
+		logger.info("XLSX MDI-and-EDRS Upload: Starting XLSX File Read");
 		Tika tika = new Tika();
 		String detectedType;
 		XSSFWorkbook workbook = null;
@@ -230,7 +217,7 @@ public class UploadAndExportController {
 			responseObject.set("fields", fields);
 			//Actually submit to the fhir server here!
 			if(submitFlag){
-				logger.info("XLSX TOX-To-MDI Upload: Uploading Tox-To-EDRS To FhirBase");
+				logger.info("XLSX MDI-and-EDRS Upload: Uploading Tox-To-EDRS To FhirBase");
 				JsonNode responseInfo = submitToFhirBase(bundleString, modelFields, mapper);
 				responseObject.set("fhirResponse", responseInfo);
 				responseObject.put("Narrative", "");
@@ -299,6 +286,40 @@ public class UploadAndExportController {
 	public ObjectNode createTOXToMDIFieldsNode(ToxToMDIModelFields modelFields) {
 		ObjectMapper mapper = new ObjectMapper();
 		ObjectNode fields = mapper.createObjectNode();
+		// Handle non-specimen, non results, non notes object
+		for (Field f : modelFields.getClass().getDeclaredFields()) {
+			String keyName = f.getName();
+			ObjectNode fieldObject = mapper.createObjectNode();
+			String value = "";
+			if(keyName.equalsIgnoreCase("SPECIMEN") || keyName.equalsIgnoreCase("RESULTS") || keyName.equalsIgnoreCase("NOTES")){
+				continue;
+			}
+			if (f.getType().equals(String.class)) {
+				try {
+					value = ((String) f.get(modelFields));
+				} catch (IllegalArgumentException | IllegalAccessException e) {
+					continue;
+				}
+			} else if (f.getType().equals(Boolean.class)) {
+				try {
+					value = Boolean.toString(((Boolean) f.get(modelFields)));
+				} catch (IllegalArgumentException | IllegalAccessException e) {
+					continue;
+				}
+			}
+			if (value.isEmpty()) {
+				fieldObject.put("status", "not mapped");
+			} else {
+				fieldObject.put("status", "mapped");
+			}
+			fieldObject.put("value", value);
+			List<String> errorList = modelFields.getErrorListForName(f.getName());
+			if (!errorList.isEmpty()) {
+				fieldObject.set("errors", mapper.valueToTree(errorList));
+				fieldObject.put("status", "not mapped");
+			}
+			fields.set(keyName, fieldObject);
+		}
 		// Handle Specimen
 		if (modelFields.SPECIMENS != null && !modelFields.SPECIMENS.isEmpty()) {
 			ArrayNode specimenArrayNode = mapper.createArrayNode();
@@ -325,6 +346,7 @@ public class UploadAndExportController {
 					List<String> errorList = toxSpecimen.getErrorListForName(f.getName());
 					if (!errorList.isEmpty()) {
 						fieldObject.set("errors", mapper.valueToTree(errorList));
+						fieldObject.put("status", "not mapped");
 					}
 					specimenFields.set(keyName, fieldObject);
 				}
@@ -358,6 +380,7 @@ public class UploadAndExportController {
 					List<String> errorList = toxResult.getErrorListForName(f.getName());
 					if (!errorList.isEmpty()) {
 						fieldObject.set("errors", mapper.valueToTree(errorList));
+						fieldObject.put("status", "not mapped");
 					}
 					resultFields.set(keyName, fieldObject);
 				}
@@ -417,6 +440,7 @@ public class UploadAndExportController {
 			fieldObject.put("value", value);
 			List<String> errorList = modelFields.getErrorListForName(f.getName());
 			if (!errorList.isEmpty()) {
+				fieldObject.put("status", "not mapped");
 				fieldObject.set("errors", mapper.valueToTree(errorList));
 			}
 			fields.set(keyName, fieldObject);
