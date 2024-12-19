@@ -2,11 +2,11 @@
 
 ## Introduction
 
-Raven-Mapper-Api is a backend api service for the  Raven Mortality Case Management System. Raven-Mapper-Api is tightly integrated to a fhir server and it's datasource, and it is recommended to deploy Raven-Mapper-Api with [raven-fhir-server](https://github.com/MortalityReporting/raven-fhir-server) as the providing datasource.
+Raven-Mapper-Api is a backend API service for the  Raven Mortality Case Management System. Raven-Mapper-Api is tightly integrated to a fhir server and it's datasource, and it is recommended to deploy Raven-Mapper-Api with [raven-fhir-server](https://github.com/MortalityReporting/raven-fhir-server) as the providing datasource.
 
 Raven-Import-Api provides:
 
-* An importing web service for converting csv data to VRDR-fhir, and submitting to a raven-fhir-server.
+* An importing web service for converting xlsx or csv data to MDI-FHIR resources, and submitting to a raven-fhir-server.
 * An exporting web service for retrieving and packaging case data out of the raven-fhir-server, and submitting to one of several different state registrar in standard VRDR format.
 
 ## Requirements And Installation
@@ -14,11 +14,11 @@ Raven-Import-Api provides:
 Requirements for installation are:
 * [Java-jdk version 10 or higher](https://www.oracle.com/java/technologies/javase-downloads.html)
 * [The build tool maven](http://maven.apache.org/)
-* A version of the VRDR java library. The correct version of the library is contained as a git submodule in this repository.
+* A version of the MDI_java library. The correct version of the library is contained as a git submodule in this repository.
 
 ### Installation
 
-Install VRDR javalib: Move into ```${PROJECT_HOME}/VRDR_javalib``` and run ```mvn install``` from the command line.
+Install MDI javalib: Move into ```${PROJECT_HOME}/MDI_javalib``` and run ```mvn install``` from the command line.
 
 Package the main project into a war: Move into ```${PROJECT_HOME}``` and run ```mvn package```.
 
@@ -49,7 +49,12 @@ All configuration for the project can be found in ```src/main/resources/applicat
 ## Importing Tool
 Importing is accomplished through a web client ui hosted at the web root url. Once you are deploy, access the root with your web client, and you'll be greeted with a file selector. Selecting a csv of case data will allow the user to import the case data, convert to fhir, and submit to the raven-fhir-server. A UI report of each case imported, their name, age, and import status is shown in a table for review.
 
-For an example csv, the project has attached at the top level ```ConnectathonTestCase122221.csv```. For a detailed description of the csv structure, refer to the furthur documentation here(ED Note: To finish).
+The reference files for xlsx and csv import are available as files within the top level of the project.
+```
+MDI-To-EDRS-Template.csv
+MDI-To-EDRS-Template.xlsx
+Tox-To-MDI-Template.xlsx
+```
 
 ##Exporting Tool
 
