@@ -84,6 +84,51 @@ MDI-To-EDRS-Template.xlsx
 Tox-To-MDI-Template.xlsx
 ```
 
+---
+
+## Import API Endpoints Template
+
+### **Upload CSV File**
+#### Endpoint
+`POST /upload-csv-file`
+Uploads mdi-and-edrs or tox-and-mdi csv file to raven fhirbase service
+#### Parameters
+- `file` (required): The CSV file to upload.
+  - **Type**: `File`
+- `mappingType` (required): The type of mapping to apply to the file, enumerated as 'mdi-and-edrs' or 'tox-to-mdi'
+  - **Type**: `String`
+
+### **Upload XLSX File**
+Uploads mdi-and-edrs or tox-and-mdi xlsx file to raven fhirbase service
+#### Endpoint
+`POST /upload-xlsx-file`
+
+#### Parameters
+- `file` (required): The XLSX file to upload.
+  - **Type**: `File`
+- `mappingType` (required): The type of mapping to apply to the file, enumerated as 'mdi-and-edrs' or 'tox-to-mdi'
+  - **Type**: `String`
+
+### **Upload Tox to MDI XLSX File**
+Replication of ```upload-xlsx-file``` with 'tox-to-mdi' filetype
+#### Endpoint
+`POST /upload-tox-to-mdi-xlsx-file`
+
+#### Parameters
+- `file` (required): The XLSX file to upload.
+  - **Type**: `File`
+
+### **Upload MDI to EDRS XLSX File**
+Replication of ```upload-xlsx-file``` with 'mdi-and-edrs' filetype
+#### Endpoint
+`POST /upload-mdi-to-edrs-xlsx-file`
+
+#### Parameters
+- `file` (required): The XLSX file to upload.
+  - **Type**: `File`
+
+---
+
 ##Exporting Tool
 
 **DEPRECIATED**
