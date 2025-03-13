@@ -74,6 +74,7 @@ import edu.gatech.chai.VRDR.model.CauseOfDeathPart1;
 import edu.gatech.chai.VRDR.model.CauseOfDeathPart2;
 import edu.gatech.chai.VRDR.model.DeathCertificationProcedure;
 import edu.gatech.chai.VRDR.model.DeathDate;
+import edu.gatech.chai.VRDR.model.DeathLocation;
 import edu.gatech.chai.VRDR.model.Decedent;
 import edu.gatech.chai.VRDR.model.DecedentPregnancyStatus;
 import edu.gatech.chai.VRDR.model.InjuryIncident;
@@ -671,6 +672,9 @@ public class LocalToMDIAndEDRSService {
 		injuryIncident.setSubject(patientReference);
 		if(certifierReference != null){
 			injuryIncident.addPerformer(certifierReference);
+		}
+		if(inputFields.CHOWNINJURY != null && !inputFields.CHOWNINJURY.isEmpty()){
+			
 		}
 		if(inputFields.CINJDATE != null && !inputFields.CINJDATE.isEmpty()) {
 			Date injDate = CommonMappingUtil.parseDateFromField(inputFields, "CINJDATE", inputFields.CINJDATE);

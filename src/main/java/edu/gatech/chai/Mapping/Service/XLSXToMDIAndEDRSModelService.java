@@ -1,16 +1,20 @@
 package edu.gatech.chai.Mapping.Service;
 
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import org.apache.poi.ss.format.CellDateFormatter;
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.DataFormatter;
 import org.apache.poi.ss.usermodel.Row;
+import org.apache.poi.xssf.usermodel.XSSFCell;
 import org.apache.poi.xssf.usermodel.XSSFRow;
 import org.apache.poi.xssf.usermodel.XSSFSheet;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
@@ -257,7 +261,13 @@ public class XLSXToMDIAndEDRSModelService {
             return "";
         }
         DataFormatter formatter = new DataFormatter();
-        return formatter.formatCellValue(sheet.getRow(fieldMap.get(name)).getCell(columnIndex));
+        XSSFCell targetCell = sheet.getRow(fieldMap.get(name)).getCell(columnIndex);
+        //Special Handling for date cell value of "default date format" sometimes causes issues with locales so override to force a standardized mm/dd/yyyy format 
+        if(targetCell.getCellStyle().getDataFormat() == 14){
+            String correctedDateFormat= "mm/dd/yyyy";
+            return new CellDateFormatter(correctedDateFormat).format(targetCell.getDateCellValue());
+        }
+        return formatter.formatCellValue(targetCell);
     }
 
     private boolean lintAndCompareStrings(String left, String right){
