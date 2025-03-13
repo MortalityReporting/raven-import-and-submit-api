@@ -12,16 +12,20 @@ import java.util.Optional;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import org.apache.poi.ss.format.CellDateFormatter;
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.CellType;
 import org.apache.poi.ss.usermodel.DataFormatter;
 import org.apache.poi.ss.usermodel.Row;
+import org.apache.poi.xssf.usermodel.XSSFCell;
 import org.apache.poi.xssf.usermodel.XSSFRow;
 import org.apache.poi.xssf.usermodel.XSSFSheet;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
+
+import edu.gatech.chai.MDI.Model.MDIAndEDRSModelFields;
 import edu.gatech.chai.MDI.Model.ToxResult;
 import edu.gatech.chai.MDI.Model.ToxSpecimen;
 import edu.gatech.chai.MDI.Model.ToxToMDIModelFields;
@@ -37,7 +41,7 @@ public class XLSXToToxToMDIModelService {
     private static String AGENCY_HEADER = "Agency Name";
     private static final String[] AGENCY_FIELDS = {"MDI Agency Name", "MDI Agency Address: Street", "MDI Agency Address: City", "MDI Agency Address: County", "MDI Agency Address: State", "MDI Agency Address: Zip", "Pathologist/Coroner", "Investigator/Point of Contact"};
     private static String DECEDENT_HEADER = "Decedent";
-    private static final String[] DECEDENT_FIELDS = {"Decedent Name", "MDI Case Management Number", "Examination/Autopsy Number", "Decedent Sex", "Decedent DOB", "ME/C Case Notes", "Date of Report Issuance", "Analyst", "Toxicologist/Certifier (Title)"};
+    private static final String[] DECEDENT_FIELDS = {"Decedent Name", "MDI Case System", "MDI Case Number", "Decedent Sex", "Decedent DOB", "ME/C Case Notes", "Date/Time of Specimen Collection", "Date/Time of Receipt", "Date of Report Issuance"};
     private static String SPECIMEN_HEADER = "Specimens";
     private static final String[] SPECIMEN_FIELDS = {"Name", "Specimen Unique Identifier", "Body Site", "Amount", "Container", "Date/Time Collected", "Date/Time of Receipt", "Condition", "Comments"};
     private static String RESULTS_HEADER = "Results";
@@ -371,12 +375,19 @@ public class XLSXToToxToMDIModelService {
 
     }
 
-    private String getStringForColumnAndName(XSSFSheet sheet, Map<String, Integer> fieldMap, int columnIndex,String name){
+    private String getStringForColumnAndName(XSSFSheet sheet, MDIAndEDRSModelFields model, Map<String, Integer> fieldMap, int columnIndex,String name){
         if(fieldMap.get(name) == null){
+            model.getErrorListForName(name).add("No value found for key '"+name+"'.");
             return "";
         }
         DataFormatter formatter = new DataFormatter();
-        return formatter.formatCellValue(sheet.getRow(fieldMap.get(name)).getCell(columnIndex));
+        XSSFCell targetCell = sheet.getRow(fieldMap.get(name)).getCell(columnIndex);
+        //Special Handling for date cell value of "default date format" sometimes causes issues with locales so override to force a standardized mm/dd/yyyy format 
+        if(targetCell.getCellStyle().getDataFormat() == 14){
+            String correctedDateFormat= "mm/dd/yyyy";
+            return new CellDateFormatter(correctedDateFormat).format(targetCell.getDateCellValue());
+        }
+        return formatter.formatCellValue(targetCell);
     }
 
     private boolean lintAndCompareStrings(String left, String right){
@@ -388,16 +399,14 @@ public class XLSXToToxToMDIModelService {
     public String interpretCellValue(Cell valueCell, String currentKey, ToxToMDIModelFields modelFields){
         String currentValue = "";
         if(Arrays.asList(DATE_FIELDS).contains(currentKey)){
-            currentValue = parseCellDateOrDateTimeWithFormat(valueCell, modelFields, currentKey, DATE_FORMAT);
+            return parseCellDateOrDateTimeWithFormat(valueCell, modelFields, currentKey, DATE_FORMAT);
         }
         else if(Arrays.asList(DATETIME_FIELDS).contains(currentKey)){
-            currentValue = parseCellDateOrDateTimeWithFormat(valueCell, modelFields, currentKey, DATETIME_FORMAT);
+            return parseCellDateOrDateTimeWithFormat(valueCell, modelFields, currentKey, DATETIME_FORMAT);
         }
         else{
-            currentValue = dataFormatter.formatCellValue(valueCell);
+            return dataFormatter.formatCellValue(valueCell);
         } 
-        currentValue = dataFormatter.formatCellValue(valueCell);
-        return currentValue;
     }
 
     public String parseCellDateOrDateTimeWithFormat(Cell valueCell, ToxToMDIModelFields modelFields, String fieldName, String format){
