@@ -1,0 +1,62 @@
+# Compiled class file
+*.class
+
+# Log file
+*.log
+
+# BlueJ files
+*.ctxt
+
+# Mobile Tools for Java (J2ME)
+.mtj.tmp/
+
+# Package Files #
+*.jar
+*.war
+*.ear
+
+# virtual machine crash logs, see http://www.java.com/en/download/help/error_hotspot.xml
+hs_err_pid*
+
+# NetBeans temporary files
+nbproject/private/
+build/
+dist/
+nbdist/
+nbactions.xml
+nb-configuration.xml
+
+# IntelliJ IDEA project files
+.idea/
+*.iws
+*.iml
+*.ipr
+
+# Eclipse project files
+.metadata/
+bin/
+tmp/
+.tmp___/
+.classpath
+.project
+.settings/
+.loadpath
+
+# Maven target directory
+/target/
+
+# Gradle build directory
+/build/
+
+# VS Code stuff
+.vscode/
+*.code-workspace
+*.code-profile
+
+# OS generated files #
+.DS_Store
+Thumbs.db
+
+# other
+*.swp
+*.bak
