@@ -35,12 +35,15 @@ import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.opencsv.bean.CsvToBean;
 import com.opencsv.bean.CsvToBeanBuilder;
 
+import edu.gatech.chai.MDI.Model.DCRModelFields;
 import edu.gatech.chai.MDI.Model.MDIAndEDRSModelFields;
 import edu.gatech.chai.MDI.Model.ToxResult;
 import edu.gatech.chai.MDI.Model.ToxSpecimen;
 import edu.gatech.chai.MDI.Model.ToxToMDIModelFields;
+import edu.gatech.chai.Mapping.Service.LocalToDCRService;
 import edu.gatech.chai.Mapping.Service.LocalToMDIAndEDRSService;
 import edu.gatech.chai.Mapping.Service.LocalToToxToMDIService;
+import edu.gatech.chai.Mapping.Service.XLSXToDCRModelService;
 import edu.gatech.chai.Mapping.Service.XLSXToMDIAndEDRSModelService;
 import edu.gatech.chai.Mapping.Service.XLSXToToxToMDIModelService;
 import edu.gatech.chai.Submission.Repository.PatientSubmitRepository;
@@ -54,11 +57,15 @@ public class UploadAndExportController {
 	@Autowired
 	LocalToToxToMDIService mDIToToxToMDIService;
 	@Autowired
+	LocalToDCRService mDIToDCRService;
+	@Autowired
 	SubmitBundleService submitBundleService;
 	@Autowired
 	private XLSXToMDIAndEDRSModelService xLSXToMDIToEDRSService;
 	@Autowired
 	private XLSXToToxToMDIModelService xLSXToToxToMDIService;
+	@Autowired
+	private XLSXToDCRModelService xLSXToDCRModelService;
 	@Value("${fhircms.submit}")
 	boolean submitFlag;
 
@@ -93,8 +100,11 @@ public class UploadAndExportController {
 		} else if (type.equalsIgnoreCase("tox-to-mdi")){
 			return uploadXLSXFileForToxToMDI(file);
 		}
+		else if (type.equalsIgnoreCase("dcr")){
+			return uploadXLSXFileForDCR(file);
+		}
 		else{
-			throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Invalid 'type' param of '"+type+"' expected a value of 'mdi-and-edrs' or 'tox-to-mdi'");
+			throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Invalid 'type' param of '"+type+"' expected a value of 'mdi-and-edrs' or 'tox-to-mdi' or 'dcr'");
 		}
 	}
 
@@ -218,6 +228,73 @@ public class UploadAndExportController {
 			//Actually submit to the fhir server here!
 			if(submitFlag){
 				logger.info("XLSX MDI-and-EDRS Upload: Uploading Tox-To-EDRS To FhirBase");
+				JsonNode responseInfo = submitToFhirBase(bundleString, modelFields, mapper);
+				responseObject.set("fhirResponse", responseInfo);
+				responseObject.put("Narrative", "");
+			}
+			responseJson.add(responseObject);
+		}
+		//JsonNode responseJson = mapper.valueToTree(mappedXLSXData);
+		HttpStatus returnStatus = HttpStatus.CREATED;
+		if(mappedXLSXData.size() == 0){
+			returnStatus = HttpStatus.NO_CONTENT;
+		}
+		return new ResponseEntity<JsonNode>(responseJson, returnStatus);
+    }
+
+	@PostMapping(value = {"upload-dcr-xlsx-file"})
+    public ResponseEntity<JsonNode> uploadXLSXFileForDCR(@RequestParam(name = "file", required = true) MultipartFile file) throws JsonProcessingException {
+		//Read XLSX File submitted
+		logger.info("XLSX DCR Upload: Starting XLSX File Read");
+		Tika tika = new Tika();
+		String detectedType;
+		XSSFWorkbook workbook = null;
+		try {
+			detectedType = tika.detect(file.getBytes());
+			workbook = new XSSFWorkbook(file.getInputStream());
+		} catch (IOException e1) {
+			throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, e1.getLocalizedMessage());
+		}
+		if(detectedType.equalsIgnoreCase("application/vnd.openxmlformats-officedocument.spreadsheetml.sheet")){
+			throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "Expected a file media type of:application/vnd.openxmlformats-officedocument.spreadsheetml.sheet" +
+			"but instead found media type of:"+detectedType);
+		}
+
+		List<DCRModelFields> mappedXLSXData;
+		//Map data to internal definition
+		try {
+			mappedXLSXData = xLSXToDCRModelService.convertToMDIModelFields(workbook);
+		} catch (Exception e) {
+			throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, e.getLocalizedMessage());
+		}
+		//Setup mapper
+		ObjectMapper mapper = new ObjectMapper();
+		mapper.setVisibility(PropertyAccessor.ALL, Visibility.NONE);
+		mapper.setVisibility(PropertyAccessor.FIELD, Visibility.ANY);
+		ArrayNode responseJson = mapper.createArrayNode();
+		//For each mapped field
+		for(DCRModelFields modelFields:mappedXLSXData){
+			//Convert 
+			String bundleString = "";
+			try {
+				bundleString = mDIToDCRService.convertToMDIString(modelFields);
+			} catch (ParseException e1) {
+				e1.printStackTrace();
+				continue;
+			}
+			ObjectNode responseObject = mapper.createObjectNode();
+			try {
+				responseObject.set("fhirBundle", mapper.readTree(bundleString));
+			} catch (IOException e1) {
+				e1.printStackTrace();
+				continue;
+			}
+			//Collect mapping of objects here.
+			ObjectNode fields = createMDIAndEDRSFieldsNode(modelFields);
+			responseObject.set("fields", fields);
+			//Actually submit to the fhir server here!
+			if(submitFlag){
+				logger.info("XLSX DCR Upload: Uploading Tox-To-EDRS To FhirBase");
 				JsonNode responseInfo = submitToFhirBase(bundleString, modelFields, mapper);
 				responseObject.set("fhirResponse", responseInfo);
 				responseObject.put("Narrative", "");

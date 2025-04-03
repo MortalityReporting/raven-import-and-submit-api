@@ -1,0 +1,1231 @@
+[
+    {
+        "fhirBundle": {
+            "resourceType": "Bundle",
+            "id": "GTRI-ME-211-Tox-Message-Bundle",
+            "meta": {
+                "profile": [
+                    "http://hl7.org/fhir/us/mdi/StructureDefinition/Bundle-message-tox-to-mdi"
+                ]
+            },
+            "identifier": {
+                "system": "urn:mdi:raven:temporary",
+                "value": "1681185105899"
+            },
+            "type": "batch",
+            "entry": [
+                {
+                    "fullUrl": "Organization/GTRI-ME-211-Organization",
+                    "resource": {
+                        "resourceType": "Organization",
+                        "id": "GTRI-ME-211-Organization",
+                        "meta": {
+                            "profile": [
+                                "http://hl7.org/fhir/us/core/StructureDefinition/us-core-organization"
+                            ]
+                        },
+                        "active": true,
+                        "name": "UF Health Pathology Labs, Forensic Toxicology Laboratory",
+                        "address": [
+                            {
+                                "text": "UF Health Pathology Labs, Forensic Toxicology Laboratory",
+                                "line": [
+                                    "4800 SW 35th Drive"
+                                ],
+                                "state": "FL",
+                                "postalCode": "32608"
+                            }
+                        ]
+                    },
+                    "request": {
+                        "method": "POST"
+                    }
+                },
+                {
+                    "fullUrl": "PractitionerRole/GTRI-ME-211-PractitionerRole",
+                    "resource": {
+                        "resourceType": "PractitionerRole",
+                        "id": "GTRI-ME-211-PractitionerRole",
+                        "meta": {
+                            "profile": [
+                                "http://hl7.org/fhir/us/core/StructureDefinition/us-core-practitionerrole"
+                            ]
+                        },
+                        "practitioner": {
+                            "reference": "Practitioner/GTRI-ME-211-Practitioner"
+                        },
+                        "organization": {
+                            "reference": "Organization/GTRI-ME-211-Organization"
+                        }
+                    },
+                    "request": {
+                        "method": "POST"
+                    }
+                },
+                {
+                    "fullUrl": "Practitioner/GTRI-ME-211-Practitioner",
+                    "resource": {
+                        "resourceType": "Practitioner",
+                        "id": "GTRI-ME-211-Practitioner",
+                        "meta": {
+                            "profile": [
+                                "http://hl7.org/fhir/us/core/StructureDefinition/us-core-practitioner"
+                            ]
+                        },
+                        "name": [
+                            {
+                                "family": "C",
+                                "given": [
+                                    "Ruben"
+                                ]
+                            }
+                        ]
+                    },
+                    "request": {
+                        "method": "POST"
+                    }
+                },
+                {
+                    "fullUrl": "PractitionerRole/GTRI-ME-211-PractitionerRole",
+                    "resource": {
+                        "resourceType": "PractitionerRole",
+                        "id": "GTRI-ME-211-PractitionerRole",
+                        "meta": {
+                            "profile": [
+                                "http://hl7.org/fhir/us/core/StructureDefinition/us-core-practitionerrole"
+                            ]
+                        },
+                        "practitioner": {
+                            "reference": "Practitioner/GTRI-ME-211-Practitioner"
+                        },
+                        "organization": {
+                            "reference": "Organization/GTRI-ME-211-Organization"
+                        }
+                    },
+                    "request": {
+                        "method": "POST"
+                    }
+                },
+                {
+                    "fullUrl": "Patient/GTRI-ME-211-Decedent",
+                    "resource": {
+                        "resourceType": "Patient",
+                        "id": "GTRI-ME-211-Decedent",
+                        "meta": {
+                            "profile": [
+                                "http://hl7.org/fhir/us/core/StructureDefinition/us-core-patient"
+                            ]
+                        },
+                        "name": [
+                            {
+                                "use": "official",
+                                "family": "  Ramirez",
+                                "given": [
+                                    "Joseph",
+                                    "S."
+                                ]
+                            }
+                        ],
+                        "birthDate": "1964-02-24"
+                    },
+                    "request": {
+                        "method": "POST"
+                    }
+                },
+                {
+                    "fullUrl": "DiagnosticReport/GTRI-ME-211-DiagnosticReport-Tox-To-MDI",
+                    "resource": {
+                        "resourceType": "DiagnosticReport",
+                        "id": "GTRI-ME-211-DiagnosticReport-Tox-To-MDI",
+                        "meta": {
+                            "profile": [
+                                "https://fhir.org/fhir/us/mdi/StructureDefinition/DiagnosticReport-toxicology-to-mdi"
+                            ]
+                        },
+                        "status": "final",
+                        "category": [
+                            {
+                                "coding": [
+                                    {
+                                        "system": "http://terminology.hl7.org/CodeSystem/v2-0074",
+                                        "code": "LAB",
+                                        "display": "Laboratory"
+                                    }
+                                ]
+                            }
+                        ],
+                        "subject": {
+                            "reference": "Patient/GTRI-ME-211-Decedent"
+                        },
+                        "effectiveDateTime": "2023-04-10T23:51:45-04:00",
+                        "issued": "2022-01-05T00:00:00.000-05:00",
+                        "performer": [
+                            {
+                                "reference": "PractitionerRole/GTRI-ME-211-PractitionerRole"
+                            }
+                        ],
+                        "specimen": [
+                            {
+                                "reference": "Specimen/GTRI-ME-211-0-Specimen"
+                            },
+                            {
+                                "reference": "Specimen/GTRI-ME-211-1-Specimen"
+                            },
+                            {
+                                "reference": "Specimen/GTRI-ME-211-2-Specimen"
+                            },
+                            {
+                                "reference": "Specimen/GTRI-ME-211-3-Specimen"
+                            },
+                            {
+                                "reference": "Specimen/GTRI-ME-211-4-Specimen"
+                            },
+                            {
+                                "reference": "Specimen/GTRI-ME-211-5-Specimen"
+                            }
+                        ],
+                        "result": [
+                            {
+                                "reference": "Observation/GTRI-ME-211-0-Result"
+                            },
+                            {
+                                "reference": "Observation/GTRI-ME-211-1-Result"
+                            },
+                            {
+                                "reference": "Observation/GTRI-ME-211-2-Result"
+                            },
+                            {
+                                "reference": "Observation/GTRI-ME-211-3-Result"
+                            },
+                            {
+                                "reference": "Observation/GTRI-ME-211-4-Result"
+                            },
+                            {
+                                "reference": "Observation/GTRI-ME-211-5-Result"
+                            },
+                            {
+                                "reference": "Observation/GTRI-ME-211-6-Result"
+                            }
+                        ]
+                    },
+                    "request": {
+                        "method": "POST"
+                    }
+                },
+                {
+                    "fullUrl": "Specimen/GTRI-ME-211-0-Specimen",
+                    "resource": {
+                        "resourceType": "Specimen",
+                        "id": "GTRI-ME-211-0-Specimen",
+                        "meta": {
+                            "profile": [
+                                "https://fhir.org/fhir/us/mdi/StructureDefinition/Specimen-toxicology-lab"
+                            ]
+                        },
+                        "subject": {
+                            "reference": "Patient/GTRI-ME-211-Decedent"
+                        },
+                        "receivedTime": "2021-12-03T20:21:00-05:00",
+                        "collection": {
+                            "collectedDateTime": "2021-12-03T11:00:00-05:00",
+                            "quantity": {
+                                "code": "20 mL"
+                            },
+                            "bodySite": {
+                                "text": "femoral vein structure (body structure)"
+                            }
+                        }
+                    },
+                    "request": {
+                        "method": "POST"
+                    }
+                },
+                {
+                    "fullUrl": "Specimen/GTRI-ME-211-1-Specimen",
+                    "resource": {
+                        "resourceType": "Specimen",
+                        "id": "GTRI-ME-211-1-Specimen",
+                        "meta": {
+                            "profile": [
+                                "https://fhir.org/fhir/us/mdi/StructureDefinition/Specimen-toxicology-lab"
+                            ]
+                        },
+                        "subject": {
+                            "reference": "Patient/GTRI-ME-211-Decedent"
+                        },
+                        "receivedTime": "2021-12-03T20:21:00-05:00",
+                        "collection": {
+                            "collectedDateTime": "2021-12-03T11:00:00-05:00",
+                            "quantity": {
+                                "code": "5 mL"
+                            }
+                        }
+                    },
+                    "request": {
+                        "method": "POST"
+                    }
+                },
+                {
+                    "fullUrl": "Specimen/GTRI-ME-211-2-Specimen",
+                    "resource": {
+                        "resourceType": "Specimen",
+                        "id": "GTRI-ME-211-2-Specimen",
+                        "meta": {
+                            "profile": [
+                                "https://fhir.org/fhir/us/mdi/StructureDefinition/Specimen-toxicology-lab"
+                            ]
+                        },
+                        "subject": {
+                            "reference": "Patient/GTRI-ME-211-Decedent"
+                        },
+                        "receivedTime": "2021-12-03T20:21:00-05:00",
+                        "collection": {
+                            "collectedDateTime": "2021-12-03T11:00:00-05:00",
+                            "quantity": {
+                                "code": "3 mL"
+                            }
+                        }
+                    },
+                    "request": {
+                        "method": "POST"
+                    }
+                },
+                {
+                    "fullUrl": "Specimen/GTRI-ME-211-3-Specimen",
+                    "resource": {
+                        "resourceType": "Specimen",
+                        "id": "GTRI-ME-211-3-Specimen",
+                        "meta": {
+                            "profile": [
+                                "https://fhir.org/fhir/us/mdi/StructureDefinition/Specimen-toxicology-lab"
+                            ]
+                        },
+                        "subject": {
+                            "reference": "Patient/GTRI-ME-211-Decedent"
+                        },
+                        "receivedTime": "2021-12-03T20:21:00-05:00",
+                        "collection": {
+                            "collectedDateTime": "2021-12-03T11:00:00-05:00",
+                            "quantity": {
+                                "code": "3 mL"
+                            }
+                        }
+                    },
+                    "request": {
+                        "method": "POST"
+                    }
+                },
+                {
+                    "fullUrl": "Specimen/GTRI-ME-211-4-Specimen",
+                    "resource": {
+                        "resourceType": "Specimen",
+                        "id": "GTRI-ME-211-4-Specimen",
+                        "meta": {
+                            "profile": [
+                                "https://fhir.org/fhir/us/mdi/StructureDefinition/Specimen-toxicology-lab"
+                            ]
+                        },
+                        "subject": {
+                            "reference": "Patient/GTRI-ME-211-Decedent"
+                        },
+                        "receivedTime": "2021-12-03T20:21:00-05:00",
+                        "collection": {
+                            "collectedDateTime": "2021-12-03T11:00:00-05:00",
+                            "quantity": {
+                                "code": "60 mL"
+                            }
+                        }
+                    },
+                    "request": {
+                        "method": "POST"
+                    }
+                },
+                {
+                    "fullUrl": "Specimen/GTRI-ME-211-5-Specimen",
+                    "resource": {
+                        "resourceType": "Specimen",
+                        "id": "GTRI-ME-211-5-Specimen",
+                        "meta": {
+                            "profile": [
+                                "https://fhir.org/fhir/us/mdi/StructureDefinition/Specimen-toxicology-lab"
+                            ]
+                        },
+                        "subject": {
+                            "reference": "Patient/GTRI-ME-211-Decedent"
+                        },
+                        "receivedTime": "2021-12-03T20:21:00-05:00",
+                        "collection": {
+                            "collectedDateTime": "2021-12-03T11:00:00-05:00",
+                            "quantity": {
+                                "code": "5 g"
+                            }
+                        }
+                    },
+                    "request": {
+                        "method": "POST"
+                    }
+                },
+                {
+                    "fullUrl": "Observation/GTRI-ME-211-0-Result",
+                    "resource": {
+                        "resourceType": "Observation",
+                        "id": "GTRI-ME-211-0-Result",
+                        "meta": {
+                            "profile": [
+                                "http://hl7.org/fhir/us/mdi/StructureDefinition/Observation-toxicology-lab-result"
+                            ]
+                        },
+                        "code": {
+                            "text": "Ethanol"
+                        },
+                        "subject": {
+                            "reference": "Patient/GTRI-ME-211-Decedent"
+                        },
+                        "valueString": "54 mg/L",
+                        "specimen": {
+                            "reference": "Specimen/GTRI-ME-211-0-Specimen"
+                        }
+                    },
+                    "request": {
+                        "method": "POST"
+                    }
+                },
+                {
+                    "fullUrl": "Observation/GTRI-ME-211-1-Result",
+                    "resource": {
+                        "resourceType": "Observation",
+                        "id": "GTRI-ME-211-1-Result",
+                        "meta": {
+                            "profile": [
+                                "http://hl7.org/fhir/us/mdi/StructureDefinition/Observation-toxicology-lab-result"
+                            ]
+                        },
+                        "code": {
+                            "text": "Ethanol"
+                        },
+                        "subject": {
+                            "reference": "Patient/GTRI-ME-211-Decedent"
+                        },
+                        "valueString": "Detected",
+                        "specimen": {
+                            "reference": "Specimen/GTRI-ME-211-1-Specimen"
+                        }
+                    },
+                    "request": {
+                        "method": "POST"
+                    }
+                },
+                {
+                    "fullUrl": "Observation/GTRI-ME-211-2-Result",
+                    "resource": {
+                        "resourceType": "Observation",
+                        "id": "GTRI-ME-211-2-Result",
+                        "meta": {
+                            "profile": [
+                                "http://hl7.org/fhir/us/mdi/StructureDefinition/Observation-toxicology-lab-result"
+                            ]
+                        },
+                        "code": {
+                            "text": "Ethanol"
+                        },
+                        "subject": {
+                            "reference": "Patient/GTRI-ME-211-Decedent"
+                        },
+                        "valueString": "Detected",
+                        "specimen": {
+                            "reference": "Specimen/GTRI-ME-211-1-Specimen"
+                        }
+                    },
+                    "request": {
+                        "method": "POST"
+                    }
+                },
+                {
+                    "fullUrl": "Observation/GTRI-ME-211-3-Result",
+                    "resource": {
+                        "resourceType": "Observation",
+                        "id": "GTRI-ME-211-3-Result",
+                        "meta": {
+                            "profile": [
+                                "http://hl7.org/fhir/us/mdi/StructureDefinition/Observation-toxicology-lab-result"
+                            ]
+                        },
+                        "code": {
+                            "text": "not tested"
+                        },
+                        "subject": {
+                            "reference": "Patient/GTRI-ME-211-Decedent"
+                        },
+                        "specimen": {
+                            "reference": "Specimen/GTRI-ME-211-2-Specimen"
+                        }
+                    },
+                    "request": {
+                        "method": "POST"
+                    }
+                },
+                {
+                    "fullUrl": "Observation/GTRI-ME-211-4-Result",
+                    "resource": {
+                        "resourceType": "Observation",
+                        "id": "GTRI-ME-211-4-Result",
+                        "meta": {
+                            "profile": [
+                                "http://hl7.org/fhir/us/mdi/StructureDefinition/Observation-toxicology-lab-result"
+                            ]
+                        },
+                        "code": {
+                            "text": "not tested"
+                        },
+                        "subject": {
+                            "reference": "Patient/GTRI-ME-211-Decedent"
+                        },
+                        "specimen": {
+                            "reference": "Specimen/GTRI-ME-211-4-Specimen"
+                        }
+                    },
+                    "request": {
+                        "method": "POST"
+                    }
+                },
+                {
+                    "fullUrl": "Observation/GTRI-ME-211-5-Result",
+                    "resource": {
+                        "resourceType": "Observation",
+                        "id": "GTRI-ME-211-5-Result",
+                        "meta": {
+                            "profile": [
+                                "http://hl7.org/fhir/us/mdi/StructureDefinition/Observation-toxicology-lab-result"
+                            ]
+                        },
+                        "code": {
+                            "text": "not tested"
+                        },
+                        "subject": {
+                            "reference": "Patient/GTRI-ME-211-Decedent"
+                        },
+                        "specimen": {
+                            "reference": "Specimen/GTRI-ME-211-5-Specimen"
+                        }
+                    },
+                    "request": {
+                        "method": "POST"
+                    }
+                },
+                {
+                    "fullUrl": "Observation/GTRI-ME-211-6-Result",
+                    "resource": {
+                        "resourceType": "Observation",
+                        "id": "GTRI-ME-211-6-Result",
+                        "meta": {
+                            "profile": [
+                                "http://hl7.org/fhir/us/mdi/StructureDefinition/Observation-toxicology-lab-result"
+                            ]
+                        },
+                        "code": {
+                            "text": "Ethanol"
+                        },
+                        "subject": {
+                            "reference": "Patient/GTRI-ME-211-Decedent"
+                        },
+                        "valueString": "0.133 g/dL",
+                        "specimen": {
+                            "reference": "Specimen/GTRI-ME-211-3-Specimen"
+                        }
+                    },
+                    "request": {
+                        "method": "POST"
+                    }
+                }
+            ]
+        },
+        "fields": {
+            "TOXCASENUMBER": {
+                "status": "not mapped",
+                "FHIRResource": {},
+                "value": ""
+            },
+            "TOXORGNAME": {
+                "status": "mapped",
+                "FHIRResource": {},
+                "value": "UF Health Pathology Labs, Forensic Toxicology Laboratory"
+            },
+            "TOXORDERCODE": {
+                "status": "not mapped",
+                "FHIRResource": {},
+                "value": ""
+            },
+            "TOXPERFORMER": {
+                "status": "mapped",
+                "FHIRResource": {},
+                "value": "Ruben C. Sutton"
+            },
+            "TOXORGSTREET": {
+                "status": "mapped",
+                "FHIRResource": {},
+                "value": "4800 SW 35th Drive"
+            },
+            "TOXORGCITY": {
+                "status": "not mapped",
+                "FHIRResource": {},
+                "value": ""
+            },
+            "TOXORGCOUNTY": {
+                "status": "not mapped",
+                "FHIRResource": {},
+                "value": ""
+            },
+            "TOXORGSTATE": {
+                "status": "mapped",
+                "FHIRResource": {},
+                "value": "FL"
+            },
+            "TOXORGZIP": {
+                "status": "mapped",
+                "FHIRResource": {},
+                "value": "32608"
+            },
+            "TOXORGCOUNTRY": {
+                "status": "not mapped",
+                "FHIRResource": {},
+                "value": ""
+            },
+            "MDICASEID": {
+                "status": "mapped",
+                "FHIRResource": {},
+                "value": "ME-211"
+            },
+            "MDICASESYSTEM": {
+                "status": "mapped",
+                "FHIRResource": {},
+                "value": "GTRI"
+            },
+            "FIRSTNAME": {
+                "status": "mapped",
+                "FHIRResource": {},
+                "value": "Joseph"
+            },
+            "MIDNAME": {
+                "status": "mapped",
+                "FHIRResource": {},
+                "value": "S."
+            },
+            "LASTNAME": {
+                "status": "mapped",
+                "FHIRResource": {},
+                "value": "  Ramirez"
+            },
+            "SUFFIXNAME": {
+                "status": "not mapped",
+                "FHIRResource": {},
+                "value": ""
+            },
+            "BIRTHDATE": {
+                "status": "mapped",
+                "FHIRResource": {},
+                "value": "2/24/64"
+            },
+            "MECNOTES": {
+                "status": "mapped",
+                "FHIRResource": {},
+                "value": "No decomposition"
+            },
+            "SPECIMENCOLLECTION_DATETIME": {
+                "status": "mapped",
+                "FHIRResource": {},
+                "value": "2021-12-03 11:00 am"
+            },
+            "REPORTDATE": {
+                "status": "mapped",
+                "FHIRResource": {},
+                "value": "2022-01-05"
+            },
+            "SPECIMENS": [
+                {
+                    "NAME": {
+                        "status": "mapped",
+                        "FHIRResource": {},
+                        "value": "Blood"
+                    },
+                    "IDENTIFIER": {
+                        "status": "mapped",
+                        "FHIRResource": {},
+                        "value": "X353256"
+                    },
+                    "BODYSITE": {
+                        "status": "mapped",
+                        "FHIRResource": {},
+                        "value": "femoral vein structure (body structure)"
+                    },
+                    "AMOUNT": {
+                        "status": "mapped",
+                        "FHIRResource": {},
+                        "value": "20 mL"
+                    },
+                    "CONTAINER": {
+                        "status": "not mapped",
+                        "FHIRResource": {},
+                        "value": ""
+                    },
+                    "COLLECTED_DATETIME": {
+                        "status": "mapped",
+                        "FHIRResource": {},
+                        "value": "2021-12-03 11:00 am"
+                    },
+                    "RECEIPT_DATETIME": {
+                        "status": "mapped",
+                        "FHIRResource": {},
+                        "value": "2021-12-03 4:00 pm"
+                    },
+                    "CONDITION": {
+                        "status": "not mapped",
+                        "FHIRResource": {},
+                        "value": ""
+                    }
+                },
+                {
+                    "NAME": {
+                        "status": "mapped",
+                        "FHIRResource": {},
+                        "value": "Urine"
+                    },
+                    "IDENTIFIER": {
+                        "status": "mapped",
+                        "FHIRResource": {},
+                        "value": "ZZZ352356"
+                    },
+                    "BODYSITE": {
+                        "status": "not mapped",
+                        "FHIRResource": {},
+                        "value": ""
+                    },
+                    "AMOUNT": {
+                        "status": "mapped",
+                        "FHIRResource": {},
+                        "value": "5 mL"
+                    },
+                    "CONTAINER": {
+                        "status": "not mapped",
+                        "FHIRResource": {},
+                        "value": ""
+                    },
+                    "COLLECTED_DATETIME": {
+                        "status": "mapped",
+                        "FHIRResource": {},
+                        "value": "2021-12-03 11:00 am"
+                    },
+                    "RECEIPT_DATETIME": {
+                        "status": "mapped",
+                        "FHIRResource": {},
+                        "value": "2021-12-03 4:00 pm"
+                    },
+                    "CONDITION": {
+                        "status": "not mapped",
+                        "FHIRResource": {},
+                        "value": ""
+                    }
+                },
+                {
+                    "NAME": {
+                        "status": "mapped",
+                        "FHIRResource": {},
+                        "value": "Bile"
+                    },
+                    "IDENTIFIER": {
+                        "status": "mapped",
+                        "FHIRResource": {},
+                        "value": "OO352356"
+                    },
+                    "BODYSITE": {
+                        "status": "not mapped",
+                        "FHIRResource": {},
+                        "value": ""
+                    },
+                    "AMOUNT": {
+                        "status": "mapped",
+                        "FHIRResource": {},
+                        "value": "3 mL"
+                    },
+                    "CONTAINER": {
+                        "status": "not mapped",
+                        "FHIRResource": {},
+                        "value": ""
+                    },
+                    "COLLECTED_DATETIME": {
+                        "status": "mapped",
+                        "FHIRResource": {},
+                        "value": "2021-12-03 11:00 am"
+                    },
+                    "RECEIPT_DATETIME": {
+                        "status": "mapped",
+                        "FHIRResource": {},
+                        "value": "2021-12-03 4:00 pm"
+                    },
+                    "CONDITION": {
+                        "status": "not mapped",
+                        "FHIRResource": {},
+                        "value": ""
+                    }
+                },
+                {
+                    "NAME": {
+                        "status": "mapped",
+                        "FHIRResource": {},
+                        "value": "Vitreous Humor"
+                    },
+                    "IDENTIFIER": {
+                        "status": "mapped",
+                        "FHIRResource": {},
+                        "value": "XXX352356"
+                    },
+                    "BODYSITE": {
+                        "status": "not mapped",
+                        "FHIRResource": {},
+                        "value": ""
+                    },
+                    "AMOUNT": {
+                        "status": "mapped",
+                        "FHIRResource": {},
+                        "value": "3 mL"
+                    },
+                    "CONTAINER": {
+                        "status": "not mapped",
+                        "FHIRResource": {},
+                        "value": ""
+                    },
+                    "COLLECTED_DATETIME": {
+                        "status": "mapped",
+                        "FHIRResource": {},
+                        "value": "2021-12-03 11:00 am"
+                    },
+                    "RECEIPT_DATETIME": {
+                        "status": "mapped",
+                        "FHIRResource": {},
+                        "value": "2021-12-03 4:00 pm"
+                    },
+                    "CONDITION": {
+                        "status": "not mapped",
+                        "FHIRResource": {},
+                        "value": ""
+                    }
+                },
+                {
+                    "NAME": {
+                        "status": "mapped",
+                        "FHIRResource": {},
+                        "value": "Stomach Contents "
+                    },
+                    "IDENTIFIER": {
+                        "status": "mapped",
+                        "FHIRResource": {},
+                        "value": "MM352356"
+                    },
+                    "BODYSITE": {
+                        "status": "not mapped",
+                        "FHIRResource": {},
+                        "value": ""
+                    },
+                    "AMOUNT": {
+                        "status": "mapped",
+                        "FHIRResource": {},
+                        "value": "60 mL"
+                    },
+                    "CONTAINER": {
+                        "status": "not mapped",
+                        "FHIRResource": {},
+                        "value": ""
+                    },
+                    "COLLECTED_DATETIME": {
+                        "status": "mapped",
+                        "FHIRResource": {},
+                        "value": "2021-12-03 11:00 am"
+                    },
+                    "RECEIPT_DATETIME": {
+                        "status": "mapped",
+                        "FHIRResource": {},
+                        "value": "2021-12-03 4:00 pm"
+                    },
+                    "CONDITION": {
+                        "status": "not mapped",
+                        "FHIRResource": {},
+                        "value": ""
+                    }
+                },
+                {
+                    "NAME": {
+                        "status": "mapped",
+                        "FHIRResource": {},
+                        "value": "Liver"
+                    },
+                    "IDENTIFIER": {
+                        "status": "mapped",
+                        "FHIRResource": {},
+                        "value": "DD352356"
+                    },
+                    "BODYSITE": {
+                        "status": "not mapped",
+                        "FHIRResource": {},
+                        "value": ""
+                    },
+                    "AMOUNT": {
+                        "status": "mapped",
+                        "FHIRResource": {},
+                        "value": "5 g"
+                    },
+                    "CONTAINER": {
+                        "status": "not mapped",
+                        "FHIRResource": {},
+                        "value": ""
+                    },
+                    "COLLECTED_DATETIME": {
+                        "status": "mapped",
+                        "FHIRResource": {},
+                        "value": "2021-12-03 11:00 am"
+                    },
+                    "RECEIPT_DATETIME": {
+                        "status": "mapped",
+                        "FHIRResource": {},
+                        "value": "2021-12-03 4:00 pm"
+                    },
+                    "CONDITION": {
+                        "status": "not mapped",
+                        "FHIRResource": {},
+                        "value": ""
+                    }
+                }
+            ],
+            "RESULTS": [
+                {
+                    "ANALYSIS": {
+                        "status": "mapped",
+                        "FHIRResource": {},
+                        "value": "Ethanol"
+                    },
+                    "SPECIMEN": {
+                        "status": "mapped",
+                        "FHIRResource": {},
+                        "value": "Blood"
+                    },
+                    "METHOD": {
+                        "status": "not mapped",
+                        "FHIRResource": {},
+                        "value": ""
+                    },
+                    "VALUE": {
+                        "status": "mapped",
+                        "FHIRResource": {},
+                        "value": "54 mg/L"
+                    },
+                    "CONTAINER": {
+                        "status": "not mapped",
+                        "FHIRResource": {},
+                        "value": ""
+                    },
+                    "COLLECTED_DATE": {
+                        "status": "not mapped",
+                        "FHIRResource": {},
+                        "value": ""
+                    },
+                    "COLLECTED_TIME": {
+                        "status": "not mapped",
+                        "FHIRResource": {},
+                        "value": ""
+                    },
+                    "RECORD_DATE": {
+                        "status": "not mapped",
+                        "FHIRResource": {},
+                        "value": ""
+                    },
+                    "RECORD_TIME": {
+                        "status": "not mapped",
+                        "FHIRResource": {},
+                        "value": ""
+                    }
+                },
+                {
+                    "ANALYSIS": {
+                        "status": "mapped",
+                        "FHIRResource": {},
+                        "value": "Ethanol"
+                    },
+                    "SPECIMEN": {
+                        "status": "mapped",
+                        "FHIRResource": {},
+                        "value": "Urine"
+                    },
+                    "METHOD": {
+                        "status": "not mapped",
+                        "FHIRResource": {},
+                        "value": ""
+                    },
+                    "VALUE": {
+                        "status": "mapped",
+                        "FHIRResource": {},
+                        "value": "Detected"
+                    },
+                    "CONTAINER": {
+                        "status": "not mapped",
+                        "FHIRResource": {},
+                        "value": ""
+                    },
+                    "COLLECTED_DATE": {
+                        "status": "not mapped",
+                        "FHIRResource": {},
+                        "value": ""
+                    },
+                    "COLLECTED_TIME": {
+                        "status": "not mapped",
+                        "FHIRResource": {},
+                        "value": ""
+                    },
+                    "RECORD_DATE": {
+                        "status": "not mapped",
+                        "FHIRResource": {},
+                        "value": ""
+                    },
+                    "RECORD_TIME": {
+                        "status": "not mapped",
+                        "FHIRResource": {},
+                        "value": ""
+                    }
+                },
+                {
+                    "ANALYSIS": {
+                        "status": "mapped",
+                        "FHIRResource": {},
+                        "value": "Ethanol"
+                    },
+                    "SPECIMEN": {
+                        "status": "mapped",
+                        "FHIRResource": {},
+                        "value": "Urine"
+                    },
+                    "METHOD": {
+                        "status": "not mapped",
+                        "FHIRResource": {},
+                        "value": ""
+                    },
+                    "VALUE": {
+                        "status": "mapped",
+                        "FHIRResource": {},
+                        "value": "Detected"
+                    },
+                    "CONTAINER": {
+                        "status": "not mapped",
+                        "FHIRResource": {},
+                        "value": ""
+                    },
+                    "COLLECTED_DATE": {
+                        "status": "not mapped",
+                        "FHIRResource": {},
+                        "value": ""
+                    },
+                    "COLLECTED_TIME": {
+                        "status": "not mapped",
+                        "FHIRResource": {},
+                        "value": ""
+                    },
+                    "RECORD_DATE": {
+                        "status": "not mapped",
+                        "FHIRResource": {},
+                        "value": ""
+                    },
+                    "RECORD_TIME": {
+                        "status": "not mapped",
+                        "FHIRResource": {},
+                        "value": ""
+                    }
+                },
+                {
+                    "ANALYSIS": {
+                        "status": "mapped",
+                        "FHIRResource": {},
+                        "value": "not tested"
+                    },
+                    "SPECIMEN": {
+                        "status": "mapped",
+                        "FHIRResource": {},
+                        "value": "Bile"
+                    },
+                    "METHOD": {
+                        "status": "not mapped",
+                        "FHIRResource": {},
+                        "value": ""
+                    },
+                    "VALUE": {
+                        "status": "not mapped",
+                        "FHIRResource": {},
+                        "value": ""
+                    },
+                    "CONTAINER": {
+                        "status": "not mapped",
+                        "FHIRResource": {},
+                        "value": ""
+                    },
+                    "COLLECTED_DATE": {
+                        "status": "not mapped",
+                        "FHIRResource": {},
+                        "value": ""
+                    },
+                    "COLLECTED_TIME": {
+                        "status": "not mapped",
+                        "FHIRResource": {},
+                        "value": ""
+                    },
+                    "RECORD_DATE": {
+                        "status": "not mapped",
+                        "FHIRResource": {},
+                        "value": ""
+                    },
+                    "RECORD_TIME": {
+                        "status": "not mapped",
+                        "FHIRResource": {},
+                        "value": ""
+                    }
+                },
+                {
+                    "ANALYSIS": {
+                        "status": "mapped",
+                        "FHIRResource": {},
+                        "value": "not tested"
+                    },
+                    "SPECIMEN": {
+                        "status": "mapped",
+                        "FHIRResource": {},
+                        "value": "Stomach Contents "
+                    },
+                    "METHOD": {
+                        "status": "mapped",
+                        "FHIRResource": {},
+                        "value": " "
+                    },
+                    "VALUE": {
+                        "status": "not mapped",
+                        "FHIRResource": {},
+                        "value": ""
+                    },
+                    "CONTAINER": {
+                        "status": "not mapped",
+                        "FHIRResource": {},
+                        "value": ""
+                    },
+                    "COLLECTED_DATE": {
+                        "status": "not mapped",
+                        "FHIRResource": {},
+                        "value": ""
+                    },
+                    "COLLECTED_TIME": {
+                        "status": "not mapped",
+                        "FHIRResource": {},
+                        "value": ""
+                    },
+                    "RECORD_DATE": {
+                        "status": "not mapped",
+                        "FHIRResource": {},
+                        "value": ""
+                    },
+                    "RECORD_TIME": {
+                        "status": "not mapped",
+                        "FHIRResource": {},
+                        "value": ""
+                    }
+                },
+                {
+                    "ANALYSIS": {
+                        "status": "mapped",
+                        "FHIRResource": {},
+                        "value": "not tested"
+                    },
+                    "SPECIMEN": {
+                        "status": "mapped",
+                        "FHIRResource": {},
+                        "value": "Liver"
+                    },
+                    "METHOD": {
+                        "status": "not mapped",
+                        "FHIRResource": {},
+                        "value": ""
+                    },
+                    "VALUE": {
+                        "status": "not mapped",
+                        "FHIRResource": {},
+                        "value": ""
+                    },
+                    "CONTAINER": {
+                        "status": "not mapped",
+                        "FHIRResource": {},
+                        "value": ""
+                    },
+                    "COLLECTED_DATE": {
+                        "status": "not mapped",
+                        "FHIRResource": {},
+                        "value": ""
+                    },
+                    "COLLECTED_TIME": {
+                        "status": "not mapped",
+                        "FHIRResource": {},
+                        "value": ""
+                    },
+                    "RECORD_DATE": {
+                        "status": "not mapped",
+                        "FHIRResource": {},
+                        "value": ""
+                    },
+                    "RECORD_TIME": {
+                        "status": "not mapped",
+                        "FHIRResource": {},
+                        "value": ""
+                    }
+                },
+                {
+                    "ANALYSIS": {
+                        "status": "mapped",
+                        "FHIRResource": {},
+                        "value": "Ethanol"
+                    },
+                    "SPECIMEN": {
+                        "status": "mapped",
+                        "FHIRResource": {},
+                        "value": "Vitreous Humor"
+                    },
+                    "METHOD": {
+                        "status": "not mapped",
+                        "FHIRResource": {},
+                        "value": ""
+                    },
+                    "VALUE": {
+                        "status": "mapped",
+                        "FHIRResource": {},
+                        "value": "0.133 g/dL"
+                    },
+                    "CONTAINER": {
+                        "status": "not mapped",
+                        "FHIRResource": {},
+                        "value": ""
+                    },
+                    "COLLECTED_DATE": {
+                        "status": "not mapped",
+                        "FHIRResource": {},
+                        "value": ""
+                    },
+                    "COLLECTED_TIME": {
+                        "status": "not mapped",
+                        "FHIRResource": {},
+                        "value": ""
+                    },
+                    "RECORD_DATE": {
+                        "status": "not mapped",
+                        "FHIRResource": {},
+                        "value": ""
+                    },
+                    "RECORD_TIME": {
+                        "status": "not mapped",
+                        "FHIRResource": {},
+                        "value": ""
+                    }
+                }
+            ],
+            "NOTES": []
+        }
+    }
+]

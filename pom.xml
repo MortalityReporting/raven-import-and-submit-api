@@ -27,7 +27,7 @@
     <dependency>
     	<groupId>edu.gatech.chai</groupId>
     	<artifactId>MDI</artifactId>
-    	<version>1.2.9-STU-2.0.0-US</version>
+    	<version>1.2.11-STU-2.0.0-US</version>
     </dependency>
     <!--<dependency>
       <groupId>edu.gatech</groupId>

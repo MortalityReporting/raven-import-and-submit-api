@@ -32,19 +32,14 @@ import org.hl7.fhir.r4.model.InstantType;
 import org.hl7.fhir.r4.model.IntegerType;
 import org.hl7.fhir.r4.model.Location;
 import org.hl7.fhir.r4.model.Location.LocationStatus;
-import org.hl7.fhir.r4.model.Meta;
 import org.hl7.fhir.r4.model.Narrative;
 import org.hl7.fhir.r4.model.Narrative.NarrativeStatus;
-import org.hl7.fhir.r4.model.Narrative.NarrativeStatusEnumFactory;
 import org.hl7.fhir.r4.model.Observation;
 import org.hl7.fhir.r4.model.Observation.ObservationComponentComponent;
 import org.hl7.fhir.r4.model.Observation.ObservationStatus;
 import org.hl7.fhir.r4.model.Patient;
-import org.hl7.fhir.r4.model.Practitioner;
 import org.hl7.fhir.r4.model.Procedure;
 import org.hl7.fhir.r4.model.Procedure.ProcedureStatus;
-import org.hl7.fhir.utilities.xhtml.NodeType;
-import org.hl7.fhir.utilities.xhtml.XhtmlNode;
 import org.hl7.fhir.r4.model.Reference;
 import org.hl7.fhir.r4.model.StringType;
 import org.slf4j.Logger;
@@ -55,13 +50,11 @@ import org.springframework.stereotype.Service;
 
 import ca.uhn.fhir.model.api.TemporalPrecisionEnum;
 import ca.uhn.fhir.parser.IParser;
-import edu.gatech.chai.Controller.UploadAndExportController;
 import edu.gatech.chai.MDI.Model.MDIAndEDRSModelFields;
 import edu.gatech.chai.MDI.context.MDIFhirContext;
 import edu.gatech.chai.MDI.model.resource.BundleDocumentMDIAndEDRS;
 import edu.gatech.chai.MDI.model.resource.CompositionMDIAndEDRS;
 import edu.gatech.chai.MDI.model.resource.ObservationCauseOfDeathPart1;
-import edu.gatech.chai.MDI.model.resource.ObservationHowDeathInjuryOccurred;
 import edu.gatech.chai.MDI.model.resource.util.ProcedureDeathCertificationUtil;
 import edu.gatech.chai.Mapping.Util.CommonMappingUtil;
 import edu.gatech.chai.Mapping.Util.LocalModelToFhirCMSUtil;
@@ -70,12 +63,9 @@ import edu.gatech.chai.VRCL.model.AutopsyPerformedIndicator;
 import edu.gatech.chai.VRCL.model.LocationVitalRecords;
 import edu.gatech.chai.VRCL.model.PatientVitalRecords;
 import edu.gatech.chai.VRCL.model.PractitionerVitalRecords;
-import edu.gatech.chai.VRDR.model.CauseOfDeathPart1;
 import edu.gatech.chai.VRDR.model.CauseOfDeathPart2;
 import edu.gatech.chai.VRDR.model.DeathCertificationProcedure;
 import edu.gatech.chai.VRDR.model.DeathDate;
-import edu.gatech.chai.VRDR.model.DeathLocation;
-import edu.gatech.chai.VRDR.model.Decedent;
 import edu.gatech.chai.VRDR.model.DecedentPregnancyStatus;
 import edu.gatech.chai.VRDR.model.InjuryIncident;
 import edu.gatech.chai.VRDR.model.InjuryLocation;
@@ -294,7 +284,7 @@ public class LocalToMDIAndEDRSService {
 			examAutopsySection.addEntry(new Reference("Observation/"+autopsyPerformedIndicator.getId()));
 			LocalModelToFhirCMSUtil.addResourceToBundle(returnBundle, autopsyPerformedIndicator);
 		}
-		//Hand Autopsy Location
+		//Handle Autopsy Location
 		Stream<String> autopsyLocationFields = Stream.of(inputFields.AUTOPSY_OFFICENAME, inputFields.AUTOPSY_STREET, inputFields.AUTOPSY_CITY, inputFields.AUTOPSY_COUNTY, inputFields.AUTOPSY_STATE, inputFields.AUTOPSY_ZIP);
 		if(!autopsyLocationFields.allMatch(x -> x == null || x.isEmpty())) {
 			Location autopsyPerformedLocation = createAutopsyLocation(inputFields);
