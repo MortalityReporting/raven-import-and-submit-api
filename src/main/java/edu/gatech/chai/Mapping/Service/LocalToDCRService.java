@@ -209,7 +209,7 @@ public class LocalToDCRService {
 				submittorSignature.setTargetFormat("image/png");
 				submittorSignature.setSigFormat("image/png");
 				submittorSignature.setData(signatureGenerationService.generateBase64ForPngOfHandwritingName(inputFields.SUBMITTOR_NAME));
-				returnBundle.setSignature(submittorSignature);
+				bundleDocument.setSignature(submittorSignature);
 			}
 			LocalModelToFhirCMSUtil.addResourceToBundle(bundleDocument, submittor);
 		}
