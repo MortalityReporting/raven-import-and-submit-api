@@ -150,8 +150,9 @@ public class LocalToDCRService {
 		mainComposition.setStatus(CompositionStatus.PRELIMINARY);
 		mainComposition.setDateElement(dtElement);
 		//Handle extension setting
-		mainComposition.addDCCertificationStatus("DEATH_CERT_NOT_CERT");
-		mainComposition.addDCRegistrationStatus("DEATH_CERT_NOT_REG");
+		//TODO: Add extensions back in when state management for DCR messages is more clear. 
+		//mainComposition.addDCCertificationStatus("DEATH_CERT_NOT_CERT");
+		//mainComposition.addDCRegistrationStatus("DEATH_CERT_NOT_REG");
 		if(inputFields.MDICASEID != null && !inputFields.MDICASEID.isEmpty()){
 			mainComposition.addMDICaseIdExtension(raven_generated_systemid, inputFields.MDICASEID);
 		}
@@ -223,6 +224,7 @@ public class LocalToDCRService {
 			LocalModelToFhirCMSUtil.addResourceToBundle(bundleDocument, primaryMECResource);
 		}
 		// Handle Certifier
+		SectionComponent creamationClearanceInfoSection = mainComposition.getCremationClearanceInfoSection();
 		Stream<String> certifierFields = Stream.of(inputFields.CERTIFIER_NAME,inputFields.CERTIFIER_TYPE,
 			inputFields.CERTIFIER_IDENTIFIER, inputFields.CERTIFIER_IDENTIFIER_SYSTEM);
 		if(!certifierFields.allMatch(x -> x == null || x.isEmpty())) {
@@ -240,7 +242,7 @@ public class LocalToDCRService {
 			// Handle Death Certification
 			DeathCertificationProcedure deathCertification = createDeathCertificationProcedure(inputFields, patientReference, certifierReference);
 			LocalModelToFhirCMSUtil.addResourceToBundle(bundleDocument, deathCertification);
-			mainComposition.getDeathCertificationSection().addEntry(new Reference("Procedure/"+deathCertification.getId()));
+			creamationClearanceInfoSection.addEntry(new Reference("Procedure/"+deathCertification.getId()));
 		}
 		// Handle Pronouncer
 		Stream<String> pronouncerFields = Stream.of(inputFields.PRONOUNCERNAME);
@@ -287,6 +289,14 @@ public class LocalToDCRService {
 			mainComposition.getDeathInvestigationSection().addEntry(new Reference("Location/"+injuryLocation.getId()));
 			LocalModelToFhirCMSUtil.addResourceToBundle(bundleDocument, injuryLocation);
 		}
+		// Handle InjuryIncident
+		Stream<String> deathInjuryFields = Stream.of(inputFields.CHOWNINJURY, inputFields.CINJDATE, inputFields.CINJTIME, inputFields.INJURYLOCATION,
+				inputFields.ATWORK,inputFields.TRANSPORTATION);
+		if(!deathInjuryFields.allMatch(x -> x == null || x.isEmpty())) {
+			InjuryIncident deathInjuryDescription = createInjuryIncident(inputFields, patientReference, certifierReference);
+			mainComposition.getDeathInvestigationSection().addEntry(new Reference("Observation/"+deathInjuryDescription.getId()));
+			LocalModelToFhirCMSUtil.addResourceToBundle(bundleDocument, deathInjuryDescription);
+		}
 		// Handle Death Date
 		Stream<String> deathDateFields = Stream.of(inputFields.PRNDATE, inputFields.PRNTIME,
 				inputFields.CDEATHDATE, inputFields.CDEATHTIME);
@@ -295,6 +305,7 @@ public class LocalToDCRService {
 			mainComposition.getDeathInvestigationSection().addEntry(new Reference("Observation/"+deathDate.getId()));
 			LocalModelToFhirCMSUtil.addResourceToBundle(bundleDocument, deathDate);
 		}
+		SectionComponent deathCertificationSection = mainComposition.getDeathCertificationSection();
 		// Handle Cause Of Death Pathway
 		Stream<String> causeOfDeathFields = Stream.of(inputFields.CAUSEA, inputFields.CAUSEB, inputFields.CAUSEC,
 				inputFields.CAUSED,inputFields.OSCOND, inputFields.DURATIONA, inputFields.DURATIONB,
@@ -315,28 +326,19 @@ public class LocalToDCRService {
 			mainComposition.getDeathCertificationSection().addEntry(new Reference("Observation/"+manner.getId()));
 			LocalModelToFhirCMSUtil.addResourceToBundle(bundleDocument, manner);
 		}
-		// Handle InjuryIncident
-		Stream<String> deathInjuryFields = Stream.of(inputFields.CHOWNINJURY, inputFields.CINJDATE, inputFields.CINJTIME, inputFields.INJURYLOCATION,
-				inputFields.ATWORK,inputFields.TRANSPORTATION);
-		if(!deathInjuryFields.allMatch(x -> x == null || x.isEmpty())) {
-			InjuryIncident deathInjuryDescription = createInjuryIncident(inputFields, patientReference, certifierReference);
-			mainComposition.getDeathCertificationSection().addEntry(new Reference("Observation/"+deathInjuryDescription.getId()));
-			LocalModelToFhirCMSUtil.addResourceToBundle(bundleDocument, deathInjuryDescription);
-		}
 		//Handle Autopsy
-		SectionComponent examAutopsySection = mainComposition.getDeathCertificationSection();
 		//Handle Autopsy Indicator
 		Stream<String> autopsyIdenticatorFields = Stream.of(inputFields.AUTOPSYPERFORMED, inputFields.AUTOPSYRESULTSAVAILABLE);
 		if(!autopsyIdenticatorFields.allMatch(x -> x == null || x.isEmpty())) {
 			AutopsyPerformedIndicator autopsyPerformedIndicator = createAutopsyPerformedIndicator(inputFields, patientReference, primaryMECReference);
-			examAutopsySection.addEntry(new Reference("Observation/"+autopsyPerformedIndicator.getId()));
+			deathCertificationSection.addEntry(new Reference("Observation/"+autopsyPerformedIndicator.getId()));
 			LocalModelToFhirCMSUtil.addResourceToBundle(bundleDocument, autopsyPerformedIndicator);
 		}
 		//Handle Autopsy Location
 		Stream<String> autopsyLocationFields = Stream.of(inputFields.AUTOPSY_OFFICENAME, inputFields.AUTOPSY_STREET, inputFields.AUTOPSY_CITY, inputFields.AUTOPSY_COUNTY, inputFields.AUTOPSY_STATE, inputFields.AUTOPSY_ZIP);
 		if(!autopsyLocationFields.allMatch(x -> x == null || x.isEmpty())) {
 			Location autopsyPerformedLocation = createAutopsyLocation(inputFields);
-			examAutopsySection.addEntry(new Reference("Location/"+autopsyPerformedLocation.getId()));
+			deathCertificationSection.addEntry(new Reference("Location/"+autopsyPerformedLocation.getId()));
 			LocalModelToFhirCMSUtil.addResourceToBundle(bundleDocument, autopsyPerformedLocation);
 		}
 		//Handle Funeral Home
@@ -344,7 +346,7 @@ public class LocalToDCRService {
 		inputFields.FUNERALHOME_COUNTY, inputFields.FUNERALHOME_STATE, inputFields.FUNERALHOME_ZIP, inputFields.FUNERALHOME_PHONE, inputFields.FUNERALHOME_FAX);
 		if(!funeralHomeFields.allMatch(x -> x == null || x.isEmpty())) {
 			FuneralHome funeralHome = createFuneralHome(inputFields);
-			examAutopsySection.addEntry(new Reference("Organization/"+funeralHome.getId()));
+			creamationClearanceInfoSection.addEntry(new Reference("Organization/"+funeralHome.getId()));
 			LocalModelToFhirCMSUtil.addResourceToBundle(bundleDocument, funeralHome);
 		}
 		return returnBundle;
@@ -761,24 +763,6 @@ public class LocalToDCRService {
 		return injuryIncident;
 	}
 	
-	private Observation createFoundObs(DCRModelFields inputFields, Reference decedentReference) {
-		Observation foundObs = new Observation();
-		foundObs.setId(inputFields.BASEFHIRID+"FoundObs");
-		foundObs.setStatus(ObservationStatus.FINAL);
-		foundObs.setSubject(decedentReference);
-		foundObs.setCode(new CodeableConcept().addCoding(new Coding(
-				"urn:temporary:code", "1000001", "Date and Time found dead, unconcious and in distress")));
-		if(inputFields.FOUNDDATE != null && !inputFields.FOUNDDATE.isEmpty()) {
-			Date reportDate = CommonMappingUtil.parseDateFromField(inputFields, "FOUNDDATE", inputFields.FOUNDDATE);
-			if(reportDate != null && inputFields.FOUNDTIME != null && !inputFields.FOUNDTIME.isEmpty()) {
-				Date reportTime = CommonMappingUtil.parseDateTimeFromField(inputFields, "FOUNDTIME", inputFields.FOUNDTIME);
-				LocalModelToFhirCMSUtil.addTimeToDate(reportDate, reportTime);
-			}
-			foundObs.setValue(new DateTimeType(reportDate).setTimeZoneZulu(true));
-		}
-		return foundObs;
-	}
-	
 	private DeathDate createDeathDate(DCRModelFields inputFields, Reference decedentReference, Reference pronouncerReference) throws ParseException {
 		DeathDate returnDeathDate = new DeathDate();
 		returnDeathDate.setId(inputFields.BASEFHIRID+"DeathDate");
@@ -789,7 +773,7 @@ public class LocalToDCRService {
 		if(inputFields.CDEATHDATE != null && !inputFields.CDEATHDATE.isEmpty()) {
 			Date certDate = CommonMappingUtil.parseDateFromField(inputFields, "CDEATHDATE", inputFields.CDEATHDATE);
 			if(certDate != null && inputFields.CDEATHTIME != null && !inputFields.CDEATHTIME.isEmpty()) {
-				Date certTime = CommonMappingUtil.parseDateTimeFromField(inputFields, "CDEATHTIME", inputFields.CDEATHTIME);
+				Date certTime = CommonMappingUtil.parseTimeFromField(inputFields, "CDEATHTIME", inputFields.CDEATHTIME);
 				LocalModelToFhirCMSUtil.addTimeToDate(certDate, certTime);
 			}
 			DateTimeType certValueDT = new DateTimeType(certDate, TemporalPrecisionEnum.SECOND, TimeZone.getTimeZone(ZoneId.of("Z")));
@@ -800,7 +784,7 @@ public class LocalToDCRService {
 			CommonMappingUtil.parseDateTimeFromField(inputFields, "PRNDATE", inputFields.PRNDATE);
 			Date prnDate = CommonMappingUtil.parseDateTimeFromField(inputFields, "PRNDATE", inputFields.PRNDATE);
 			if(prnDate != null && inputFields.PRNTIME != null && !inputFields.PRNTIME.isEmpty()) {
-				Date prnTime = CommonMappingUtil.parseDateTimeFromField(inputFields, "PRNTIME", inputFields.PRNTIME);
+				Date prnTime = CommonMappingUtil.parseTimeFromField(inputFields, "PRNTIME", inputFields.PRNTIME);
 				LocalModelToFhirCMSUtil.addTimeToDate(prnDate, prnTime);
 			}
 			DateTimeType prnDT = new DateTimeType(prnDate);
