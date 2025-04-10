@@ -472,10 +472,13 @@ public class LocalToDCRService {
 		if(inputFields.POSSIBLEID != null && !inputFields.POSSIBLEID.isEmpty()) {
 			returnDecedent.addIdentifier(new Identifier().setSystem("http://hl7.org/fhir/sid/us-ssn").setValue(inputFields.POSSIBLEID));
 		}
-		Address residentAddress = LocalModelToFhirCMSUtil.createAddress("", inputFields.RESSTREET,
+		Stream<String> addressFields = Stream.of(inputFields.RESSTREET, inputFields.RESCITY, inputFields.RESCOUNTY, inputFields.RESSTATE, inputFields.RESZIP, inputFields.RESCOUNTRY);
+		if(!addressFields.allMatch(x -> x == null || x.isEmpty())) {
+			Address residentAddress = LocalModelToFhirCMSUtil.createAddress("", inputFields.RESSTREET,
 				inputFields.RESCITY, inputFields.RESCOUNTY, inputFields.RESSTATE, inputFields.RESZIP, inputFields.RESCOUNTRY);
-		residentAddress.setUse(AddressUse.HOME);
-		returnDecedent.addAddress(residentAddress);
+			residentAddress.setUse(AddressUse.HOME);
+			returnDecedent.addAddress(residentAddress);
+		}
 		if(inputFields.LKAWHERE != null && !inputFields.LKAWHERE.isEmpty()) {
 			Extension lkaExt = new Extension();
 			lkaExt.setUrl("urn:temporary:code:last-known-to-be-alive-or-okay-place");
