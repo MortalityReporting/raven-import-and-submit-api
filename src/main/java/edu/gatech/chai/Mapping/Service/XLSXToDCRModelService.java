@@ -31,9 +31,9 @@ public class XLSXToDCRModelService{
     private static final Logger logger = LoggerFactory.getLogger(XLSXToToxToMDIModelService.class);
     private static final String ELEMENT_HEADER = "Elements";
 
-    private static final String[] FIELDS = {"Message Reason", "Submittor Name", "Submittor Email"
+    private static final String[] FIELDS = {"Message Reason", "Submittor Name", "Submittor Email", "Submittor Phone Number", "Submittor Fax Number"
         ,"Funeral Home Name", "Funeral Home Address: Street", "Funeral Home Address: City", "Funeral Home Address: County"
-        ,"Funeral Home Address: State, U.S. Territory or Canadian Province", "Funeral Home Address: Country", "Funeral Home Phone Number"
+        ,"Funeral Home Address: State, U.S. Territory or Canadian Province", "Funeral Home Address: Postal Code", "Funeral Home Address: Country", "Funeral Home Phone Number"
         ,"Funeral Home Fax Number"};
     private static final String endCapColumnHeader = "End of Cases"; //Cell text we expect at the end of the row.
 
