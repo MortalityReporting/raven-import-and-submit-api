@@ -4,7 +4,6 @@ import java.text.ParseException;
 import java.time.ZoneId;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Base64;
 import java.util.Date;
 import java.util.List;
 import java.util.TimeZone;
@@ -19,7 +18,6 @@ import org.hl7.fhir.r4.model.Bundle.HTTPVerb;
 import org.hl7.fhir.r4.model.CodeableConcept;
 import org.hl7.fhir.r4.model.Coding;
 import org.hl7.fhir.r4.model.Composition.CompositionStatus;
-import org.hl7.fhir.r4.model.Composition.SectionComponent;
 import org.hl7.fhir.r4.model.ContactPoint;
 import org.hl7.fhir.r4.model.ContactPoint.ContactPointSystem;
 import org.hl7.fhir.r4.model.ContactPoint.ContactPointUse;
@@ -195,7 +193,7 @@ public class LocalToDCRService {
 			}
 		}
 		// Handle Submittor (distinct from Primary Medical Examiner/Coroner)
-		Stream<String> submittorFields = Stream.of(inputFields.SUBMITTOR_NAME,inputFields.SUBMITTOR_EMAIL);
+		Stream<String> submittorFields = Stream.of(inputFields.SUBMITTOR_NAME,inputFields.SUBMITTOR_EMAIL, inputFields.SUBMITTOR_PHONE, inputFields.SUBMITTOR_FAX);
 		if(!submittorFields.allMatch(x -> x == null || x.isEmpty())) {
 			Practitioner submittor = createSubmittor(inputFields);
 			Reference submittorReference = new Reference("Practitioner/"+submittor.getId());
@@ -223,8 +221,6 @@ public class LocalToDCRService {
 			mainComposition.addAuthor(primaryMECReference);
 			LocalModelToFhirCMSUtil.addResourceToBundle(bundleDocument, primaryMECResource);
 		}
-		// Handle Certifier
-		SectionComponent creamationClearanceInfoSection = mainComposition.getCremationClearanceInfoSection();
 		Stream<String> certifierFields = Stream.of(inputFields.CERTIFIER_NAME,inputFields.CERTIFIER_TYPE,
 			inputFields.CERTIFIER_IDENTIFIER, inputFields.CERTIFIER_IDENTIFIER_SYSTEM);
 		if(!certifierFields.allMatch(x -> x == null || x.isEmpty())) {
@@ -242,7 +238,7 @@ public class LocalToDCRService {
 			// Handle Death Certification
 			DeathCertificationProcedure deathCertification = createDeathCertificationProcedure(inputFields, patientReference, certifierReference);
 			LocalModelToFhirCMSUtil.addResourceToBundle(bundleDocument, deathCertification);
-			creamationClearanceInfoSection.addEntry(new Reference("Procedure/"+deathCertification.getId()));
+			mainComposition.getCremationClearanceInfoSection().addEntry(new Reference("Procedure/"+deathCertification.getId()));
 		}
 		// Handle Pronouncer
 		Stream<String> pronouncerFields = Stream.of(inputFields.PRONOUNCERNAME);
@@ -305,7 +301,6 @@ public class LocalToDCRService {
 			mainComposition.getDeathInvestigationSection().addEntry(new Reference("Observation/"+deathDate.getId()));
 			LocalModelToFhirCMSUtil.addResourceToBundle(bundleDocument, deathDate);
 		}
-		SectionComponent deathCertificationSection = mainComposition.getDeathCertificationSection();
 		// Handle Cause Of Death Pathway
 		Stream<String> causeOfDeathFields = Stream.of(inputFields.CAUSEA, inputFields.CAUSEB, inputFields.CAUSEC,
 				inputFields.CAUSED,inputFields.OSCOND, inputFields.DURATIONA, inputFields.DURATIONB,
@@ -331,14 +326,14 @@ public class LocalToDCRService {
 		Stream<String> autopsyIdenticatorFields = Stream.of(inputFields.AUTOPSYPERFORMED, inputFields.AUTOPSYRESULTSAVAILABLE);
 		if(!autopsyIdenticatorFields.allMatch(x -> x == null || x.isEmpty())) {
 			AutopsyPerformedIndicator autopsyPerformedIndicator = createAutopsyPerformedIndicator(inputFields, patientReference, primaryMECReference);
-			deathCertificationSection.addEntry(new Reference("Observation/"+autopsyPerformedIndicator.getId()));
+			mainComposition.getDeathCertificationSection().addEntry(new Reference("Observation/"+autopsyPerformedIndicator.getId()));
 			LocalModelToFhirCMSUtil.addResourceToBundle(bundleDocument, autopsyPerformedIndicator);
 		}
 		//Handle Autopsy Location
 		Stream<String> autopsyLocationFields = Stream.of(inputFields.AUTOPSY_OFFICENAME, inputFields.AUTOPSY_STREET, inputFields.AUTOPSY_CITY, inputFields.AUTOPSY_COUNTY, inputFields.AUTOPSY_STATE, inputFields.AUTOPSY_ZIP);
 		if(!autopsyLocationFields.allMatch(x -> x == null || x.isEmpty())) {
 			Location autopsyPerformedLocation = createAutopsyLocation(inputFields);
-			deathCertificationSection.addEntry(new Reference("Location/"+autopsyPerformedLocation.getId()));
+			mainComposition.getDeathCertificationSection().addEntry(new Reference("Location/"+autopsyPerformedLocation.getId()));
 			LocalModelToFhirCMSUtil.addResourceToBundle(bundleDocument, autopsyPerformedLocation);
 		}
 		//Handle Funeral Home
@@ -346,7 +341,7 @@ public class LocalToDCRService {
 		inputFields.FUNERALHOME_COUNTY, inputFields.FUNERALHOME_STATE, inputFields.FUNERALHOME_ZIP, inputFields.FUNERALHOME_PHONE, inputFields.FUNERALHOME_FAX);
 		if(!funeralHomeFields.allMatch(x -> x == null || x.isEmpty())) {
 			FuneralHome funeralHome = createFuneralHome(inputFields);
-			creamationClearanceInfoSection.addEntry(new Reference("Organization/"+funeralHome.getId()));
+			mainComposition.getCremationClearanceInfoSection().addEntry(new Reference("Organization/"+funeralHome.getId()));
 			LocalModelToFhirCMSUtil.addResourceToBundle(bundleDocument, funeralHome);
 		}
 		return returnBundle;
@@ -508,6 +503,12 @@ public class LocalToDCRService {
 		}
 		if(inputFields.SUBMITTOR_EMAIL != null && !inputFields.SUBMITTOR_EMAIL.isEmpty()){
 			returnPractitioner.addTelecom(new ContactPoint().setSystem(ContactPointSystem.EMAIL).setUse(ContactPointUse.WORK).setValue(inputFields.SUBMITTOR_EMAIL));
+		}
+		if(inputFields.SUBMITTOR_PHONE != null && !inputFields.SUBMITTOR_PHONE.isEmpty()){
+			returnPractitioner.addTelecom(new ContactPoint().setSystem(ContactPointSystem.PHONE).setUse(ContactPointUse.WORK).setValue(inputFields.SUBMITTOR_PHONE));
+		}
+		if(inputFields.SUBMITTOR_FAX != null && !inputFields.SUBMITTOR_FAX.isEmpty()){
+			returnPractitioner.addTelecom(new ContactPoint().setSystem(ContactPointSystem.FAX).setUse(ContactPointUse.WORK).setValue(inputFields.SUBMITTOR_FAX));
 		}
 		return returnPractitioner;
 	}

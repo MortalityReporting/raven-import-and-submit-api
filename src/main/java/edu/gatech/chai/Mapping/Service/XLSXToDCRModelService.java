@@ -82,12 +82,15 @@ public class XLSXToDCRModelService{
     public DCRModelFields convertColumnToModelFields(DCRModelFields returnModel,int currentColumn, XSSFSheet sheet, Map<String, Integer> fieldMap) throws Exception{ 
         returnModel.setMESSAGE_REASON(getStringForColumnAndName(sheet, returnModel, fieldMap,currentColumn,"Message Reason"));
         returnModel.setSUBMITTOR_NAME(getStringForColumnAndName(sheet, returnModel, fieldMap,currentColumn,"Submittor Name"));
+        returnModel.setSUBMITTOR_PHONE(getStringForColumnAndName(sheet, returnModel, fieldMap,currentColumn,"Submittor Phone Number"));
+        returnModel.setSUBMITTOR_FAX(getStringForColumnAndName(sheet, returnModel, fieldMap,currentColumn,"Submittor Fax Number"));
         returnModel.setSUBMITTOR_EMAIL(getStringForColumnAndName(sheet, returnModel, fieldMap,currentColumn,"Submittor Email"));
         returnModel.setFUNERALHOME_NAME(getStringForColumnAndName(sheet, returnModel, fieldMap,currentColumn,"Funeral Home Name"));
         returnModel.setFUNERALHOME_STREET(getStringForColumnAndName(sheet, returnModel, fieldMap,currentColumn,"Funeral Home Address: Street"));
         returnModel.setFUNERALHOME_CITY(getStringForColumnAndName(sheet, returnModel, fieldMap,currentColumn,"Funeral Home Address: City"));
         returnModel.setFUNERALHOME_COUNTY(getStringForColumnAndName(sheet, returnModel, fieldMap,currentColumn,"Funeral Home Address: County"));
         returnModel.setFUNERALHOME_STATE(getStringForColumnAndName(sheet, returnModel, fieldMap,currentColumn,"Funeral Home Address: State, U.S. Territory or Canadian Province"));
+        returnModel.setFUNERALHOME_ZIP(getStringForColumnAndName(sheet, returnModel, fieldMap,currentColumn,"Funeral Home Address: Postal Code"));
         returnModel.setFUNERALHOME_COUNTRY(getStringForColumnAndName(sheet, returnModel, fieldMap,currentColumn,"Funeral Home Address: Country"));
         returnModel.setFUNERALHOME_PHONE(getStringForColumnAndName(sheet, returnModel, fieldMap,currentColumn,"Funeral Home Phone Number"));
         returnModel.setFUNERALHOME_FAX(getStringForColumnAndName(sheet, returnModel, fieldMap,currentColumn,"Funeral Home Fax Number"));

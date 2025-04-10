@@ -12,6 +12,7 @@ import java.util.regex.Pattern;
 
 import org.apache.poi.ss.format.CellDateFormatter;
 import org.apache.poi.ss.usermodel.Cell;
+import org.apache.poi.ss.usermodel.CellType;
 import org.apache.poi.ss.usermodel.DataFormatter;
 import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.xssf.usermodel.XSSFCell;
@@ -260,13 +261,13 @@ public class XLSXToMDIAndEDRSModelService {
             model.getErrorListForName(name).add("No value found for key '"+name+"'.");
             return "";
         }
-        DataFormatter formatter = new DataFormatter();
         XSSFCell targetCell = sheet.getRow(fieldMap.get(name)).getCell(columnIndex);
         //Special Handling for date cell value of "default date format" sometimes causes issues with locales so override to force a standardized mm/dd/yyyy format 
-        if(targetCell.getCellStyle().getDataFormat() == 14){
+        if(targetCell.getCellStyle().getDataFormat() == 14 && targetCell.getCellType() != CellType.BLANK){
             String correctedDateFormat= "mm/dd/yyyy";
             return new CellDateFormatter(correctedDateFormat).format(targetCell.getDateCellValue());
         }
+        DataFormatter formatter = new DataFormatter();
         return formatter.formatCellValue(targetCell);
     }
 
