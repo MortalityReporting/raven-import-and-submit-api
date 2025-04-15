@@ -22,7 +22,6 @@ import org.hl7.fhir.r4.model.ContactPoint;
 import org.hl7.fhir.r4.model.ContactPoint.ContactPointSystem;
 import org.hl7.fhir.r4.model.ContactPoint.ContactPointUse;
 import org.hl7.fhir.r4.model.DateTimeType;
-import org.hl7.fhir.r4.model.Enumerations.AdministrativeGender;
 import org.hl7.fhir.r4.model.Extension;
 import org.hl7.fhir.r4.model.HumanName;
 import org.hl7.fhir.r4.model.HumanName.NameUse;
@@ -63,11 +62,11 @@ import edu.gatech.chai.Mapping.Util.LocalModelToFhirCMSUtil;
 import edu.gatech.chai.USCore.model.util.CommonUtil;
 import edu.gatech.chai.VRCL.model.AutopsyPerformedIndicator;
 import edu.gatech.chai.VRCL.model.LocationVitalRecords;
-import edu.gatech.chai.VRCL.model.PatientVitalRecords;
 import edu.gatech.chai.VRCL.model.PractitionerVitalRecords;
 import edu.gatech.chai.VRDR.model.CauseOfDeathPart2;
 import edu.gatech.chai.VRDR.model.DeathCertificationProcedure;
 import edu.gatech.chai.VRDR.model.DeathDate;
+import edu.gatech.chai.VRDR.model.Decedent;
 import edu.gatech.chai.VRDR.model.DecedentPregnancyStatus;
 import edu.gatech.chai.VRDR.model.FuneralHome;
 import edu.gatech.chai.VRDR.model.InjuryIncident;
@@ -160,8 +159,8 @@ public class LocalToDCRService {
 		//Since we're creating a batch bundle we need to set the request type on all resources. However this one is handled special from "addResourceToBatchBundle"
 		returnBundle.getEntryFirstRep().setRequest(new BundleEntryRequestComponent().setMethod(HTTPVerb.POST));
 
-		Patient patientResource = null;
-		Reference patientReference = null;
+		Decedent decedentResource = null;
+		Reference decedentReference = null;
 		PractitionerVitalRecords primaryMECResource = null;
 		Reference primaryMECReference = null;
 		PractitionerVitalRecords certifierResource = null;
@@ -177,11 +176,11 @@ public class LocalToDCRService {
 				,inputFields.RESZIP,inputFields.RESNAME,inputFields.LKAWHERE,inputFields.HOSPNAME
 				,inputFields.MDICASEID, inputFields.EDRSCASEID);
 		if(!decedentFields.allMatch(x -> x == null || x.isEmpty())) {
-			patientResource = createPatient(inputFields);
-			patientReference = new Reference("Patient/"+patientResource.getId());
-			mainComposition.setSubject(patientReference);
-			mainComposition.getDecedentDemographicsSection().addEntry(patientReference);
-			LocalModelToFhirCMSUtil.addResourceToBundle(bundleDocument, patientResource);
+			decedentResource = createPatient(inputFields);
+			decedentReference = new Reference("Patient/"+decedentResource.getId());
+			mainComposition.setSubject(decedentReference);
+			mainComposition.getDecedentDemographicsSection().addEntry(decedentReference);
+			LocalModelToFhirCMSUtil.addResourceToBundle(bundleDocument, decedentResource);
 		}
 		//Special handling to identify a primaryMEC. If a certifier is found but no ME/C is found; just the MEC
 		if(inputFields.MENAME == null || inputFields.MENAME.isEmpty()){
@@ -236,7 +235,7 @@ public class LocalToDCRService {
 			certifierReference = new Reference("Practitioner/"+certifierResource.getId());
 			mainComposition.addAttester(certifierReference);
 			// Handle Death Certification
-			DeathCertificationProcedure deathCertification = createDeathCertificationProcedure(inputFields, patientReference, certifierReference);
+			DeathCertificationProcedure deathCertification = createDeathCertificationProcedure(inputFields, decedentReference, certifierReference);
 			LocalModelToFhirCMSUtil.addResourceToBundle(bundleDocument, deathCertification);
 			mainComposition.getCremationClearanceInfoSection().addEntry(new Reference("Procedure/"+deathCertification.getId()));
 		}
@@ -267,21 +266,21 @@ public class LocalToDCRService {
 		//Handle TobaccoUseContributedToDeath
 		Stream<String> tobaccoFields = Stream.of(inputFields.TOBACCO);
 		if(!tobaccoFields.allMatch(x -> x == null || x.isEmpty())) {
-			TobaccoUseContributedToDeath tobacco = createObservationTobaccoUseContributedToDeath(inputFields, patientReference);
+			TobaccoUseContributedToDeath tobacco = createObservationTobaccoUseContributedToDeath(inputFields, decedentReference);
 			mainComposition.getDeathInvestigationSection().addEntry(new Reference("Observation/"+tobacco.getId()));
 			LocalModelToFhirCMSUtil.addResourceToBundle(bundleDocument, tobacco);
 		}
 		//Handle Decedent Pregnancy
 		Stream<String> pregnantFields = Stream.of(inputFields.PREGNANT);
 		if(!pregnantFields.allMatch(x -> x == null || x.isEmpty())) {
-			DecedentPregnancyStatus pregnant = createObservationDecedentPregnancy(inputFields, patientReference);
+			DecedentPregnancyStatus pregnant = createObservationDecedentPregnancy(inputFields, decedentReference);
 			mainComposition.getDeathInvestigationSection().addEntry(new Reference("Observation/"+pregnant.getId()));
 			LocalModelToFhirCMSUtil.addResourceToBundle(bundleDocument, pregnant);
 		}
 		//Handle Injury Location
 		Stream<String> injuryLocationFields = Stream.of(inputFields.INJURYLOCATION);
 		if(!injuryLocationFields.allMatch(x -> x == null || x.isEmpty())) {
-			InjuryLocation injuryLocation = createInjuryLocation(inputFields, patientReference);
+			InjuryLocation injuryLocation = createInjuryLocation(inputFields, decedentReference);
 			mainComposition.getDeathInvestigationSection().addEntry(new Reference("Location/"+injuryLocation.getId()));
 			LocalModelToFhirCMSUtil.addResourceToBundle(bundleDocument, injuryLocation);
 		}
@@ -289,7 +288,7 @@ public class LocalToDCRService {
 		Stream<String> deathInjuryFields = Stream.of(inputFields.CHOWNINJURY, inputFields.CINJDATE, inputFields.CINJTIME, inputFields.INJURYLOCATION,
 				inputFields.ATWORK,inputFields.TRANSPORTATION);
 		if(!deathInjuryFields.allMatch(x -> x == null || x.isEmpty())) {
-			InjuryIncident deathInjuryDescription = createInjuryIncident(inputFields, patientReference, certifierReference);
+			InjuryIncident deathInjuryDescription = createInjuryIncident(inputFields, decedentReference, certifierReference);
 			mainComposition.getDeathInvestigationSection().addEntry(new Reference("Observation/"+deathInjuryDescription.getId()));
 			LocalModelToFhirCMSUtil.addResourceToBundle(bundleDocument, deathInjuryDescription);
 		}
@@ -297,7 +296,7 @@ public class LocalToDCRService {
 		Stream<String> deathDateFields = Stream.of(inputFields.PRNDATE, inputFields.PRNTIME,
 				inputFields.CDEATHDATE, inputFields.CDEATHTIME);
 		if(!deathDateFields.allMatch(x -> x == null || x.isEmpty())) {
-			DeathDate deathDate = createDeathDate(inputFields, patientReference, pronouncerReference);
+			DeathDate deathDate = createDeathDate(inputFields, decedentReference, pronouncerReference);
 			mainComposition.getDeathInvestigationSection().addEntry(new Reference("Observation/"+deathDate.getId()));
 			LocalModelToFhirCMSUtil.addResourceToBundle(bundleDocument, deathDate);
 		}
@@ -307,7 +306,7 @@ public class LocalToDCRService {
 				inputFields.DURATIONC, inputFields.DURATIOND);
 		if(!causeOfDeathFields.allMatch(x -> x == null || x.isEmpty())) {
 			//THis list contains CauseOfDeathPart1 and CauseOfDeathPart2 resources
-			List<Observation> causeOfDeathPathway = createCauseOfDeathPathway(inputFields, bundleDocument, mainComposition, patientReference, certifierReference);
+			List<Observation> causeOfDeathPathway = createCauseOfDeathPathway(inputFields, bundleDocument, mainComposition, decedentReference, certifierReference);
 			for(Observation cause:causeOfDeathPathway){
 				mainComposition.getDeathCertificationSection().addEntry(new Reference("Observation/"+cause.getId()));
 				LocalModelToFhirCMSUtil.addResourceToBundle(bundleDocument, cause);
@@ -317,7 +316,7 @@ public class LocalToDCRService {
 		// Handle Manner Of Death
 		Stream<String> mannerFields = Stream.of(inputFields.MANNER);
 		if(!mannerFields.allMatch(x -> x == null || x.isEmpty())) {
-			MannerOfDeath manner = createMannerOfDeath(inputFields, patientReference, primaryMECReference);
+			MannerOfDeath manner = createMannerOfDeath(inputFields, decedentReference, primaryMECReference);
 			mainComposition.getDeathCertificationSection().addEntry(new Reference("Observation/"+manner.getId()));
 			LocalModelToFhirCMSUtil.addResourceToBundle(bundleDocument, manner);
 		}
@@ -325,7 +324,7 @@ public class LocalToDCRService {
 		//Handle Autopsy Indicator
 		Stream<String> autopsyIdenticatorFields = Stream.of(inputFields.AUTOPSYPERFORMED, inputFields.AUTOPSYRESULTSAVAILABLE);
 		if(!autopsyIdenticatorFields.allMatch(x -> x == null || x.isEmpty())) {
-			AutopsyPerformedIndicator autopsyPerformedIndicator = createAutopsyPerformedIndicator(inputFields, patientReference, primaryMECReference);
+			AutopsyPerformedIndicator autopsyPerformedIndicator = createAutopsyPerformedIndicator(inputFields, decedentReference, primaryMECReference);
 			mainComposition.getDeathCertificationSection().addEntry(new Reference("Observation/"+autopsyPerformedIndicator.getId()));
 			LocalModelToFhirCMSUtil.addResourceToBundle(bundleDocument, autopsyPerformedIndicator);
 		}
@@ -347,8 +346,8 @@ public class LocalToDCRService {
 		return returnBundle;
 	}
 	
-	private Patient createPatient(DCRModelFields inputFields) throws ParseException {
-		Patient returnDecedent = new PatientVitalRecords();
+	private Decedent createPatient(DCRModelFields inputFields) throws ParseException {
+		Decedent returnDecedent = new Decedent();
 		returnDecedent.setId(inputFields.BASEFHIRID + "Decedent");
 		/*Stream<String> caseIdFields = Stream.of(inputFields.SYSTEMID,inputFields.CASEID);
 		if(!caseIdFields.allMatch(x -> x == null || x.isEmpty())) {
@@ -404,15 +403,7 @@ public class LocalToDCRService {
 			}
 		}
 		if(inputFields.GENDER != null && !inputFields.GENDER.isEmpty()) {
-			if(LocalModelToFhirCMSUtil.containsIgnoreCase(inputFields.GENDER, "Female")) {
-				returnDecedent.setGender(AdministrativeGender.FEMALE);
-			}
-			else if(LocalModelToFhirCMSUtil.containsIgnoreCase(inputFields.GENDER, "Male")) {
-				returnDecedent.setGender(AdministrativeGender.MALE);
-			}
-			else{
-				returnDecedent.setGender(AdministrativeGender.UNKNOWN);
-			}
+			returnDecedent.setSexAtDeath(inputFields.GENDER);
 		}
 		if(inputFields.BIRTHDATE != null && !inputFields.BIRTHDATE.isEmpty()) {
 			Date birthDate = LocalModelToFhirCMSUtil.parseDate(inputFields.BIRTHDATE);
