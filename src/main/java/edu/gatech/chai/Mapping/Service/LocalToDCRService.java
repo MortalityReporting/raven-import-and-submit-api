@@ -7,6 +7,7 @@ import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 import java.util.TimeZone;
+import java.util.UUID;
 import java.util.stream.Stream;
 
 import org.hl7.fhir.r4.model.Address;
@@ -112,10 +113,10 @@ public class LocalToDCRService {
 		dtElement.setTimeZoneZulu(true);
 		InstantType instantElement = new InstantType(now, TemporalPrecisionEnum.MILLI, TimeZone.getTimeZone(ZoneId.of("Z")));
 		returnBundle.setTimestampElement(instantElement);
-		returnBundle.setIdentifier(new Identifier().setSystem("urn:raven:temporary").setValue(Long.toString(now.getTime())));
+		returnBundle.setIdentifier(new Identifier().setSystem("urn:mdi:raven").setValue(Long.toString(now.getTime())));
 		Identifier caseIdentifier = new Identifier().setSystem(inputFields.SYSTEMID);
 		caseIdentifier.setValue("TestIdentifier");
-		caseIdentifier.setType(new CodeableConcept().addCoding(new Coding().setCode("1000007").setSystem("urn:temporary:code").setDisplay("Case Number")));
+		caseIdentifier.setType(new CodeableConcept().addCoding(new Coding().setCode("1000007").setSystem("urn:mdi:raven").setDisplay("Case Number")));
 		returnBundle.setType(BundleType.MESSAGE);
 		//MessageHeaderDCR
 		MessageHeaderDCR messageHeaderDCR = new MessageHeaderDCR();
@@ -182,6 +183,8 @@ public class LocalToDCRService {
 			mainComposition.setSubject(decedentReference);
 			mainComposition.getDecedentDemographicsSection().addEntry(decedentReference);
 			LocalModelToFhirCMSUtil.addResourceToBundle(bundleDocument, decedentResource);
+
+			mainComposition.addFHCaseIdExtension(UUID.nameUUIDFromBytes((inputFields.FIRSTNAME + " " + inputFields.LASTNAME).getBytes()).toString()); //Derived consistent UUID 
 		}
 		//Special handling to identify a primaryMEC. If a certifier is found but no ME/C is found; just the MEC
 		if(inputFields.MENAME == null || inputFields.MENAME.isEmpty()){
