@@ -66,6 +66,7 @@ import edu.gatech.chai.VRCL.model.PractitionerVitalRecords;
 import edu.gatech.chai.VRDR.model.CauseOfDeathPart2;
 import edu.gatech.chai.VRDR.model.DeathCertificationProcedure;
 import edu.gatech.chai.VRDR.model.DeathDate;
+import edu.gatech.chai.VRDR.model.DeathLocation;
 import edu.gatech.chai.VRDR.model.Decedent;
 import edu.gatech.chai.VRDR.model.DecedentPregnancyStatus;
 import edu.gatech.chai.VRDR.model.FuneralHome;
@@ -256,7 +257,7 @@ public class LocalToDCRService {
 			pronouncerReference = new Reference("Practitioner/"+pronouncerResource.getId());
 		}
 		// Handle Death Location
-		LocationVitalRecords deathLocation = null;
+		DeathLocation deathLocation = null;
 		Stream<String> deathLocFields = Stream.of(inputFields.DEATHLOCATION);
 		if(!deathLocFields.allMatch(x -> x == null || x.isEmpty())) {
 			deathLocation = createDeathLocation(inputFields);
@@ -796,8 +797,8 @@ public class LocalToDCRService {
 		return returnDeathDate;
 	}
 	
-	private LocationVitalRecords createDeathLocation(DCRModelFields inputFields) {
-		LocationVitalRecords returnDeathLocation = new LocationVitalRecords();
+	private DeathLocation createDeathLocation(DCRModelFields inputFields) {
+		DeathLocation returnDeathLocation = new DeathLocation();
 		returnDeathLocation.setId(inputFields.BASEFHIRID+"Death-Location");
 		returnDeathLocation.setName(inputFields.DEATHLOCATION);
 		returnDeathLocation.setAddress(new Address().setText(inputFields.DEATHLOCATION));
