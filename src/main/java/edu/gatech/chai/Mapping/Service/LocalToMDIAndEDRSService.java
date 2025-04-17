@@ -207,7 +207,8 @@ public class LocalToMDIAndEDRSService {
 		}
 		// Handle Death Location
 		DeathLocation deathLocation = null;
-		Stream<String> deathLocFields = Stream.of(inputFields.DEATHLOCATION);
+		Stream<String> deathLocFields = Stream.of(inputFields.DEATHLOCATION_STREET, inputFields.DEATHLOCATION_CITY, inputFields.DEATHLOCATION_COUNTY,
+		inputFields.DEATHLOCATION_STATE, inputFields.DEATHLOCATION_ZIP, inputFields.DEATHLOCATION_COUNTRY);
 		if(!deathLocFields.allMatch(x -> x == null || x.isEmpty())) {
 			deathLocation = createDeathLocation(inputFields);
 			mainComposition.getCircumstancesSection().addEntry(new Reference("Location/"+deathLocation.getId()));
@@ -749,8 +750,10 @@ public class LocalToMDIAndEDRSService {
 	private DeathLocation createDeathLocation(MDIAndEDRSModelFields inputFields) {
 		DeathLocation returnDeathLocation = new DeathLocation();
 		returnDeathLocation.setId(inputFields.BASEFHIRID+"Death-Location");
-		returnDeathLocation.setName(inputFields.DEATHLOCATION);
-		returnDeathLocation.setAddress(new Address().setText(inputFields.DEATHLOCATION));
+		returnDeathLocation.setName("Death Location");
+		Address deathLocationAddress = LocalModelToFhirCMSUtil.createAddress("", inputFields.DEATHLOCATION_STREET, inputFields.DEATHLOCATION_CITY, inputFields.DEATHLOCATION_COUNTY,
+			inputFields.DEATHLOCATION_STATE, inputFields.DEATHLOCATION_STATE, inputFields.DEATHLOCATION_ZIP);
+		returnDeathLocation.setAddress(deathLocationAddress);
 		return returnDeathLocation;
 	}
 

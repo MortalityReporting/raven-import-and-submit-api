@@ -51,6 +51,7 @@ import org.springframework.stereotype.Service;
 import ca.uhn.fhir.model.api.TemporalPrecisionEnum;
 import ca.uhn.fhir.parser.IParser;
 import edu.gatech.chai.MDI.Model.DCRModelFields;
+import edu.gatech.chai.MDI.Model.MDIAndEDRSModelFields;
 import edu.gatech.chai.MDI.context.MDIFhirContext;
 import edu.gatech.chai.MDI.model.resource.BundleDocumentMDIDCR;
 import edu.gatech.chai.MDI.model.resource.BundleMessageDeathCertificateReview;
@@ -261,11 +262,12 @@ public class LocalToDCRService {
 		}
 		// Handle Death Location
 		DeathLocation deathLocation = null;
-		Stream<String> deathLocFields = Stream.of(inputFields.DEATHLOCATION);
+		Stream<String> deathLocFields = Stream.of(inputFields.DEATHLOCATION_STREET, inputFields.DEATHLOCATION_CITY, inputFields.DEATHLOCATION_COUNTY,
+		inputFields.DEATHLOCATION_STATE, inputFields.DEATHLOCATION_ZIP, inputFields.DEATHLOCATION_COUNTRY);
 		if(!deathLocFields.allMatch(x -> x == null || x.isEmpty())) {
 			deathLocation = createDeathLocation(inputFields);
 			mainComposition.getDeathInvestigationSection().addEntry(new Reference("Location/"+deathLocation.getId()));
-			LocalModelToFhirCMSUtil.addResourceToBundle(bundleDocument, deathLocation);
+			LocalModelToFhirCMSUtil.addResourceToBundle(returnBundle, deathLocation);
 		}
 		//Handle TobaccoUseContributedToDeath
 		Stream<String> tobaccoFields = Stream.of(inputFields.TOBACCO);
@@ -800,11 +802,13 @@ public class LocalToDCRService {
 		return returnDeathDate;
 	}
 	
-	private DeathLocation createDeathLocation(DCRModelFields inputFields) {
+	private DeathLocation createDeathLocation(MDIAndEDRSModelFields inputFields) {
 		DeathLocation returnDeathLocation = new DeathLocation();
 		returnDeathLocation.setId(inputFields.BASEFHIRID+"Death-Location");
-		returnDeathLocation.setName(inputFields.DEATHLOCATION);
-		returnDeathLocation.setAddress(new Address().setText(inputFields.DEATHLOCATION));
+		returnDeathLocation.setName("Death Location");
+		Address deathLocationAddress = LocalModelToFhirCMSUtil.createAddress("", inputFields.DEATHLOCATION_STREET, inputFields.DEATHLOCATION_CITY, inputFields.DEATHLOCATION_COUNTY,
+			inputFields.DEATHLOCATION_STATE, inputFields.DEATHLOCATION_STATE, inputFields.DEATHLOCATION_ZIP);
+		returnDeathLocation.setAddress(deathLocationAddress);
 		return returnDeathLocation;
 	}
 

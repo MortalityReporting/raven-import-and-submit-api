@@ -42,7 +42,8 @@ public class XLSXToMDIAndEDRSModelService {
         ,"Cause of Death Part I Line a", "Cause of Death Part I Line b", "Cause of Death Part I Line c", "Cause of Death Part I Line d", "Cause of Death Part I Interval, Line a"
         ,"Cause of Death Part I Interval, Line b","Cause of Death Part I Interval, Line c","Cause of Death Part I Interval, Line d","Cause of Death Part II", "Manner of Death"
         ,"Date of Injury", "Time of Injury", "Estimated Date of Injury Interval: Earliest", "Estimated Date of Injury Interval: Latest", "Did Injury Occur at Work?", "Decedent's Transportation Role During Injury"
-        ,"Location of Death","Location of Injury","Place of death","Pregnancy status","Did Tobacco Use Contribute to Death?"
+        ,"Location of Death","Location of Death: Street","Location of Death: City","Location of Death: County","Location of Death: State, U.S. Territory or Canadian Province","Location of Death: Postal Code","Location of Death: Country",
+        "Location of Injury","Place of death","Pregnancy status","Did Tobacco Use Contribute to Death?"
         ,"Decedent Date of death","Decedent Time of death","Date establishment method","Estimated Date of Death Interval: Earliest", "Estimated Date of Death Interval: Latest","Date pronounced dead","Time pronounced dead","Pronouncer of death","Place of death"
         ,"Autopsy Performed?", "Autopsy Results Available?", "Autopsy Performed Office Name", "Autopsy Performed Location: Street", "Autopsy Performed Location: City"
         ,"Autopsy Performed Location: County","Autopsy Performed Location: State, U.S. Territory or Canadian Province", "Autopsy Performed Location: Postal Code"
@@ -123,7 +124,12 @@ public class XLSXToMDIAndEDRSModelService {
         returnModel.setCHOWNINJURY(getStringForColumnAndName(sheet, returnModel, fieldMap,currentColumn,"How injury occurred"));
         returnModel.setCINJDATE(getStringForColumnAndName(sheet, returnModel, fieldMap,currentColumn,"Date of Injury"));
         returnModel.setCINJTIME(getStringForColumnAndName(sheet, returnModel, fieldMap,currentColumn,"Time of Injury"));
-        returnModel.setDEATHLOCATION(getStringForColumnAndName(sheet, returnModel, fieldMap,currentColumn,"Location of Death"));
+        returnModel.setDEATHLOCATION_STREET(getStringForColumnAndName(sheet, returnModel, fieldMap,currentColumn,"Location of Death: Street"));
+        returnModel.setDEATHLOCATION_CITY(getStringForColumnAndName(sheet, returnModel, fieldMap,currentColumn,"Location of Death: City"));
+        returnModel.setDEATHLOCATION_COUNTY(getStringForColumnAndName(sheet, returnModel, fieldMap,currentColumn,"Location of Death: County"));
+        returnModel.setDEATHLOCATION_STATE(getStringForColumnAndName(sheet, returnModel, fieldMap,currentColumn,"Location of Death: State, U.S. Territory or Canadian Province"));
+        returnModel.setDEATHLOCATION_ZIP(getStringForColumnAndName(sheet, returnModel, fieldMap,currentColumn,"Location of Death: Postal Code"));
+        returnModel.setDEATHLOCATION_COUNTRY(getStringForColumnAndName(sheet, returnModel, fieldMap,currentColumn,"Location of Death: Country"));
         returnModel.setDEATHLOCATIONTYPE(getStringForColumnAndName(sheet, returnModel, fieldMap,currentColumn,"Place of death"));
         returnModel.setINJURYLOCATION(getStringForColumnAndName(sheet, returnModel, fieldMap,currentColumn,"Location of Injury"));
         returnModel.setCDEATHDATE(getStringForColumnAndName(sheet, returnModel, fieldMap,currentColumn,"Decedent Date of death"));
