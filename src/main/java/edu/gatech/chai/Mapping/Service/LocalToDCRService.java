@@ -284,14 +284,15 @@ public class LocalToDCRService {
 			LocalModelToFhirCMSUtil.addResourceToBundle(bundleDocument, pregnant);
 		}
 		//Handle Injury Location
-		Stream<String> injuryLocationFields = Stream.of(inputFields.INJURYLOCATION);
+		Stream<String> injuryLocationFields = Stream.of(inputFields.INJURYLOCATION_STREET, inputFields.INJURYLOCATION_CITY, inputFields.INJURYLOCATION_COUNTY,
+		inputFields.INJURYLOCATION_STATE, inputFields.INJURYLOCATION_ZIP, inputFields.INJURYLOCATION_COUNTRY);
 		if(!injuryLocationFields.allMatch(x -> x == null || x.isEmpty())) {
 			InjuryLocation injuryLocation = createInjuryLocation(inputFields, decedentReference);
 			mainComposition.getDeathInvestigationSection().addEntry(new Reference("Location/"+injuryLocation.getId()));
 			LocalModelToFhirCMSUtil.addResourceToBundle(bundleDocument, injuryLocation);
 		}
 		// Handle InjuryIncident
-		Stream<String> deathInjuryFields = Stream.of(inputFields.CHOWNINJURY, inputFields.CINJDATE, inputFields.CINJTIME, inputFields.INJURYLOCATION,
+		Stream<String> deathInjuryFields = Stream.of(inputFields.CHOWNINJURY, inputFields.CINJDATE, inputFields.CINJTIME,
 				inputFields.ATWORK,inputFields.TRANSPORTATION);
 		if(!deathInjuryFields.allMatch(x -> x == null || x.isEmpty())) {
 			InjuryIncident deathInjuryDescription = createInjuryIncident(inputFields, decedentReference, certifierReference);
@@ -637,8 +638,9 @@ public class LocalToDCRService {
 	private InjuryLocation createInjuryLocation(DCRModelFields inputFields, Reference decedentReference){
 		InjuryLocation injuryLocation = new InjuryLocation();
 		injuryLocation.setId(inputFields.BASEFHIRID + "Injury-Location");
-    	injuryLocation.setName(inputFields.INJURYLOCATION);
-    	injuryLocation.setAddress(new Address().setText(inputFields.INJURYLOCATION));
+    	Address injuryAddress = LocalModelToFhirCMSUtil.createAddress("", inputFields.INJURYLOCATION_STREET, inputFields.INJURYLOCATION_CITY, inputFields.INJURYLOCATION_COUNTY,
+		inputFields.INJURYLOCATION_STATE, inputFields.INJURYLOCATION_STATE, inputFields.INJURYLOCATION_ZIP);
+    	injuryLocation.setAddress(injuryAddress);
 		return injuryLocation;
 	}
 	
@@ -749,10 +751,6 @@ public class LocalToDCRService {
 			}
 			DateTimeType injEffectiveDT = new DateTimeType(injDate);
 			injuryIncident.setEffective(injEffectiveDT);
-		}
-
-		if(inputFields.INJURYLOCATION != null && !inputFields.INJURYLOCATION.isEmpty()) {
-			injuryIncident.addPlaceOfInjuryComponent(inputFields.INJURYLOCATION);
 		}
 
 		if(inputFields.ATWORK != null && !inputFields.ATWORK.isEmpty()){

@@ -50,6 +50,7 @@ import org.springframework.stereotype.Service;
 
 import ca.uhn.fhir.model.api.TemporalPrecisionEnum;
 import ca.uhn.fhir.parser.IParser;
+import edu.gatech.chai.MDI.Model.DCRModelFields;
 import edu.gatech.chai.MDI.Model.MDIAndEDRSModelFields;
 import edu.gatech.chai.MDI.context.MDIFhirContext;
 import edu.gatech.chai.MDI.model.resource.BundleDocumentMDIAndEDRS;
@@ -229,7 +230,8 @@ public class LocalToMDIAndEDRSService {
 			LocalModelToFhirCMSUtil.addResourceToBundle(returnBundle, pregnant);
 		}
 		//Handle Injury Location
-		Stream<String> injuryLocationFields = Stream.of(inputFields.INJURYLOCATION);
+		Stream<String> injuryLocationFields = Stream.of(inputFields.INJURYLOCATION_STREET, inputFields.INJURYLOCATION_CITY, inputFields.INJURYLOCATION_COUNTY,
+		inputFields.INJURYLOCATION_STATE, inputFields.INJURYLOCATION_ZIP, inputFields.INJURYLOCATION_COUNTRY);
 		if(!injuryLocationFields.allMatch(x -> x == null || x.isEmpty())) {
 			InjuryLocation injuryLocation = createInjuryLocation(inputFields, patientReference);
 			mainComposition.getCircumstancesSection().addEntry(new Reference("Location/"+injuryLocation.getId()));
@@ -264,7 +266,7 @@ public class LocalToMDIAndEDRSService {
 			LocalModelToFhirCMSUtil.addResourceToBundle(returnBundle, manner);
 		}
 		// Handle InjuryIncident
-		Stream<String> deathInjuryFields = Stream.of(inputFields.CHOWNINJURY, inputFields.CINJDATE, inputFields.CINJTIME, inputFields.INJURYLOCATION,
+		Stream<String> deathInjuryFields = Stream.of(inputFields.CHOWNINJURY, inputFields.CINJDATE, inputFields.CINJTIME,
 				inputFields.ATWORK,inputFields.TRANSPORTATION);
 		if(!deathInjuryFields.allMatch(x -> x == null || x.isEmpty())) {
 			InjuryIncident deathInjuryDescription = createInjuryIncident(inputFields, patientReference, certifierReference);
@@ -564,8 +566,9 @@ public class LocalToMDIAndEDRSService {
 	private InjuryLocation createInjuryLocation(MDIAndEDRSModelFields inputFields, Reference decedentReference){
 		InjuryLocation injuryLocation = new InjuryLocation();
 		injuryLocation.setId(inputFields.BASEFHIRID + "Injury-Location");
-    	injuryLocation.setName(inputFields.INJURYLOCATION);
-    	injuryLocation.setAddress(new Address().setText(inputFields.INJURYLOCATION));
+    	Address injuryAddress = LocalModelToFhirCMSUtil.createAddress("", inputFields.INJURYLOCATION_STREET, inputFields.INJURYLOCATION_CITY, inputFields.INJURYLOCATION_COUNTY,
+		inputFields.INJURYLOCATION_STATE, inputFields.INJURYLOCATION_STATE, inputFields.INJURYLOCATION_ZIP);
+    	injuryLocation.setAddress(injuryAddress);
 		return injuryLocation;
 	}
 	
@@ -676,10 +679,6 @@ public class LocalToMDIAndEDRSService {
 			}
 			DateTimeType injEffectiveDT = new DateTimeType(injDate);
 			injuryIncident.setEffective(injEffectiveDT);
-		}
-
-		if(inputFields.INJURYLOCATION != null && !inputFields.INJURYLOCATION.isEmpty()) {
-			injuryIncident.addPlaceOfInjuryComponent(inputFields.INJURYLOCATION);
 		}
 
 		if(inputFields.ATWORK != null && !inputFields.ATWORK.isEmpty()){
