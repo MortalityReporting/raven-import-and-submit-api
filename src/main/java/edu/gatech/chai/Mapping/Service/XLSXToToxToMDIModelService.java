@@ -418,6 +418,9 @@ public class XLSXToToxToMDIModelService {
         catch(IllegalStateException e){
             modelFields.getErrorListForName(fieldName).add("Could not parse the value '"+valueCell.getStringCellValue()+"' with format '"+format+"'");
         }
+        catch(NullPointerException e){
+            
+        }
         return returnValue;
     }
 }
