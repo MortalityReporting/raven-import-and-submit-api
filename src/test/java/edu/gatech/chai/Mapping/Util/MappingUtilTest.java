@@ -5,7 +5,6 @@ import java.math.BigDecimal;
 import org.hl7.fhir.r4.model.Quantity;
 import org.hl7.fhir.r4.model.Quantity.QuantityComparator;
 
-import edu.gatech.AppTest;
 import junit.framework.Test;
 import junit.framework.TestCase;
 import junit.framework.TestSuite;
@@ -59,5 +58,14 @@ public class MappingUtilTest extends TestCase{
         assertEquals(returnQuantity.getComparator(), null);
         assertEquals(returnQuantity.getValue().compareTo(new BigDecimal(23)), 0);
         assertTrue(returnQuantity.getUnit().equalsIgnoreCase("ng/mL"));
+    }
+
+    public void testParseQuantity3()
+    {
+        String input = "1.0 %(g/dL)";
+        Quantity returnQuantity = LocalModelToFhirCMSUtil.parseQuantity(input);
+        assertEquals(returnQuantity.getComparator(), null);
+        assertEquals(returnQuantity.getValue().compareTo(new BigDecimal(1)), 0);
+        assertTrue(returnQuantity.getUnit().equalsIgnoreCase("%(g/dL)"));
     }
 }

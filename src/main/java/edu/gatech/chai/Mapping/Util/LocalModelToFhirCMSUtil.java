@@ -47,7 +47,7 @@ public class LocalModelToFhirCMSUtil {
 	public static List<String> timeFormatStrings = Arrays.asList("hh:mm:ss a", "hh:mm a",
 			"hh:mm:ss", "hh:mm","hhmm","hhmmss");
 	public static String ageRegex = "(\\d+)\\s*(year|month|week|day|hour|minute)";
-	public static String quantityRegex = "^\\s*([<>]?=?)\\s*([+-]?\\d+(?:[.,]\\d+)?)\\s*(%?\\s*(?:\\([a-zA-Z°\\/]+\\))?)?\\s*$";
+	public static String quantityRegex = "^\\s*([<>]?=?)\\s*([+-]?\\d+(?:[.,]\\d+)?)\\s*(.*)\\s*$";
 	public static List<String> nameFormatStrings = Arrays.asList("(.*),\\s{0,1}(.*)\\s(.*)", "(\\w+)\\s(\\w)[\\.]\\s(\\w+)", "(\\w+)\\s(\\w+)");
 	public static Extension dataAbsentNotAskedExtension = new Extension("http://hl7.org/fhir/StructureDefinition/data-absent-reason", new CodeType("not-asked"));
 	public static String convertUnitOfMeasureStringToCode(String uomString) {
