@@ -47,7 +47,7 @@ public class LocalModelToFhirCMSUtil {
 	public static List<String> timeFormatStrings = Arrays.asList("hh:mm:ss a", "hh:mm a",
 			"hh:mm:ss", "hh:mm","hhmm","hhmmss");
 	public static String ageRegex = "(\\d+)\\s*(year|month|week|day|hour|minute)";
-	public static String valueAndUnitRegex = "(\\<|\\<=|\\>=|\\>|ad)?s*(\\d+(\\.\\d+)?)\\s*(((P|T|G|M|k|h|da|d|c|m|μ|n|p)?(m|s|A|K|g|L))(\\/(P|T|G|M|k|h|da|d|c|m|μ|n|p)?(m|s|A|K|g|L))?)";
+	public static String quantityRegex = "^\\s*([<>]?=?)\\s*([+-]?\\d+(?:[.,]\\d+)?)\\s*(%?\\s*(?:\\([a-zA-Z°\\/]+\\))?)?\\s*$";
 	public static List<String> nameFormatStrings = Arrays.asList("(.*),\\s{0,1}(.*)\\s(.*)", "(\\w+)\\s(\\w)[\\.]\\s(\\w+)", "(\\w+)\\s(\\w+)");
 	public static Extension dataAbsentNotAskedExtension = new Extension("http://hl7.org/fhir/StructureDefinition/data-absent-reason", new CodeType("not-asked"));
 	public static String convertUnitOfMeasureStringToCode(String uomString) {
@@ -238,23 +238,25 @@ public class LocalModelToFhirCMSUtil {
 
 	public static Quantity parseQuantity(String quantityString) {
 		Quantity returnQuantity = new Quantity();
-		Pattern r = Pattern.compile(valueAndUnitRegex, Pattern.MULTILINE);
+		Pattern r = Pattern.compile(quantityRegex, Pattern.MULTILINE);
 	    Matcher m = r.matcher(quantityString);
 		if(m.find()) {
-			String comparatorSymbol =m.group(1);
-			String decimalQuantityString =  m.group(2);
-			String unitString = m.group(4);
+            String comparatorSymbol = (m.groupCount() >= 1) ? m.group(1) : null;
+            String decimalQuantityString = (m.groupCount() >= 2) ? m.group(2) : null;
+            String unitString = (m.groupCount() >= 3) ? m.group(3) : null;
 			if(comparatorSymbol != null && !comparatorSymbol.isEmpty()){
 				returnQuantity.setComparator(QuantityComparator.fromCode(comparatorSymbol));
 			}
-			returnQuantity.setValue(Double.parseDouble(decimalQuantityString));
-			returnQuantity.setUnit(unitString);
+			if(decimalQuantityString != null && !decimalQuantityString.isEmpty()){
+				returnQuantity.setValue(Double.parseDouble(decimalQuantityString));
+			}
+			if(unitString != null && !unitString.isEmpty()){
+				returnQuantity.setUnit(unitString);
+			}
 			return returnQuantity;
 		}
 	    return null;
 	}
-
-	
 	
 	public static Address createAddress(String place, String street, String city,
 			String county, String state, String zip, String country) {

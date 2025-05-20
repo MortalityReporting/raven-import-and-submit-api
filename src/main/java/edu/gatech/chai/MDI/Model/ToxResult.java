@@ -1,8 +1,7 @@
 package edu.gatech.chai.MDI.Model;
 
-import java.util.Objects;
-
 import com.opencsv.bean.CsvBindByName;
+import java.util.Objects;
 
 public class ToxResult extends BaseModelFields{
 	@CsvBindByName
@@ -16,6 +15,10 @@ public class ToxResult extends BaseModelFields{
 	@CsvBindByName
 	public String CONTAINER = "";
 	@CsvBindByName
+	public String RANGE_LOW = "";
+	@CsvBindByName
+	public String RANGE_HIGH = "";
+	@CsvBindByName
 	public String COLLECTED_DATE = "";
 	@CsvBindByName
 	public String COLLECTED_TIME = "";
@@ -23,19 +26,19 @@ public class ToxResult extends BaseModelFields{
 	public String RECORD_DATE = "";
 	@CsvBindByName
 	public String RECORD_TIME = "";
-	
+
 
 	public ToxResult() {
-		super();
 	}
 
-	public ToxResult(String ANALYSIS, String SPECIMEN, String METHOD, String VALUE, String CONTAINER, String COLLECTED_DATE, String COLLECTED_TIME, String RECORD_DATE, String RECORD_TIME) {
-		super();
+	public ToxResult(String ANALYSIS, String SPECIMEN, String METHOD, String VALUE, String CONTAINER, String RANGE_LOW, String RANGE_HIGH, String COLLECTED_DATE, String COLLECTED_TIME, String RECORD_DATE, String RECORD_TIME) {
 		this.ANALYSIS = ANALYSIS;
 		this.SPECIMEN = SPECIMEN;
 		this.METHOD = METHOD;
 		this.VALUE = VALUE;
 		this.CONTAINER = CONTAINER;
+		this.RANGE_LOW = RANGE_LOW;
+		this.RANGE_HIGH = RANGE_HIGH;
 		this.COLLECTED_DATE = COLLECTED_DATE;
 		this.COLLECTED_TIME = COLLECTED_TIME;
 		this.RECORD_DATE = RECORD_DATE;
@@ -47,7 +50,6 @@ public class ToxResult extends BaseModelFields{
 	}
 
 	public void setANALYSIS(String ANALYSIS) {
-		this.checkNullSetter(this.ANALYSIS.getClass(), ANALYSIS);
 		this.ANALYSIS = ANALYSIS;
 	}
 
@@ -56,7 +58,6 @@ public class ToxResult extends BaseModelFields{
 	}
 
 	public void setSPECIMEN(String SPECIMEN) {
-		this.checkNullSetter(this.SPECIMEN.getClass(), SPECIMEN);
 		this.SPECIMEN = SPECIMEN;
 	}
 
@@ -65,7 +66,6 @@ public class ToxResult extends BaseModelFields{
 	}
 
 	public void setMETHOD(String METHOD) {
-		this.checkNullSetter(this.METHOD.getClass(), METHOD);
 		this.METHOD = METHOD;
 	}
 
@@ -74,7 +74,6 @@ public class ToxResult extends BaseModelFields{
 	}
 
 	public void setVALUE(String VALUE) {
-		this.checkNullSetter(this.VALUE.getClass(), VALUE);
 		this.VALUE = VALUE;
 	}
 
@@ -83,8 +82,23 @@ public class ToxResult extends BaseModelFields{
 	}
 
 	public void setCONTAINER(String CONTAINER) {
-		this.checkNullSetter(this.CONTAINER.getClass(), CONTAINER);
 		this.CONTAINER = CONTAINER;
+	}
+
+	public String getRANGE_LOW() {
+		return this.RANGE_LOW;
+	}
+
+	public void setRANGE_LOW(String RANGE_LOW) {
+		this.RANGE_LOW = RANGE_LOW;
+	}
+
+	public String getRANGE_HIGH() {
+		return this.RANGE_HIGH;
+	}
+
+	public void setRANGE_HIGH(String RANGE_HIGH) {
+		this.RANGE_HIGH = RANGE_HIGH;
 	}
 
 	public String getCOLLECTED_DATE() {
@@ -92,7 +106,6 @@ public class ToxResult extends BaseModelFields{
 	}
 
 	public void setCOLLECTED_DATE(String COLLECTED_DATE) {
-		this.checkNullSetter(this.COLLECTED_DATE.getClass(), COLLECTED_DATE);
 		this.COLLECTED_DATE = COLLECTED_DATE;
 	}
 
@@ -101,7 +114,6 @@ public class ToxResult extends BaseModelFields{
 	}
 
 	public void setCOLLECTED_TIME(String COLLECTED_TIME) {
-		this.checkNullSetter(this.COLLECTED_TIME.getClass(), COLLECTED_TIME);
 		this.COLLECTED_TIME = COLLECTED_TIME;
 	}
 
@@ -110,7 +122,6 @@ public class ToxResult extends BaseModelFields{
 	}
 
 	public void setRECORD_DATE(String RECORD_DATE) {
-		this.checkNullSetter(this.RECORD_DATE.getClass(), RECORD_DATE);
 		this.RECORD_DATE = RECORD_DATE;
 	}
 
@@ -119,7 +130,6 @@ public class ToxResult extends BaseModelFields{
 	}
 
 	public void setRECORD_TIME(String RECORD_TIME) {
-		this.checkNullSetter(this.RECORD_TIME.getClass(), RECORD_TIME);
 		this.RECORD_TIME = RECORD_TIME;
 	}
 
@@ -145,6 +155,16 @@ public class ToxResult extends BaseModelFields{
 
 	public ToxResult CONTAINER(String CONTAINER) {
 		setCONTAINER(CONTAINER);
+		return this;
+	}
+
+	public ToxResult RANGE_LOW(String RANGE_LOW) {
+		setRANGE_LOW(RANGE_LOW);
+		return this;
+	}
+
+	public ToxResult RANGE_HIGH(String RANGE_HIGH) {
+		setRANGE_HIGH(RANGE_HIGH);
 		return this;
 	}
 
@@ -176,12 +196,12 @@ public class ToxResult extends BaseModelFields{
 			return false;
 		}
 		ToxResult toxResult = (ToxResult) o;
-		return Objects.equals(ANALYSIS, toxResult.ANALYSIS) && Objects.equals(SPECIMEN, toxResult.SPECIMEN) && Objects.equals(METHOD, toxResult.METHOD) && Objects.equals(VALUE, toxResult.VALUE) && Objects.equals(CONTAINER, toxResult.CONTAINER) && Objects.equals(COLLECTED_DATE, toxResult.COLLECTED_DATE) && Objects.equals(COLLECTED_TIME, toxResult.COLLECTED_TIME) && Objects.equals(RECORD_DATE, toxResult.RECORD_DATE) && Objects.equals(RECORD_TIME, toxResult.RECORD_TIME);
+		return Objects.equals(ANALYSIS, toxResult.ANALYSIS) && Objects.equals(SPECIMEN, toxResult.SPECIMEN) && Objects.equals(METHOD, toxResult.METHOD) && Objects.equals(VALUE, toxResult.VALUE) && Objects.equals(CONTAINER, toxResult.CONTAINER) && Objects.equals(RANGE_LOW, toxResult.RANGE_LOW) && Objects.equals(RANGE_HIGH, toxResult.RANGE_HIGH) && Objects.equals(COLLECTED_DATE, toxResult.COLLECTED_DATE) && Objects.equals(COLLECTED_TIME, toxResult.COLLECTED_TIME) && Objects.equals(RECORD_DATE, toxResult.RECORD_DATE) && Objects.equals(RECORD_TIME, toxResult.RECORD_TIME);
 	}
 
 	@Override
 	public int hashCode() {
-		return Objects.hash(ANALYSIS, SPECIMEN, METHOD, VALUE, CONTAINER, COLLECTED_DATE, COLLECTED_TIME, RECORD_DATE, RECORD_TIME);
+		return Objects.hash(ANALYSIS, SPECIMEN, METHOD, VALUE, CONTAINER, RANGE_LOW, RANGE_HIGH, COLLECTED_DATE, COLLECTED_TIME, RECORD_DATE, RECORD_TIME);
 	}
 
 	@Override
@@ -192,12 +212,13 @@ public class ToxResult extends BaseModelFields{
 			", METHOD='" + getMETHOD() + "'" +
 			", VALUE='" + getVALUE() + "'" +
 			", CONTAINER='" + getCONTAINER() + "'" +
+			", RANGE_LOW='" + getRANGE_LOW() + "'" +
+			", RANGE_HIGH='" + getRANGE_HIGH() + "'" +
 			", COLLECTED_DATE='" + getCOLLECTED_DATE() + "'" +
 			", COLLECTED_TIME='" + getCOLLECTED_TIME() + "'" +
 			", RECORD_DATE='" + getRECORD_DATE() + "'" +
 			", RECORD_TIME='" + getRECORD_TIME() + "'" +
 			"}";
 	}
-	
 	
 }

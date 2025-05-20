@@ -21,6 +21,7 @@ import org.hl7.fhir.r4.model.HumanName.NameUse;
 import org.hl7.fhir.r4.model.Identifier;
 import org.hl7.fhir.r4.model.MessageHeader.MessageDestinationComponent;
 import org.hl7.fhir.r4.model.MessageHeader.MessageSourceComponent;
+import org.hl7.fhir.r4.model.Observation.ObservationReferenceRangeComponent;
 import org.hl7.fhir.r4.model.Observation.ObservationStatus;
 import org.hl7.fhir.r4.model.Meta;
 import org.hl7.fhir.r4.model.Organization;
@@ -28,6 +29,7 @@ import org.hl7.fhir.r4.model.Patient;
 import org.hl7.fhir.r4.model.Practitioner;
 import org.hl7.fhir.r4.model.PractitionerRole;
 import org.hl7.fhir.r4.model.Quantity;
+import org.hl7.fhir.r4.model.Range;
 import org.hl7.fhir.r4.model.Reference;
 import org.hl7.fhir.r4.model.Resource;
 import org.hl7.fhir.r4.model.Specimen.SpecimenCollectionComponent;
@@ -420,7 +422,20 @@ public class LocalToToxToMDIService {
 		resultResource.setSubject(subjectReference);
 		resultResource.setCode(new CodeableConcept().setText(toxResult.ANALYSIS));
 		resultResource.setStatus(ObservationStatus.FINAL);
-		resultResource.setValue(new StringType(toxResult.VALUE)); // TODO: work with range
+		Stream<String> rangeFields = Stream.of(toxResult.RANGE_LOW, toxResult.RANGE_HIGH);
+		if(!rangeFields.allMatch(x -> x == null || x.isEmpty())){
+			ObservationReferenceRangeComponent orrc = new ObservationReferenceRangeComponent();
+			if(toxResult.RANGE_LOW != null && !toxResult.RANGE_LOW.isEmpty()){
+				Quantity lowQuantity = LocalModelToFhirCMSUtil.parseQuantity(toxResult.RANGE_LOW);
+				orrc.setLow(lowQuantity);
+			}
+			if(toxResult.RANGE_HIGH != null && !toxResult.RANGE_HIGH.isEmpty()){
+				Quantity highQuantity = LocalModelToFhirCMSUtil.parseQuantity(toxResult.RANGE_HIGH);
+				orrc.setHigh(highQuantity);
+			}
+			resultResource.addReferenceRange(orrc);
+		}
+		resultResource.setValue(new StringType(toxResult.VALUE));
 		if (toxResult.METHOD != null && !toxResult.METHOD.isEmpty()) {
 			resultResource.setMethod(new CodeableConcept().setText(toxResult.METHOD));
 		}

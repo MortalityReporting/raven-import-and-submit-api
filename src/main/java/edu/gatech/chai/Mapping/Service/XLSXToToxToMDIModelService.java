@@ -45,7 +45,7 @@ public class XLSXToToxToMDIModelService {
     private static String SPECIMEN_HEADER = "Specimens";
     private static final String[] SPECIMEN_FIELDS = {"Name", "Specimen Unique Identifier", "Body Site", "Amount", "Container", "Date/Time Collected", "Date/Time of Receipt", "Condition", "Comments"};
     private static String RESULTS_HEADER = "Results";
-    private static final String[] RESULTS_FIELDS = {"Analyte/Analysis", "Specimen", "Method", "Value", "Range", "Description"};
+    private static final String[] RESULTS_FIELDS = {"Analyte/Analysis", "Specimen", "Method", "Value", "Range Low", "Range High", "Description"};
     private static String NOTES_HEADER = "General Comments";
 
     private static String[] DATE_FIELDS = {"Decedent DOB", "Date of Report Issuance"};
@@ -289,7 +289,8 @@ public class XLSXToToxToMDIModelService {
         Optional.ofNullable(resultFieldMap.get("Specimen")).ifPresent(x -> result.SPECIMEN = dataFormatter.formatCellValue(specimenRow.getCell(x)));
         Optional.ofNullable(resultFieldMap.get("Method")).ifPresent(x -> result.METHOD = dataFormatter.formatCellValue(specimenRow.getCell(x)));
         Optional.ofNullable(resultFieldMap.get("Value")).ifPresent(x -> result.VALUE = dataFormatter.formatCellValue(specimenRow.getCell(x)));
-        //Optional.ofNullable(resultFieldMap.get("Range")).ifPresent(x -> result = formatter.formatCellValue(specimenRow.getCell(x))); TODO: Add Range
+        Optional.ofNullable(resultFieldMap.get("Range Low")).ifPresent(x -> result.RANGE_LOW = dataFormatter.formatCellValue(specimenRow.getCell(x)));
+        Optional.ofNullable(resultFieldMap.get("Range High")).ifPresent(x -> result.RANGE_HIGH = dataFormatter.formatCellValue(specimenRow.getCell(x)));
         //Optional.ofNullable(resultFieldMap.get("Description")).ifPresent(x -> result. = formatter.formatCellValue(specimenRow.getCell(x))); TODO: Add Description
         return result;
     }
