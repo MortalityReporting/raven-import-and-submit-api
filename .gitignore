@@ -60,3 +60,4 @@ Thumbs.db
 # other
 *.swp
 *.bak
+env.list
