@@ -60,7 +60,7 @@ docker build -t raven-import-api .
    Include the network when running the import-api as shown below. Use env.list file to put your envirnment variables. 
 
 ```bash
-docker run -d --restart unless-stopped -p 80:8080 --network <your_network_name> --env-file ./env.list --name raven_import raven-import-api```
+docker run -d --restart unless-stopped -p 80:8080 --network <your_network_name> --env-file ./env.list --name raven_import raven-import-api
 ```
 
 You can verify the installation by using browser. Goto http://localhost/raven-import-and-submit-api. If you see a simple file upload page, then
