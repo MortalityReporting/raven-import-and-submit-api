@@ -56,10 +56,15 @@ docker build -t raven-import-api .
 ```
 
 2. **Run the container**
+   If the import api server is communicating with the other Raven modules within the same local docker environment, then this container needs to be in the same network.
+   Include the network when running the import-api as shown below. Use env.list file to put your envirnment variables. 
 
 ```bash
-docker run -p 80:80 raven-import-api
+docker run -d --restart unless-stopped -p 80:8080 --network <your_network_name> --env-file ./env.list --name raven_import raven-import-api
 ```
+
+You can verify the installation by using browser. Goto http://localhost/raven-import-and-submit-api. If you see a simple file upload page, then
+your installation is good. The CSV template file for the import is available in https://github.com/MortalityReporting/raven-import-and-submit-api/blob/main/MDI-To-EDRS-Template.csv.  
 
 
 ## Configuration

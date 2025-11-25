@@ -5,7 +5,12 @@ import java.util.Date;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import org.hl7.fhir.exceptions.FHIRException;
+import org.hl7.fhir.r4.model.CodeType;
 import org.hl7.fhir.r4.model.CodeableConcept;
+import org.hl7.fhir.r4.model.Extension;
+import org.hl7.fhir.r4.model.Enumerations.DataAbsentReasonEnumFactory;
+import org.hl7.fhir.r4.model.codesystems.DataAbsentReason;
 
 import edu.gatech.chai.MDI.Model.BaseModelFields;
 import edu.gatech.chai.MDI.Model.ToxToMDIModelFields;
@@ -73,5 +78,23 @@ public class CommonMappingUtil {
 			modelFields.getErrorListForName(fieldName).add("Could not parse '"+fieldValue+"' into a datetime type");
 		}
 		return returnDate;
+	}
+
+	public static Extension getDataAbsentReason(String code) {
+		if (code == null || code.isBlank()) {
+			code = "masked";
+		}
+
+		DataAbsentReason dataAbsentReason;
+		try {
+			dataAbsentReason = DataAbsentReason.fromCode(code);
+		} catch (FHIRException e) {
+			e.printStackTrace();
+			dataAbsentReason = DataAbsentReason.MASKED;
+		}
+			
+		Extension extension = new Extension("http://hl7.org/fhir/StructureDefinition/data-absent-reason", new CodeType(dataAbsentReason.toCode()));
+
+		return extension;
 	}
 }

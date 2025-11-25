@@ -319,6 +319,12 @@ public class LocalToMDIAndEDRSService {
 				name.addSuffix(inputFields.SUFFIXNAME);
 			}
 			returnDecedent.addName(name);
+		} else {
+			// If name is null or empty, then we put data absent reason because
+			// this is a required field in the MDI FHIR IG. 
+			HumanName name = new HumanName();
+			name.addExtension(CommonMappingUtil.getDataAbsentReason(null));
+			returnDecedent.addName(name);
 		}
 		if(inputFields.RACE != null && !inputFields.RACE.isEmpty()) {
 			if(LocalModelToFhirCMSUtil.containsIgnoreCase(inputFields.RACE, "White")) {
