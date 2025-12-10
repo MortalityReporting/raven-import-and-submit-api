@@ -39,6 +39,7 @@ import org.hl7.fhir.r4.model.Observation.ObservationComponentComponent;
 import org.hl7.fhir.r4.model.Observation.ObservationStatus;
 import org.hl7.fhir.r4.model.Patient;
 import org.hl7.fhir.r4.model.Procedure;
+import org.hl7.fhir.r4.model.Quantity;
 import org.hl7.fhir.r4.model.Procedure.ProcedureStatus;
 import org.hl7.fhir.r4.model.Reference;
 import org.hl7.fhir.r4.model.StringType;
@@ -68,6 +69,7 @@ import edu.gatech.chai.VRDR.model.CauseOfDeathPart2;
 import edu.gatech.chai.VRDR.model.DeathCertificationProcedure;
 import edu.gatech.chai.VRDR.model.DeathDate;
 import edu.gatech.chai.VRDR.model.DeathLocation;
+import edu.gatech.chai.VRDR.model.DecedentAge;
 import edu.gatech.chai.VRDR.model.DecedentPregnancyStatus;
 import edu.gatech.chai.VRDR.model.InjuryIncident;
 import edu.gatech.chai.VRDR.model.InjuryLocation;
@@ -110,7 +112,7 @@ public class LocalToMDIAndEDRSService {
 		returnBundle.setIdentifier(new Identifier().setSystem("urn:raven:temporary").setValue(Long.toString(now.getTime())));
 		returnBundle.setType(BundleType.BATCH);
 		Identifier caseIdentifier = new Identifier().setSystem(inputFields.SYSTEMID);
-		caseIdentifier.setValue("TestIdentifier");
+		caseIdentifier.setValue(inputFields.BASEFHIRID);
 		caseIdentifier.setType(new CodeableConcept().addCoding(new Coding().setCode("1000007").setSystem("urn:temporary:code").setDisplay("Case Number")));
 		
 		CompositionMDIAndEDRS mainComposition = returnBundle.getCompositionMDIAndEDRS();
@@ -132,6 +134,8 @@ public class LocalToMDIAndEDRSService {
 
 		Patient patientResource = null;
 		Reference patientReference = null;
+		DecedentAge decedentAgeResource = null;
+		Reference decedentAgeReference = null;
 		PractitionerVitalRecords primaryMECResource = null;
 		Reference primaryMECReference = null;
 		PractitionerVitalRecords certifierResource = null;
@@ -151,6 +155,14 @@ public class LocalToMDIAndEDRSService {
 			patientReference = new Reference("Patient/"+patientResource.getId());
 			mainComposition.setSubject(patientReference);
 			LocalModelToFhirCMSUtil.addResourceToBundle(returnBundle, patientResource);
+		}
+		// Age and AgeUnit demographics info
+		Stream<String> demographicsFields = Stream.of(inputFields.AGE,inputFields.AGEUNIT);
+		if (!demographicsFields.allMatch(x -> x == null || x.isEmpty())) {
+			decedentAgeResource = createDecedentAge(inputFields, patientReference);
+			decedentAgeReference = new Reference("Observation/"+decedentAgeResource.getId());
+			mainComposition.getDemographicsSection().addEntry(decedentAgeReference);
+			LocalModelToFhirCMSUtil.addResourceToBundle(returnBundle, decedentAgeResource);
 		}
 		//Special handling to identify a primaryMEC. If a certifier is found but no ME/C is found; just the MEC
 		if(inputFields.MENAME == null || inputFields.MENAME.isEmpty()){
@@ -280,11 +292,13 @@ public class LocalToMDIAndEDRSService {
 		medicationHistorySection.setText(narrative);
 		medicationHistorySection.setEmptyReason(new CodeableConcept().addCoding(new Coding("http://terminology.hl7.org/CodeSystem/list-empty-reason","unavailable","Unavailable")));
 		//Handle Autopsy
-		SectionComponent examAutopsySection = mainComposition.getExamAutopsySection();
+		SectionComponent examAutopsySection = null;
 		//Handle Autopsy Indicator
 		Stream<String> autopsyIdenticatorFields = Stream.of(inputFields.AUTOPSYPERFORMED, inputFields.AUTOPSYRESULTSAVAILABLE);
 		if(!autopsyIdenticatorFields.allMatch(x -> x == null || x.isEmpty())) {
 			AutopsyPerformedIndicator autopsyPerformedIndicator = createAutopsyPerformedIndicator(inputFields, patientReference, primaryMECReference);
+			if (examAutopsySection == null) 
+				examAutopsySection = mainComposition.getExamAutopsySection();;
 			examAutopsySection.addEntry(new Reference("Observation/"+autopsyPerformedIndicator.getId()));
 			LocalModelToFhirCMSUtil.addResourceToBundle(returnBundle, autopsyPerformedIndicator);
 		}
@@ -292,6 +306,8 @@ public class LocalToMDIAndEDRSService {
 		Stream<String> autopsyLocationFields = Stream.of(inputFields.AUTOPSY_OFFICENAME, inputFields.AUTOPSY_STREET, inputFields.AUTOPSY_CITY, inputFields.AUTOPSY_COUNTY, inputFields.AUTOPSY_STATE, inputFields.AUTOPSY_ZIP);
 		if(!autopsyLocationFields.allMatch(x -> x == null || x.isEmpty())) {
 			Location autopsyPerformedLocation = createAutopsyLocation(inputFields);
+			if (examAutopsySection == null) 
+				examAutopsySection = mainComposition.getExamAutopsySection();;
 			examAutopsySection.addEntry(new Reference("Location/"+autopsyPerformedLocation.getId()));
 			LocalModelToFhirCMSUtil.addResourceToBundle(returnBundle, autopsyPerformedLocation);
 		}
@@ -448,6 +464,19 @@ public class LocalToMDIAndEDRSService {
 		return returnDecedent;
 	}
 	
+	private DecedentAge createDecedentAge(MDIAndEDRSModelFields inputFields, Reference patientReference) {
+		DecedentAge returnDecedentAge = new DecedentAge(patientReference);
+		returnDecedentAge.setId(inputFields.BASEFHIRID + "DecedentAge");
+		Quantity ageQty = new Quantity(Integer.valueOf(inputFields.AGE));
+		ageQty.setCode(LocalModelToFhirCMSUtil.convertUnitOfMeasureStringToCode(inputFields.AGEUNIT.toLowerCase()));
+		if ("UNK".equals(ageQty.getCode())) {
+			ageQty.setSystem("http://terminology.hl7.org/CodeSystem/v3-NullFlavor");
+		}
+		returnDecedentAge.setValue(ageQty);
+
+		return returnDecedentAge;
+	}
+
 	private PractitionerVitalRecords createPrimaryMEC(MDIAndEDRSModelFields inputFields) {
 		PractitionerVitalRecords returnPractitioner = new PractitionerVitalRecords();
 		returnPractitioner.setId(inputFields.BASEFHIRID + "Primary-Practitioner");

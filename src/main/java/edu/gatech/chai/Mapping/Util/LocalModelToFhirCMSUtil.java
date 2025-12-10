@@ -62,8 +62,10 @@ public class LocalModelToFhirCMSUtil {
 				return "wk";
 			case "months":
 				return "mo";
-			default:
+			case "years":
 				return "a";
+			default:
+				return "UNK";
 		}
 	}
 	public static Date parseDateForYear(String yearString) throws ParseException {

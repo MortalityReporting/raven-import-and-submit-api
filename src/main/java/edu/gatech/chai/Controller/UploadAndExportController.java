@@ -534,7 +534,7 @@ public class UploadAndExportController {
 		// parse CSV file to create a list of `InputField` objects
 		Reader reader = new BufferedReader(new InputStreamReader(file.getInputStream()));
 		// create csv bean reader
-		CsvToBean<MDIAndEDRSModelFields> csvToBean = new CsvToBeanBuilder(reader)
+		CsvToBean<MDIAndEDRSModelFields> csvToBean = new CsvToBeanBuilder<MDIAndEDRSModelFields>(reader)
 				.withType(MDIAndEDRSModelFields.class)
 				.withIgnoreLeadingWhiteSpace(true)
 				.build();
