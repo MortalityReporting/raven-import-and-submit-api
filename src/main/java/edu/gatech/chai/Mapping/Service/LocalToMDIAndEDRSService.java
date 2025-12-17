@@ -660,36 +660,54 @@ public class LocalToMDIAndEDRSService {
 		manner.setId(inputFields.BASEFHIRID+"MannerOfDeath");
 		manner.addPerformer(practitionerReference);
 		Coding mannerCoding = new Coding();
+		String mannerText = null;
 		if(inputFields.MANNER != null && !inputFields.MANNER.isEmpty()) {
-			mannerCoding.setSystem("http://snomed.info/sct");
 			if(LocalModelToFhirCMSUtil.containsIgnoreCase(inputFields.MANNER, "Homicide")) {
+				mannerCoding.setSystem("http://snomed.info/sct");
 				mannerCoding.setCode("27935005");
 				mannerCoding.setDisplay("Homicide");
 			}
 			else if(LocalModelToFhirCMSUtil.containsIgnoreCase(inputFields.MANNER, "Suicide")) {
+				mannerCoding.setSystem("http://snomed.info/sct");
 				mannerCoding.setCode("44301001");
 				mannerCoding.setDisplay("Suicide");
 			}
 			else if(LocalModelToFhirCMSUtil.containsIgnoreCase(inputFields.MANNER, "Accident")) {
+				mannerCoding.setSystem("http://snomed.info/sct");
 				mannerCoding.setCode("7878000");
-				mannerCoding.setDisplay("Accidental Death");
+				mannerCoding.setDisplay("Accidental death");
 			}
 			else if(LocalModelToFhirCMSUtil.containsIgnoreCase(inputFields.MANNER, "Natural")) {
+				mannerCoding.setSystem("http://snomed.info/sct");
 				mannerCoding.setCode("38605008");
-				mannerCoding.setDisplay("Natural");
+				mannerCoding.setDisplay("Natural death");
 			}
-			else if(LocalModelToFhirCMSUtil.containsIgnoreCase(inputFields.MANNER, "Investigation")) {
+			else if(LocalModelToFhirCMSUtil.containsIgnoreCase(inputFields.MANNER, "Investigation")
+				|| LocalModelToFhirCMSUtil.containsIgnoreCase(inputFields.MANNER, "Pending")) {
+				mannerCoding.setSystem("http://snomed.info/sct");
 				mannerCoding.setCode("185973002");
 				mannerCoding.setDisplay("Patient awaiting investigation");
 			}
+			else if(LocalModelToFhirCMSUtil.containsIgnoreCase(inputFields.MANNER, "Undetermined")) {
+				mannerCoding.setSystem("http://snomed.info/sct");
+				mannerCoding.setCode("65037004");
+				mannerCoding.setDisplay("Death, manner undetermined");
+			}
+
+			if (!inputFields.MANNER.equalsIgnoreCase(mannerCoding.getDisplay())) {
+				mannerText = inputFields.MANNER;
+			}
 		}
+
 		CodeableConcept mannerCode = new CodeableConcept();
 		if(!mannerCoding.isEmpty()) {
 			mannerCode.addCoding(mannerCoding);
 		}
-		else {
+
+		if (mannerText != null) {
 			mannerCode.setText(inputFields.MANNER);
 		}
+		
 		manner.setValue(mannerCode);
 		manner.setSubject(decedentReference);
 		return manner;
