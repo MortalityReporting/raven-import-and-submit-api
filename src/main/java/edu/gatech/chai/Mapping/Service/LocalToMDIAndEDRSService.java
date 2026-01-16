@@ -124,7 +124,11 @@ public class LocalToMDIAndEDRSService {
 		mainComposition.setStatus(CompositionStatus.PRELIMINARY);
 		mainComposition.setDateElement(dtElement);
 		if(inputFields.MDICASEID != null && !inputFields.MDICASEID.isEmpty()){
-			mainComposition.addMDICaseIdExtension(raven_generated_systemid, inputFields.MDICASEID);
+			if (inputFields.SYSTEMID != null && !inputFields.SYSTEMID.isEmpty()) {
+				mainComposition.addMDICaseIdExtension("urn:mdi:"+inputFields.SYSTEMID, inputFields.MDICASEID);
+			} else {
+				mainComposition.addMDICaseIdExtension(raven_generated_systemid, inputFields.MDICASEID);
+			}
 		}
 		if(inputFields.EDRSCASEID != null && !inputFields.EDRSCASEID.isEmpty()){
 			mainComposition.addEDRSCaseIdExtension(raven_generated_systemid, inputFields.EDRSCASEID);
