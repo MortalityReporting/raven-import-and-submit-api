@@ -60,6 +60,5 @@ Thumbs.db
 # other
 *.swp
 *.bak
-env.list
 env.*
-env.list
+Dockerfile.gitlab

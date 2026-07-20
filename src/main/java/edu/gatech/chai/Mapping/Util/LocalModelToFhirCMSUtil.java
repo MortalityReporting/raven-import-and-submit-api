@@ -27,8 +27,6 @@ import org.hl7.fhir.r4.model.Extension;
 import org.hl7.fhir.r4.model.Quantity.QuantityComparator;
 import org.hl7.fhir.r4.model.Reference;
 
-import ca.uhn.fhir.model.dstu2.valueset.QuantityComparatorEnum;
-
 import org.hl7.fhir.r4.model.HumanName;
 import org.hl7.fhir.r4.model.IdType;
 import org.hl7.fhir.r4.model.Identifier;
